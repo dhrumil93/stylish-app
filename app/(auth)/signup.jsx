@@ -86,8 +86,11 @@ export default function SignUp() {
           to the public offer
         </Text>
 
-        <TouchableOpacity style={styles.createButton}>
-          <Text style={styles.createButtonText}>Create Account</Text>
+        <TouchableOpacity 
+          style={styles.createButton}
+          onPress={() => router.push('/(screens)/welcome')}
+        >
+          <Text style={styles.createButtonText}>Register</Text>
         </TouchableOpacity>
 
         <Text style={styles.orText}>- OR Continue with -</Text>
