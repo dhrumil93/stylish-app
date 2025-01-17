@@ -1,39 +1,55 @@
 import React, { useEffect } from 'react';
-import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
 const { width } = Dimensions.get('window');
 
-// Prevent the splash screen from auto-hiding
-SplashScreen.preventAutoHideAsync();
-
 export default function Splash() {
   const router = useRouter();
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const timer = setTimeout(async () => {
-      await SplashScreen.hideAsync(); // Hide the native splash screen
-      router.replace('/');
-    }, 3000);
-
-    return () => clearTimeout(timer);
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start(async () => {
+      try {
+        await SplashScreen.hideAsync();
+        router.push('/(screens)/onboarding');
+      } catch (error) {
+        console.log('Error navigating:', error);
+      }
+    });
   }, []);
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
+      <Animated.View style={[styles.logoContainer, { opacity: fadeAnim }]}>
         <Image 
-          source={require('../../assets/images/Group 34010.png')}
+          source={require('../../assets/images/group34010.png')}
           style={styles.logoIcon}
           resizeMode="contain"
         />
         <Image 
-          source={require('../../assets/images/Stylish.png')}
+          source={require('../../assets/images/stylish.png')}
           style={styles.logoText}
           resizeMode="contain"
         />
-      </View>
+      </Animated.View>
     </View>
   );
 }

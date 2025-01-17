@@ -13,17 +13,17 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/Group 34010.png",
+        "foregroundImage": "./assets/images/group34010.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/Group 34010.png"
+      "favicon": "./assets/images/group34010.png"
     },
     "splash": {
-      "image": "./assets/images/Group 34010.png",
+      "image": "./assets/images/group34010.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
