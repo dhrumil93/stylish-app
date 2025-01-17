@@ -94,6 +94,49 @@ const flatAndHeels = {
   image: require("../../assets/images/heels.png"),
 };
 
+const trendingProducts = [
+  {
+    id: 1,
+    title: "IWC Schaffhausen 2021 Pilot's Watch",
+    subtitle: "SIHH 2019 44mm",
+    price: 650,
+    originalPrice: 1599,
+    discount: "60% off",
+    image: require("../../assets/images/watch.png"),
+  },
+  {
+    id: 2,
+    title: "Labbin White Sneakers",
+    subtitle: "For Men and Female",
+    price: 650,
+    originalPrice: 1250,
+    discount: "70% off",
+    image: require("../../assets/images/sneakers.png"),
+  },
+  {
+    id: 3,
+    title: "Mammon Women's Handbag",
+    subtitle: "(Set of 3, Grey)",
+    price: 750,
+    originalPrice: 1999,
+    discount: "65% off",
+    image: require("../../assets/images/handbag.png"),
+  },
+];
+
+const newArrivals = {
+  title: "New Arrivals",
+  subtitle: "Summer' 25 Collections",
+  image: require("../../assets/images/summer_sale.png"),
+};
+
+const sponsored = {
+  title: "Sponserd",
+  image: require("../../assets/images/sponsored_shoes.jpg"),
+  discount: "UP TO 50% OFF",
+  link: "up to 50% Off",
+};
+
 export default function Home() {
   const router = useRouter();
 
@@ -217,7 +260,7 @@ export default function Home() {
             </View>
             <TouchableOpacity style={styles.viewAllButton}>
               <Text style={styles.viewAllText}>View all</Text>
-              <AntDesign name="arrowright" size={16} color="#4A8CFF" />
+              <AntDesign name="arrowright" size={16} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
@@ -316,6 +359,86 @@ export default function Home() {
               </TouchableOpacity>
             </View>
           </View>
+        </View>
+
+        {/* Trending Products Section */}
+        <View style={styles.trendingContainer}>
+          {/* Header Section */}
+          <View style={styles.trendingHeader}>
+            <View style={styles.trendingTitleContainer}>
+              <Text style={styles.trendingTitle}>Trending Products</Text>
+              <View style={styles.dateContainer}>
+                <MaterialCommunityIcons name="calendar" size={18} color="#FFFFFF" />
+                <Text style={styles.dateText}>Last Date 29/02/22</Text>
+              </View>
+            </View>
+            <TouchableOpacity style={styles.viewAllButton}>
+              <Text style={styles.viewAllText}>View all</Text>
+              <AntDesign name="arrowright" size={16} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Trending Products Cards */}
+        <View style={styles.trendingCardsContainer}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.trendingScrollContainer}
+          >
+            {trendingProducts.map((product) => (
+              <TouchableOpacity key={product.id} style={styles.trendingProductCard}>
+                <Image source={product.image} style={styles.trendingProductImage} />
+                <View style={styles.trendingProductInfo}>
+                  <Text style={styles.trendingProductTitle} numberOfLines={2}>
+                    {product.title}
+                  </Text>
+                  <Text style={styles.trendingProductSubtitle}>{product.subtitle}</Text>
+                  <View style={styles.trendingPriceContainer}>
+                    <Text style={styles.trendingPrice}>₹{product.price}</Text>
+                    <Text style={styles.trendingOriginalPrice}>₹{product.originalPrice}</Text>
+                    <Text style={styles.trendingDiscount}>{product.discount}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* New Arrivals Section */}
+        <View style={styles.newArrivalsContainer}>
+          <Image 
+            source={newArrivals.image}
+            style={styles.newArrivalsImage}
+          />
+          <View style={styles.newArrivalsContent}>
+            <View style={styles.newArrivalsTextContainer}>
+              <Text style={styles.newArrivalsTitle}>{newArrivals.title}</Text>
+              <Text style={styles.newArrivalsSubtitle}>{newArrivals.subtitle}</Text>
+            </View>
+            <TouchableOpacity style={styles.newArrivalsButton}>
+              <Text style={styles.newArrivalsButtonText}>View all</Text>
+              <AntDesign name="arrowright" size={16} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Sponsored Section */}
+        <View style={styles.sponsoredContainer}>
+          <Text style={styles.sponsoredTitle}>{sponsored.title}</Text>
+          <TouchableOpacity style={styles.sponsoredCard}>
+            <Image 
+              source={sponsored.image}
+              style={styles.sponsoredImage}
+            />
+            <View style={styles.discountOverlay}>
+              <Text style={styles.discountText}>{sponsored.discount}</Text>
+            </View>
+            <View style={styles.sponsoredFooter}>
+              <Text style={styles.sponsoredLink}>{sponsored.link}</Text>
+              <AntDesign name="right" size={20} color="#000" />
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
@@ -814,5 +937,205 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginRight: 8,
+  },
+  trendingContainer: {
+    backgroundColor: '#FD6E87',
+    marginHorizontal: 16,
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 16,
+  },
+  trendingHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  trendingTitleContainer: {
+    flex: 1,
+  },
+  trendingTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dateText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    marginLeft: 8,
+  },
+  viewAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 4,
+  },
+  viewAllText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '500',
+    marginRight: 8,
+  },
+  trendingCardsContainer: {
+    marginTop: -8, // Overlap with the header container
+    paddingBottom: 16,
+  },
+  trendingScrollContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  trendingProductCard: {
+    width: width * 0.4,
+    marginRight: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  trendingProductImage: {
+    width: '100%',
+    height: 150,
+    resizeMode: 'cover',
+  },
+  trendingProductInfo: {
+    padding: 12,
+  },
+  trendingProductTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#000',
+    marginBottom: 4,
+    lineHeight: 20,
+  },
+  trendingProductSubtitle: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 8,
+  },
+  trendingPriceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  trendingPrice: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+    marginRight: 8,
+  },
+  trendingOriginalPrice: {
+    fontSize: 14,
+    color: '#666',
+    textDecorationLine: 'line-through',
+    marginRight: 8,
+  },
+  trendingDiscount: {
+    fontSize: 14,
+    color: '#FF4B6E',
+    fontWeight: '500',
+  },
+  newArrivalsContainer: {
+    marginHorizontal: 16,
+    marginVertical: 16,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#FFFFFF',
+  },
+  newArrivalsImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+  },
+  newArrivalsContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+  },
+  newArrivalsTextContainer: {
+    flex: 1,
+  },
+  newArrivalsTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 4,
+  },
+  newArrivalsSubtitle: {
+    fontSize: 16,
+    color: '#666',
+  },
+  newArrivalsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F83758',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 4,
+  },
+  newArrivalsButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '500',
+    marginRight: 8,
+  },
+  sponsoredContainer: {
+    marginHorizontal: 16,
+    marginVertical: 16,
+  },
+  sponsoredTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 12,
+  },
+  sponsoredCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  sponsoredImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+  },
+  discountOverlay: {
+    position: 'absolute',
+    top: '20%',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  discountText: {
+    color: 'black',
+    fontSize: 28,
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+  sponsoredFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#FFFFFF',
+  },
+  sponsoredLink: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
   },
 });
