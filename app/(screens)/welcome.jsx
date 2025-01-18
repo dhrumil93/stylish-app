@@ -22,12 +22,14 @@ export default function Welcome() {
     >
       <View style={styles.overlay}>
         <View style={styles.content}>
-          <Text style={styles.title}>
-            You want{'\n'}
-            Authentic, here{'\n'}
-            you go!
-          </Text>
-          <Text style={styles.subtitle}>Find it here, buy it now!</Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>
+              You want{'\n'}
+              Authentic, here{'\n'}
+              you go!
+            </Text>
+            <Text style={styles.subtitle}>Find it here, buy it now!</Text>
+          </View>
           
           <TouchableOpacity 
             style={styles.button}
@@ -49,37 +51,56 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'flex-end',
-    paddingBottom: 50,
   },
   content: {
-    paddingHorizontal: 32,
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+    alignItems: 'center',
+  },
+  textContainer: {
+    marginBottom: 32,
+    alignItems: 'center',
   },
   title: {
     fontSize: 36,
     fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: 8,
+    marginBottom: 12,
+    lineHeight: 45,
+    letterSpacing: 1,
     fontFamily: 'Montserrat-Bold',
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
     color: '#FFFFFF',
-    marginBottom: 32,
+    opacity: 0.9,
     fontFamily: 'Montserrat-Regular',
+    textAlign: 'center',
   },
   button: {
-    backgroundColor: '#FF4B6E',
+    backgroundColor: '#F83758',
     height: 56,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#F83758',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+    width: '100%',
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     fontFamily: 'Montserrat-SemiBold',
+    letterSpacing: 0.5,
   },
 }); 

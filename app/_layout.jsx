@@ -14,6 +14,12 @@ export default function Layout() {
         }}
       />
       <Stack.Screen 
+        name="(screens)"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen 
         name="index"
         options={{
           headerShown: false,
