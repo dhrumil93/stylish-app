@@ -84,7 +84,7 @@ const products = [
 
 const specialOffer = {
   title: "Special Offers",
-  emoji: "🤑",
+  emoji: "😱",
   description: "We make sure you get the offer you need at best prices",
   icon: require("../../assets/images/special_offer.png"),
 };
@@ -796,6 +796,7 @@ const styles = StyleSheet.create({
     width: width * 0.6,
     height: "241px",
     marginRight: 16,
+    marginBottom: 16,
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
     overflow: "hidden",
@@ -865,7 +866,7 @@ const styles = StyleSheet.create({
   },
   specialOfferContainer: {
     marginHorizontal: 16,
-    marginTop: 16,
+    marginTop: 8,
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
@@ -897,18 +898,18 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   specialOfferTitle: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "600",
     color: "#000",
     marginRight: 8,
   },
   specialOfferEmoji: {
-    fontSize: 20,
+    fontSize: 14,
   },
   specialOfferDescription: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#666",
-    lineHeight: 20,
+    lineHeight: 16,
   },
   flatAndHeelsContainer: {
     marginHorizontal: 16,
@@ -957,21 +958,23 @@ const styles = StyleSheet.create({
   },
   heelsTextContainer: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 4,
     alignItems: 'flex-end',
   },
   heelsTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#000',
     marginBottom: 8,
+    marginRight:24,
     lineHeight:20,
     fontWeight: '500',
   },
   heelsDescription: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#666',
     marginBottom: 16,
+    marginRight:56,
     fontWeight: '400',
     lineHeight:16
   },
@@ -979,8 +982,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FF4B6E',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginRight:20,
     borderRadius: 4,
   },
   visitButtonText: {
