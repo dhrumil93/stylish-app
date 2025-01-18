@@ -39,6 +39,13 @@ const bannerData = [
     description: "All colours",
     image: require("../../assets/images/banner.png"),
   },
+  {
+    id: 2,
+    title: "50-40% OFF",
+    subtitle: "Now in (product)",
+    description: "All colours",
+    image: require("../../assets/images/banner.png"),
+  },
   // Add more banners if needed
 ];
 

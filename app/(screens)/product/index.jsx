@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,31 +8,36 @@ import {
   ScrollView,
   SafeAreaView,
   Dimensions,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+} from "react-native";
+import { useRouter } from "expo-router";
+import {
+  AntDesign,
+  Feather,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export default function ProductDetail() {
   const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState('7 UK');
+  const [selectedSize, setSelectedSize] = useState("7 UK");
 
   const images = [
-    'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80',
-    'https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80',
-    'https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=800&q=80',
-    'https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=800&q=80',
-    'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=800&q=80',
+    "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80",
+    "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80",
+    "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=800&q=80",
+    "https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=800&q=80",
+    "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=800&q=80",
   ];
 
-  const sizes = ['6 UK', '7 UK', '8 UK', '9 UK', '10 UK'];
+  const sizes = ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"];
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        {/* Header */}
+        {/* Header - Fixed */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
             <AntDesign name="left" size={24} color="black" />
@@ -42,7 +47,11 @@ export default function ProductDetail() {
           </TouchableOpacity>
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Scrollable Content */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 180 }} // Add padding for bottom elements
+        >
           {/* Image Slider */}
           <ScrollView
             horizontal
@@ -50,7 +59,8 @@ export default function ProductDetail() {
             showsHorizontalScrollIndicator={false}
             onScroll={({ nativeEvent }) => {
               const slide = Math.ceil(
-                nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
+                nativeEvent.contentOffset.x /
+                  nativeEvent.layoutMeasurement.width
               );
               if (currentImageIndex !== slide) {
                 setCurrentImageIndex(slide);
@@ -82,8 +92,10 @@ export default function ProductDetail() {
           {/* Product Info */}
           <View style={styles.productInfo}>
             <Text style={styles.productTitle}>Nike Sneakers</Text>
-            <Text style={styles.productSubtitle}>Vision Alta Men's Shoes Size (All Colours)</Text>
-            
+            <Text style={styles.productSubtitle}>
+              Vision Alta Men's Shoes Size (All Colours)
+            </Text>
+
             {/* Rating */}
             <View style={styles.ratingContainer}>
               <View style={styles.stars}>
@@ -133,43 +145,76 @@ export default function ProductDetail() {
             {/* Product Details */}
             <Text style={styles.detailsTitle}>Product Details</Text>
             <Text style={styles.detailsText}>
-              Perhaps the most iconic sneaker of all-time, this original "Chicago" 7 colorway is the cornerstone to any sneaker collection. Made famous in 1985 by Michael Jordan, the shoe has stood the test of time, becoming the most famous colorway of the Air Jordan 1. This 2015 release saw the ...
+              Perhaps the most iconic sneaker of all-time, this original
+              "Chicago" 7 colorway is the cornerstone to any sneaker collection.
+              Made famous in 1985 by Michael Jordan, the shoe has stood the test
+              of time, becoming the most famous colorway of the Air Jordan 1.
+              This 2015 release saw the ...
             </Text>
 
             {/* Store Info */}
             <View style={styles.storeInfo}>
-              <Image
-                source={{ uri: 'https://cdn-icons-png.flaticon.com/512/1946/1946488.png' }}
-                style={[styles.storeIcon, { tintColor: '#666' }]}
-              />
-              <Text style={styles.storeText}>Nearest Store</Text>
-              <TouchableOpacity>
+              <View style={styles.storeInfoItem}>
+                <Feather name="map-pin" size={18} color="#666" />
+                <Text style={styles.storeText}>Nearest Store</Text>
+              </View>
+              <View style={styles.storeInfoItem}>
+                <MaterialCommunityIcons
+                  name="crown-outline"
+                  size={18}
+                  color="#F83758"
+                />
                 <Text style={styles.vipText}>VIP</Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
+              </View>
+              <View style={styles.storeInfoItem}>
+                <MaterialCommunityIcons
+                  name="refresh"
+                  size={18}
+                  color="#F83758"
+                />
                 <Text style={styles.returnText}>Return policy</Text>
-              </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          {/* Bottom Buttons */}
+          <View style={styles.bottomButtons}>
+            <TouchableOpacity style={styles.viewSimilarButton}>
+              <Feather
+                name="shopping-cart"
+                size={20}
+                color="#F83758"
+                style={styles.buttonIcon}
+              />
+              <Text style={styles.viewSimilarText}>Add to Cart</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.addToCartButton}>
+              <MaterialCommunityIcons
+                name="lightning-bolt"
+                size={20}
+                color="#FFF"
+                style={styles.buttonIcon}
+              />
+              <Text style={styles.addToCartText}>Buy Now</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Delivery Info */}
+          <View style={styles.deliveryInfo}>
+            <MaterialCommunityIcons
+              name="truck-delivery-outline"
+              size={32}
+              color="#F83758"
+              style={styles.deliveryIcon}
+            />
+            <View style={styles.deliveryContent}>
+              <Text style={styles.deliveryLabel}>Delivery in</Text>
+              <Text style={styles.deliveryTime}>1 within Hour</Text>
             </View>
           </View>
         </ScrollView>
 
-        {/* Bottom Buttons */}
-        <View style={styles.bottomButtons}>
-          <TouchableOpacity style={styles.viewSimilarButton}>
-            <Text style={styles.viewSimilarText}>View Similar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.addToCartButton}>
-            <Text style={styles.addToCartText}>Add to Compare</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Delivery Info */}
-        <View style={styles.deliveryInfo}>
-          <Text style={styles.deliveryTitle}>Delivery in</Text>
-          <Text style={styles.deliveryTime}>1 within Hour</Text>
-        </View>
-
-        {/* Bottom Navigation */}
+        {/* Bottom Navigation - Fixed */}
         <View style={styles.bottomNav}>
           <TouchableOpacity
             style={styles.navItem}
@@ -208,34 +253,35 @@ export default function ProductDetail() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   container: {
     flex: 1,
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
   },
   productImage: {
     width: width,
     height: width,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   pagination: {
-    flexDirection: 'row',
-    position: 'absolute',
+    flexDirection: "row",
+    position: "absolute",
     top: width - 30,
-    alignSelf: 'center',
+    alignSelf: "center",
     gap: 8,
   },
   paginationDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     opacity: 0.5,
   },
   paginationDotActive: {
@@ -248,55 +294,55 @@ const styles = StyleSheet.create({
   },
   productTitle: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   productSubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginBottom: 12,
   },
   ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
   },
   stars: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginRight: 8,
   },
   reviews: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 24,
   },
   price: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600",
     marginRight: 8,
   },
   originalPrice: {
     fontSize: 16,
-    color: '#666',
-    textDecorationLine: 'line-through',
+    color: "#666",
+    textDecorationLine: "line-through",
     marginRight: 8,
   },
   discount: {
     fontSize: 16,
-    color: '#F83758',
+    color: "#F83758",
   },
   sizeTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 12,
   },
   sizeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12,
     marginBottom: 24,
   },
@@ -305,117 +351,163 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
   },
   selectedSizeButton: {
-    backgroundColor: '#F83758',
-    borderColor: '#F83758',
+    backgroundColor: "#F83758",
+    borderColor: "#F83758",
   },
   sizeText: {
     fontSize: 14,
-    color: '#000',
+    color: "#000",
   },
   selectedSizeText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   detailsTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   detailsText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     lineHeight: 20,
     marginBottom: 24,
   },
   storeInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
     gap: 12,
-    marginBottom: 24,
+
+    paddingVertical: 0,
+    borderColor: "#F5F5F5",
+    marginBottom: 2,
   },
-  storeIcon: {
-    width: 20,
-    height: 20,
+  storeInfoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    gap: 6,
   },
   storeText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
+    fontWeight: "500",
   },
   vipText: {
     fontSize: 14,
-    color: '#F83758',
+    color: "#F83758",
+    fontWeight: "500",
   },
   returnText: {
     fontSize: 14,
-    color: '#F83758',
+    color: "#F83758",
+    fontWeight: "500",
   },
   bottomButtons: {
-    flexDirection: 'row',
-    padding: 16,
+    flexDirection: "row",
+    padding: 10,
     gap: 16,
+    backgroundColor: "#FFFFFF",
+    // borderTopWidth: 1,
+    // borderTopColor: "#F5F5F5",
   },
   viewSimilarButton: {
     flex: 1,
     height: 48,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#F83758',
+    borderColor: "#F83758",
+    gap: 8,
   },
   viewSimilarText: {
-    color: '#F83758',
+    color: "#F83758",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   addToCartButton: {
     flex: 1,
     height: 48,
-    backgroundColor: '#F83758',
+    backgroundColor: "#F83758",
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
+    shadowColor: "#F83758",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   addToCartText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
+  },
+  buttonIcon: {
+    marginRight: 4,
   },
   deliveryInfo: {
-    backgroundColor: '#FFE8EC',
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    backgroundColor: "#FFCCD5",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginTop: 8,
+    borderRadius: 12,
+    marginHorizontal: 12,
+    height: 60,
   },
-  deliveryTitle: {
+  deliveryContent: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  deliveryLabel: {
     fontSize: 14,
-    color: '#666',
+    color: "#000000",
+    // marginBottom: 2,
+    fontWeight: "900",
   },
   deliveryTime: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
+    fontSize: 16,
+    fontWeight: "400",
+    color: "#010101",
+    letterSpacing: 0.5,
+  },
+  deliveryIcon: {
+    opacity: 0.9,
+    // marginLeft: 2,
   },
   bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     paddingVertical: 8,
     paddingBottom: 20,
     borderTopWidth: 1,
-    borderTopColor: '#EEE',
-    position: 'absolute',
+    borderTopColor: "#EEE",
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 1000,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: -2,
@@ -424,8 +516,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   navItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 8,
   },
   cartButton: {
@@ -435,10 +527,10 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#FF4B6E',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#FF4B6E',
+    backgroundColor: "#FF4B6E",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#FF4B6E",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -449,10 +541,10 @@ const styles = StyleSheet.create({
   },
   navText: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginTop: 4,
   },
   activeNavText: {
-    color: '#FF4B6E',
+    color: "#FF4B6E",
   },
-}); 
+});
