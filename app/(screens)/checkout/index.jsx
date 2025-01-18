@@ -22,7 +22,9 @@ export default function Checkout() {
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
             <Image 
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/2732/2732652.png' }}
+              source={{ 
+                uri: 'https://cdn-icons-png.flaticon.com/512/2732/2732652.png'
+              }}
               style={[styles.backIcon, { tintColor: '#000' }]}
             />
           </TouchableOpacity>
@@ -34,12 +36,16 @@ export default function Checkout() {
           {/* Profile Section */}
           <View style={styles.profileSection}>
             <Image
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/4140/4140048.png' }}
+              source={
+                require("../../../assets/images/profile.png")
+              }
               style={styles.profileImage}
             />
             <View style={styles.verifiedBadge}>
               <Image 
-                source={{ uri: 'https://cdn-icons-png.flaticon.com/128/7595/7595571.png' }}
+                source={{ 
+                  uri: 'https://cdn-icons-png.flaticon.com/512/7595/7595571.png'
+                }}
                 style={[styles.verifiedIcon, { tintColor: '#4392F9' }]}
               />
             </View>
@@ -180,6 +186,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     backgroundColor: '#F5F5F5',
+    resizeMode: 'cover',
   },
   verifiedBadge: {
     position: 'absolute',
@@ -260,9 +267,11 @@ const styles = StyleSheet.create({
   backIcon: {
     width: 24,
     height: 24,
+    resizeMode: 'contain',
   },
   verifiedIcon: {
     width: 16,
     height: 16,
+    resizeMode: 'contain',
   },
 }); 

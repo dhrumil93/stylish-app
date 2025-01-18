@@ -56,7 +56,7 @@ const products = [
     discount: "40% Off",
     rating: 4,
     reviews: 56890,
-    image: require("../../assets/images/kurta.png"),
+    image: { uri: "https://images.unsplash.com/photo-1612336307429-8a898d10e223?w=800&q=80" }
   },
   {
     id: 2,
@@ -67,21 +67,64 @@ const products = [
     discount: "50% Off",
     rating: 4,
     reviews: 344567,
-    image: require("../../assets/images/shoes.png"),
+    image: { uri: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80" }
   },
   {
     id: 3,
-    title: "HRX by Hrithik Roshan",
+    title: "Black Dress",
     description: "Neque porro quisquam est qui dolorem ipsum quia",
     price: 2499,
     originalPrice: 4999,
     discount: "50% Off",
     rating: 4,
     reviews: 344567,
-    image: require("../../assets/images/shoes.png"),
+    image: { uri: "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=800&q=80" }
   },
-  // Add more products as needed
-];
+  {
+    id: 4,
+    title: "Pink Embroidered Dress",
+    description: "Neque porro quisquam est qui dolorem ipsum quia",
+    price: 1900,
+    originalPrice: 3800,
+    discount: "50% Off",
+    rating: 4.8,
+    reviews: 54678,
+    image: { uri: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80" }
+  },
+  {
+    id: 5,
+    title: "Flare Dress",
+    description: "Neque porro quisquam est qui dolorem ipsum quia",
+    price: 1990,
+    originalPrice: 3980,
+    discount: "50% Off",
+    rating: 4.3,
+    reviews: 35684,
+    image: { uri: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&q=80" }
+  },
+  {
+    id: 6,
+    title: "Denim Dress",
+    description: "Neque porro quisquam est qui dolorem ipsum quia",
+    price: 999,
+    originalPrice: 1999,
+    discount: "50% Off",
+    rating: 4.4,
+    reviews: 77156,
+    image: { uri: "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=800&q=80" }
+  },
+  {
+    id: 7,
+    title: "Nike Air Jordan",
+    description: "Neque porro quisquam est qui dolorem ipsum quia",
+    price: 4999,
+    originalPrice: 9999,
+    discount: "50% Off",
+    rating: 4.6,
+    reviews: 523456,
+    image: { uri: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80" }
+  },
+ ];
 
 const specialOffer = {
   title: "Special Offers",
@@ -104,7 +147,7 @@ const trendingProducts = [
     price: 650,
     originalPrice: 1599,
     discount: "60% off",
-    image: require("../../assets/images/watch.png"),
+    image: { uri: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80" }
   },
   {
     id: 2,
@@ -113,7 +156,7 @@ const trendingProducts = [
     price: 650,
     originalPrice: 1250,
     discount: "70% off",
-    image: require("../../assets/images/sneakers.png"),
+    image: { uri: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80" }
   },
   {
     id: 3,
@@ -122,7 +165,7 @@ const trendingProducts = [
     price: 750,
     originalPrice: 1999,
     discount: "65% off",
-    image: require("../../assets/images/handbag.png"),
+    image: { uri: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80" }
   },
 ];
 
@@ -302,7 +345,11 @@ export default function Home() {
               contentContainerStyle={styles.productsScrollContainer}
             >
               {products.map((product) => (
-                <TouchableOpacity key={product.id} style={styles.productCard}>
+                <TouchableOpacity 
+                  key={product.id}
+                  style={styles.productCard}
+                  onPress={() => router.push(`/product/${product.id}`)}
+                >
                   <Image source={product.image} style={styles.productImage} />
                   <View style={styles.productInfo}>
                     <Text style={styles.productTitle} numberOfLines={1}>
@@ -827,10 +874,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   productImage: {
-    width: "100%",
+    width: '100%',
     height: 200,
-    resizeMode: "cover",
-    borderRadius: 4,
+    resizeMode: 'cover',
+    borderRadius: 8,
   },
   productInfo: {
     padding: 12,
@@ -1071,9 +1118,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   trendingProductImage: {
-    width: "100%",
+    width: '100%',
     height: 150,
-    resizeMode: "cover",
+    resizeMode: 'cover',
+    borderRadius: 8,
   },
   trendingProductInfo: {
     padding: 12,
