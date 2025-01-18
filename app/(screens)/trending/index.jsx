@@ -206,7 +206,10 @@ export default function Trending() {
           contentContainerStyle={styles.productsContainer}
           showsVerticalScrollIndicator={false}
           renderItem={({ item: product }) => (
-            <TouchableOpacity style={styles.productCard}>
+            <TouchableOpacity 
+              style={styles.productCard}
+              onPress={() => router.push('/product')}
+            >
               <Image
                 source={{ uri: product.image }}
                 style={[

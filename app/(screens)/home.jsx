@@ -345,11 +345,7 @@ export default function Home() {
               contentContainerStyle={styles.productsScrollContainer}
             >
               {products.map((product) => (
-                <TouchableOpacity 
-                  key={product.id}
-                  style={styles.productCard}
-                  onPress={() => router.push(`/product/${product.id}`)}
-                >
+                <TouchableOpacity key={product.id} style={styles.productCard}>
                   <Image source={product.image} style={styles.productImage} />
                   <View style={styles.productInfo}>
                     <Text style={styles.productTitle} numberOfLines={1}>

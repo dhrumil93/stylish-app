@@ -43,6 +43,12 @@ export default function ScreensLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen 
+        name="product/index"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 } 
