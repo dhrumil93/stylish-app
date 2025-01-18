@@ -28,6 +28,7 @@ const categories = [
   { id: 3, name: "Kids", icon: require("../../assets/images/kids.png") },
   { id: 4, name: "Mens", icon: require("../../assets/images/mens.png") },
   { id: 5, name: "Womens", icon: require("../../assets/images/womens.png") },
+  { id: 6, name: "Shoes", icon: require("../../assets/images/shoes.png") },
 ];
 
 const bannerData = [
@@ -148,8 +149,10 @@ export default function Home() {
         <View style={styles.header}>
           <TouchableOpacity>
             <Image
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/7216/7216128.png' }}
-              style={[styles.menuIcon, { tintColor: '#000' }]}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/128/7216/7216128.png",
+              }}
+              style={[styles.menuIcon, { tintColor: "#000" }]}
             />
           </TouchableOpacity>
           <View style={styles.logoContainer}>
@@ -159,9 +162,9 @@ export default function Home() {
             />
             <Text style={styles.logoText}>Stylish</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/(screens)/checkout/')}>
             <Image
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/847/847969.png' }}
+              source={require("../../assets/images/profile.png")}
               style={styles.profileIcon}
             />
           </TouchableOpacity>
@@ -176,8 +179,10 @@ export default function Home() {
           {/* Search Bar */}
           <View style={styles.searchContainer}>
             <Image
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/149/149852.png' }}
-              style={[styles.searchIcon, { tintColor: '#666' }]}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/128/149/149852.png",
+              }}
+              style={[styles.searchIcon, { tintColor: "#666" }]}
             />
             <TextInput
               style={styles.searchInput}
@@ -186,24 +191,26 @@ export default function Home() {
             />
             <TouchableOpacity>
               <Image
-                source={{ uri: 'https://cdn-icons-png.flaticon.com/128/709/709682.png' }}
-                style={[styles.micIcon, { tintColor: '#666' }]}
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/128/709/709682.png",
+                }}
+                style={[styles.micIcon, { tintColor: "#666" }]}
               />
             </TouchableOpacity>
           </View>
           <View style={styles.subHeader}>
-          <Text style={styles.headerTitle}>All Featured</Text>
-          <View style={styles.headerRight}>
-            <TouchableOpacity style={styles.sortButton}>
-              <Text style={styles.sortText}>Sort</Text>
-              <Feather name="chevron-down" size={16} color="#000" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.filterButton}>
-              <Text style={styles.filterText}>Filter</Text>
-              <Feather name="filter" size={16} color="#000" />
-            </TouchableOpacity>
+            <Text style={styles.headerTitle}>All Featured</Text>
+            <View style={styles.headerRight}>
+              <TouchableOpacity style={styles.sortButton}>
+                <Text style={styles.sortText}>Sort</Text>
+                <Feather name="chevron-down" size={16} color="#000" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.filterButton}>
+                <Text style={styles.filterText}>Filter</Text>
+                <Feather name="filter" size={16} color="#000" />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
           {/* Categories */}
           <View style={styles.categoriesContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -232,13 +239,19 @@ export default function Home() {
                   >
                     <View style={styles.bannerContent}>
                       <Text style={styles.bannerTitle}>{banner.title}</Text>
-                      <Text style={styles.bannerSubtitle}>{banner.subtitle}</Text>
+                      <Text style={styles.bannerSubtitle}>
+                        {banner.subtitle}
+                      </Text>
                       <Text style={styles.bannerDescription}>
                         {banner.description}
                       </Text>
                       <TouchableOpacity style={styles.shopNowButton}>
                         <Text style={styles.shopNowText}>Shop Now</Text>
-                        <AntDesign name="arrowright" size={16} color="#FFFFFF" />
+                        <AntDesign
+                          name="arrowright"
+                          size={16}
+                          color="#FFFFFF"
+                        />
                       </TouchableOpacity>
                     </View>
                   </ImageBackground>
@@ -327,7 +340,10 @@ export default function Home() {
           {/* Special Offers Section */}
           <View style={styles.specialOfferContainer}>
             <View style={styles.specialOfferContent}>
-              <Image source={specialOffer.icon} style={styles.specialOfferIcon} />
+              <Image
+                source={specialOffer.icon}
+                style={styles.specialOfferIcon}
+              />
               <View style={styles.specialOfferTextContainer}>
                 <View style={styles.specialOfferHeader}>
                   <Text style={styles.specialOfferTitle}>
@@ -349,26 +365,28 @@ export default function Home() {
             {/* Background with Gradient and Pattern */}
             <View style={styles.heelsBackground}>
               <LinearGradient
-                colors={['#EFAD18', '#F8D7B4']}
+                colors={["#EFAD18", "#F8D7B4"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0.5 }}
                 style={styles.heelsGradient}
               />
-              <Image 
-                source={require('../../assets/images/horizontal_parts.png')}
+              <Image
+                source={require("../../assets/images/horizontal_parts.png")}
                 style={styles.heelsPattern}
               />
             </View>
-            
+
             {/* Content */}
             <View style={styles.heelsContent}>
-              <Image 
-                source={require('../../assets/images/heels.png')}
+              <Image
+                source={require("../../assets/images/heels.png")}
                 style={styles.heelsImage}
               />
               <View style={styles.heelsTextContainer}>
                 <Text style={styles.heelsTitle}>Flat and Heels</Text>
-                <Text style={styles.heelsDescription}>Stand a chance to get rewarded</Text>
+                <Text style={styles.heelsDescription}>
+                  Stand a chance to get rewarded
+                </Text>
                 <TouchableOpacity style={styles.visitButton}>
                   <Text style={styles.visitButtonText}>Visit now</Text>
                   <AntDesign name="arrowright" size={16} color="#FFFFFF" />
@@ -384,13 +402,17 @@ export default function Home() {
               <View style={styles.trendingTitleContainer}>
                 <Text style={styles.trendingTitle}>Trending Products</Text>
                 <View style={styles.dateContainer}>
-                  <MaterialCommunityIcons name="calendar" size={18} color="#FFFFFF" />
+                  <MaterialCommunityIcons
+                    name="calendar"
+                    size={18}
+                    color="#FFFFFF"
+                  />
                   <Text style={styles.dateText}>Last Date 29/02/22</Text>
                 </View>
               </View>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.viewAllButton}
-                onPress={() => router.push('/(screens)/trending/')}
+                onPress={() => router.push("/(screens)/trending/")}
               >
                 <Text style={styles.viewAllText}>View all</Text>
                 <AntDesign name="arrowright" size={16} color="#FFFFFF" />
@@ -400,23 +422,35 @@ export default function Home() {
 
           {/* Trending Products Cards */}
           <View style={styles.trendingCardsContainer}>
-            <ScrollView 
-              horizontal 
+            <ScrollView
+              horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.trendingScrollContainer}
             >
               {trendingProducts.map((product) => (
-                <TouchableOpacity key={product.id} style={styles.trendingProductCard}>
-                  <Image source={product.image} style={styles.trendingProductImage} />
+                <TouchableOpacity
+                  key={product.id}
+                  style={styles.trendingProductCard}
+                >
+                  <Image
+                    source={product.image}
+                    style={styles.trendingProductImage}
+                  />
                   <View style={styles.trendingProductInfo}>
                     <Text style={styles.trendingProductTitle} numberOfLines={2}>
                       {product.title}
                     </Text>
-                    <Text style={styles.trendingProductSubtitle}>{product.subtitle}</Text>
+                    <Text style={styles.trendingProductSubtitle}>
+                      {product.subtitle}
+                    </Text>
                     <View style={styles.trendingPriceContainer}>
                       <Text style={styles.trendingPrice}>₹{product.price}</Text>
-                      <Text style={styles.trendingOriginalPrice}>₹{product.originalPrice}</Text>
-                      <Text style={styles.trendingDiscount}>{product.discount}</Text>
+                      <Text style={styles.trendingOriginalPrice}>
+                        ₹{product.originalPrice}
+                      </Text>
+                      <Text style={styles.trendingDiscount}>
+                        {product.discount}
+                      </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -426,14 +460,13 @@ export default function Home() {
 
           {/* New Arrivals Section */}
           <View style={styles.newArrivalsContainer}>
-            <Image 
-              source={newArrivals.image}
-              style={styles.newArrivalsImage}
-            />
+            <Image source={newArrivals.image} style={styles.newArrivalsImage} />
             <View style={styles.newArrivalsContent}>
               <View style={styles.newArrivalsTextContainer}>
                 <Text style={styles.newArrivalsTitle}>{newArrivals.title}</Text>
-                <Text style={styles.newArrivalsSubtitle}>{newArrivals.subtitle}</Text>
+                <Text style={styles.newArrivalsSubtitle}>
+                  {newArrivals.subtitle}
+                </Text>
               </View>
               <TouchableOpacity style={styles.newArrivalsButton}>
                 <Text style={styles.newArrivalsButtonText}>View all</Text>
@@ -446,10 +479,7 @@ export default function Home() {
           <View style={styles.sponsoredContainer}>
             <Text style={styles.sponsoredTitle}>{sponsored.title}</Text>
             <TouchableOpacity style={styles.sponsoredCard}>
-              <Image 
-                source={sponsored.image}
-                style={styles.sponsoredImage}
-              />
+              <Image source={sponsored.image} style={styles.sponsoredImage} />
               <View style={styles.discountOverlay}>
                 <Text style={styles.discountText}>{sponsored.discount}</Text>
               </View>
@@ -460,47 +490,34 @@ export default function Home() {
             </TouchableOpacity>
           </View>
         </ScrollView>
-
-        {/* Bottom Navigation - Moved outside ScrollView */}
+        {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navItem}>
-            <Image 
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/1946/1946488.png' }}
-              style={[styles.navIcon, { tintColor: '#FF4B6E' }]}
-            />
-            <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => router.push("/(screens)/home")}
+          >
+            <AntDesign name="home" size={24} color="#FF4B6E" />
+            <Text style={[styles.navText,styles.activeNavText]}>Home</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navItem}>
-            <Image 
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/535/535234.png' }}
-              style={[styles.navIcon, { tintColor: '#666' }]}
-            />
-            <Text style={styles.navText}>Wishlist</Text>
+          <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
+            <AntDesign name="hearto" size={24} color="#666" />
+            <Text style={[styles.navText]}>Wishlist</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.navItem, styles.cartButton]}>
             <View style={styles.cartIconContainer}>
-              <Image 
-                source={{ uri: 'https://cdn-icons-png.flaticon.com/128/2832/2832495.png' }}
-                style={[styles.navIcon, { tintColor: '#FFFFFF' }]}
-              />
+              <Feather name="shopping-cart" size={24} color="#FFF" />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navItem}>
-            <Image 
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/149/149852.png' }}
-              style={[styles.navIcon, { tintColor: '#666' }]}
-            />
+            <Feather name="search" size={24} color="#666" />
             <Text style={styles.navText}>Search</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navItem}>
-            <Image 
-              source={{ uri: 'https://cdn-icons-png.flaticon.com/128/3524/3524636.png' }}
-              style={[styles.navIcon, { tintColor: '#666' }]}
-            />
+            <Ionicons name="settings-outline" size={24} color="#666" />
             <Text style={styles.navText}>Setting</Text>
           </TouchableOpacity>
         </View>
@@ -512,21 +529,21 @@ export default function Home() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F5',
+    borderBottomColor: "#F5F5F5",
   },
   menuIcon: {
     width: 32,
@@ -540,7 +557,7 @@ const styles = StyleSheet.create({
   logoIcon: {
     width: 24,
     height: 24,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     // tintColor: '#F83758',
   },
   logoText: {
@@ -701,7 +718,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1000,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: -2,
@@ -724,7 +741,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF4B6E",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#FF4B6E",
+    shadowColor: "#FFFFFF",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -915,43 +932,43 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 16,
     height: 180,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
-    overflow: 'hidden',
-    position: 'relative',
+    overflow: "hidden",
+    position: "relative",
   },
   heelsBackground: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     top: 0,
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   heelsGradient: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     top: 0,
     width: 11,
-    height: '100%',
+    height: "100%",
   },
   heelsPattern: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     top: 0,
     width: 77.77,
-    height: '100%',
-    resizeMode: 'cover',
+    height: "100%",
+    resizeMode: "cover",
   },
   heelsContent: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     zIndex: 1,
   },
   heelsImage: {
     width: width * 0.35,
     height: width * 0.35,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginLeft: 20,
     transform: [{ scale: 1.2 }], // Makes the image slightly larger
     zIndex: 2,
@@ -959,83 +976,83 @@ const styles = StyleSheet.create({
   heelsTextContainer: {
     flex: 1,
     paddingHorizontal: 4,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   heelsTitle: {
     fontSize: 20,
-    fontWeight: '500',
-    color: '#000',
+    fontWeight: "500",
+    color: "#000",
     marginBottom: 8,
-    marginRight:24,
-    lineHeight:20,
-    fontWeight: '500',
+    marginRight: 24,
+    lineHeight: 20,
+    fontWeight: "500",
   },
   heelsDescription: {
     fontSize: 10,
-    color: '#666',
+    color: "#666",
     marginBottom: 16,
-    marginRight:56,
-    fontWeight: '400',
-    lineHeight:16
+    marginRight: 56,
+    fontWeight: "400",
+    lineHeight: 16,
   },
   visitButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FF4B6E',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FF4B6E",
     paddingHorizontal: 10,
     paddingVertical: 8,
-    marginRight:20,
+    marginRight: 20,
     borderRadius: 4,
   },
   visitButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginRight: 8,
   },
   trendingContainer: {
-    backgroundColor: '#FD6E87',
+    backgroundColor: "#FD6E87",
     marginHorizontal: 16,
     borderRadius: 12,
     padding: 16,
     marginTop: 16,
   },
   trendingHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   trendingTitleContainer: {
     flex: 1,
   },
   trendingTitle: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
     marginBottom: 4,
   },
   dateContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   dateText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
     marginLeft: 8,
   },
   viewAllButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: "#FFFFFF",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 4,
   },
   viewAllText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginRight: 8,
   },
   trendingCardsContainer: {
@@ -1049,58 +1066,58 @@ const styles = StyleSheet.create({
   trendingProductCard: {
     width: width * 0.4,
     marginRight: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   trendingProductImage: {
-    width: '100%',
+    width: "100%",
     height: 150,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   trendingProductInfo: {
     padding: 12,
   },
   trendingProductTitle: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#000',
+    fontWeight: "500",
+    color: "#000",
     marginBottom: 4,
     lineHeight: 20,
   },
   trendingProductSubtitle: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginBottom: 8,
   },
   trendingPriceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
   },
   trendingPrice: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
     marginRight: 8,
   },
   trendingOriginalPrice: {
     fontSize: 14,
-    color: '#666',
-    textDecorationLine: 'line-through',
+    color: "#666",
+    textDecorationLine: "line-through",
     marginRight: 8,
   },
   trendingDiscount: {
     fontSize: 14,
-    color: '#FF4B6E',
-    fontWeight: '500',
+    color: "#FF4B6E",
+    fontWeight: "500",
   },
   newArrivalsContainer: {
     marginHorizontal: 16,
     marginTop: 16,
     borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: '#FFFFFF',
+    overflow: "hidden",
+    backgroundColor: "#FFFFFF",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -1111,41 +1128,43 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   newArrivalsImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   newArrivalsContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
   },
   newArrivalsTextContainer: {
     flex: 1,
   },
   newArrivalsTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#000',
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#000",
     marginBottom: 4,
+    lineHeight: 22,
   },
   newArrivalsSubtitle: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
+    fontWeight: "400",
   },
   newArrivalsButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F83758',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F83758",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 4,
   },
   newArrivalsButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginRight: 8,
   },
   sponsoredContainer: {
@@ -1154,15 +1173,15 @@ const styles = StyleSheet.create({
   },
   sponsoredTitle: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "500",
+    color: "#000",
     marginBottom: 12,
   },
   sponsoredCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -1172,59 +1191,60 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   sponsoredImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   discountOverlay: {
-    position: 'absolute',
-    top: '20%',
+    position: "absolute",
+    top: "20%",
     left: 0,
     right: 0,
-    alignItems: 'center',
+    alignItems: "center",
   },
   discountText: {
-    color: 'black',
+    color: "black",
     fontSize: 28,
-    fontWeight: '900',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
   },
   sponsoredFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   sponsoredLink: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#000',
-  }, subHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    fontWeight: "700",
+    color: "#000",
+  },
+  subHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   headerTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
   },
   headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   filterButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   navIcon: {

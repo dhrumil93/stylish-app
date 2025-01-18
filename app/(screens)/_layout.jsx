@@ -31,6 +31,18 @@ export default function ScreensLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen 
+        name="trending/index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen 
+        name="checkout/index"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 } 

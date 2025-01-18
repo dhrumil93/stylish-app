@@ -136,8 +136,10 @@ export default function Trending() {
         <View style={styles.header}>
           <TouchableOpacity>
             <Image
-              source={require("../../../assets/images/menu.png")}
-              style={styles.menuIcon}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/128/7216/7216128.png",
+              }}
+              style={[styles.menuIcon, { tintColor: "#000" }]}
             />
           </TouchableOpacity>
           <View style={styles.logoContainer}>
@@ -147,7 +149,7 @@ export default function Trending() {
             />
             <Text style={styles.logoText}>Stylish</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/(screens)/checkout/')}>
             <Image
               source={require("../../../assets/images/profile.png")}
               style={styles.profileIcon}
@@ -157,22 +159,27 @@ export default function Trending() {
 
         {/* Search Bar */}
         <View style={styles.searchContainer}>
-          <Image
-            source={require("../../../assets/images/search.png")}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search any Product..."
-            placeholderTextColor="#666"
-          />
-          <TouchableOpacity>
             <Image
-              source={require("../../../assets/images/mic.png")}
-              style={styles.micIcon}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/128/149/149852.png",
+              }}
+              style={[styles.searchIcon, { tintColor: "#666" }]}
             />
-          </TouchableOpacity>
-        </View>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search any Product..."
+              placeholderTextColor="#666"
+            />
+            <TouchableOpacity>
+              <Image
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/128/709/709682.png",
+                }}
+                style={[styles.micIcon, { tintColor: "#666" }]}
+              />
+            </TouchableOpacity>
+          </View>
+          
         {/* Sub Header */}
         <View style={styles.subHeader}>
           <Text style={styles.headerTitle}>52,082+ Items</Text>
@@ -245,13 +252,13 @@ export default function Trending() {
             style={styles.navItem}
             onPress={() => router.push("/(screens)/home")}
           >
-            <AntDesign name="home" size={24} color="#666" />
-            <Text style={styles.navText}>Home</Text>
+            <AntDesign name="home" size={24} color="#FF4B6E" />
+            <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
-            <AntDesign name="hearto" size={24} color="#FF4B6E" />
-            <Text style={[styles.navText, styles.activeNavText]}>Wishlist</Text>
+            <AntDesign name="hearto" size={24} color="#000" />
+            <Text style={styles.navText}>Wishlist</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.navItem, styles.cartButton]}>
@@ -389,7 +396,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 25,
+    borderRadius: 8,
     height: 48,
   },
   searchIcon: {
