@@ -50,7 +50,7 @@ export default function ProductDetail() {
         {/* Scrollable Content */}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 180 }} // Add padding for bottom elements
+          contentContainerStyle={{ paddingBottom: 90 }} // Add padding for bottom elements
         >
           {/* Image Slider */}
           <ScrollView
@@ -180,22 +180,14 @@ export default function ProductDetail() {
           {/* Bottom Buttons */}
           <View style={styles.bottomButtons}>
             <TouchableOpacity style={styles.viewSimilarButton}>
-              <Feather
-                name="shopping-cart"
-                size={20}
-                color="#F83758"
-                style={styles.buttonIcon}
-              />
-              <Text style={styles.viewSimilarText}>Add to Cart</Text>
+              <Feather name="shopping-cart" size={20} color="#F83758" style={styles.buttonIcon} />
+              <Text style={styles.viewSimilarText}>View Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.addToCartButton}>
-              <MaterialCommunityIcons
-                name="lightning-bolt"
-                size={20}
-                color="#FFF"
-                style={styles.buttonIcon}
-              />
-              <Text style={styles.addToCartText}>Buy Now</Text>
+            <TouchableOpacity 
+              style={styles.addToCartButton}
+              onPress={() => router.push('/(screens)/cart')}
+            >
+              <Text style={styles.addToCartText}>Add to Cart</Text>
             </TouchableOpacity>
           </View>
 
@@ -212,6 +204,79 @@ export default function ProductDetail() {
               <Text style={styles.deliveryTime}>1 within Hour</Text>
             </View>
           </View>
+
+          {/* Compare Actions */}
+          <View style={styles.compareActions}>
+            <TouchableOpacity style={styles.compareButton}>
+              <Feather name="eye" size={20} color="#666" />
+              <Text style={styles.compareButtonText}>View Similar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.compareButton}>
+              <MaterialCommunityIcons name="compare" size={20} color="#666" />
+              <Text style={styles.compareButtonText}>Add to Compare</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Similar Products Section */}
+          <View style={styles.similarSection}>
+            <View style={styles.similarHeader}>
+              <Text style={styles.similarTitle}>Similar To</Text>
+              <Text style={styles.itemCount}>282+ Items</Text>
+              <View style={styles.filterContainer}>
+                <TouchableOpacity style={styles.filterButton}>
+                  <Text style={styles.filterText}>Sort</Text>
+                  <AntDesign name="down" size={16} color="#000" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.filterButton}>
+                  <Text style={styles.filterText}>Filter</Text>
+                  <Feather name="filter" size={16} color="#000" />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Similar Products */}
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.similarProducts}
+            >
+              <TouchableOpacity style={styles.similarCard}>
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80' }}
+                  style={styles.similarImage}
+                />
+                <View style={styles.similarInfo}>
+                  <Text style={styles.similarProductTitle}>Nike Sneakers</Text>
+                  <Text style={styles.similarProductSubtitle}>Nike Air Jordan Retro 1 Low Mystic Black</Text>
+                  <Text style={styles.similarPrice}>₹1,900</Text>
+                  <View style={styles.similarRating}>
+                    {[...Array(5)].map((_, i) => (
+                      <AntDesign key={i} name={i < 4 ? "star" : "staro"} size={12} color="#FFD700" />
+                    ))}
+                    <Text style={styles.similarReviews}>46,890</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.similarCard}>
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80' }}
+                  style={styles.similarImage}
+                />
+                <View style={styles.similarInfo}>
+                  <Text style={styles.similarProductTitle}>Nike Sneakers</Text>
+                  <Text style={styles.similarProductSubtitle}>Mid Peach Mocha Shoes For Man White Black Pink S...</Text>
+                  <Text style={styles.similarPrice}>₹1,900</Text>
+                  <View style={styles.similarRating}>
+                    {[...Array(5)].map((_, i) => (
+                      <AntDesign key={i} name={i < 4 ? "star" : "staro"} size={12} color="#FFD700" />
+                    ))}
+                    <Text style={styles.similarReviews}>2,56,890</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
         </ScrollView>
 
         {/* Bottom Navigation - Fixed */}
@@ -220,12 +285,12 @@ export default function ProductDetail() {
             style={styles.navItem}
             onPress={() => router.push("/(screens)/home")}
           >
-            <AntDesign name="home" size={24} color="#666" />
+            <AntDesign name="home" size={24} color="#000000" />
             <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navItem}>
-            <AntDesign name="hearto" size={24} color="#666" />
+            <AntDesign name="hearto" size={24} color="#000000" />
             <Text style={styles.navText}>Wishlist</Text>
           </TouchableOpacity>
 
@@ -236,12 +301,12 @@ export default function ProductDetail() {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navItem}>
-            <Feather name="search" size={24} color="#666" />
+            <Feather name="search" size={24} color="#000000" />
             <Text style={styles.navText}>Search</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="settings-outline" size={24} color="#666" />
+            <Ionicons name="settings-outline" size={24} color="#000000" />
             <Text style={styles.navText}>Setting</Text>
           </TouchableOpacity>
         </View>
@@ -498,7 +563,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FFFFFF",
     paddingVertical: 8,
-    paddingBottom: 20,
+    paddingBottom: 10,
     borderTopWidth: 1,
     borderTopColor: "#EEE",
     position: "absolute",
@@ -518,10 +583,10 @@ const styles = StyleSheet.create({
   navItem: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 8,
+    // paddingVertical: 0,
   },
   cartButton: {
-    marginTop: -20,
+    marginTop: 1,
   },
   cartIconContainer: {
     width: 56,
@@ -530,7 +595,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF4B6E",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#FF4B6E",
+    shadowColor: "#FFFFFF",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -546,5 +611,116 @@ const styles = StyleSheet.create({
   },
   activeNavText: {
     color: "#FF4B6E",
+  },
+  compareActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    marginTop: 16,
+    gap: 12,
+  },
+  compareButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E8E8E8',
+    gap: 8,
+  },
+  compareButtonText: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
+  },
+  similarSection: {
+    marginTop: 20,
+    paddingBottom: 0,
+  },
+  similarHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  similarTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+  },
+  itemCount: {
+    fontSize: 16,
+    color: '#666',
+    marginLeft: 8,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    marginLeft: 'auto',
+    gap: 12,
+  },
+  filterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#EEE',
+  },
+  filterText: {
+    fontSize: 14,
+    color: '#000',
+  },
+  similarProducts: {
+    paddingHorizontal: 12,
+    gap: 12,
+  },
+  similarCard: {
+    width: 200,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    marginRight: 12,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#EEE',
+  },
+  similarImage: {
+    width: '100%',
+    height: 150,
+    resizeMode: 'cover',
+  },
+  similarInfo: {
+    padding: 12,
+  },
+  similarProductTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 4,
+  },
+  similarProductSubtitle: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 8,
+  },
+  similarPrice: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  similarRating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  similarReviews: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 4,
   },
 });

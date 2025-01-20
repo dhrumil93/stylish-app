@@ -260,23 +260,23 @@ export default function Trending() {
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
-            <AntDesign name="hearto" size={24} color="#000" />
+            <AntDesign name="hearto" size={24} color="#000000" />
             <Text style={styles.navText}>Wishlist</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.navItem, styles.cartButton]}>
             <View style={styles.cartIconContainer}>
-              <Feather name="shopping-cart" size={24} color="#FFF" />
+              <Feather name="shopping-cart" size={24} color="#FFFFFF" />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navItem}>
-            <Feather name="search" size={24} color="#666" />
+            <Feather name="search" size={24} color="#000000" />
             <Text style={styles.navText}>Search</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="settings-outline" size={24} color="#666" />
+            <Ionicons name="settings-outline" size={24} color="#000000" />
             <Text style={styles.navText}>Setting</Text>
           </TouchableOpacity>
         </View>
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FFFFFF",
     paddingVertical: 8,
-    paddingBottom: 20,
+    paddingBottom: 10,
     borderTopWidth: 1,
     borderTopColor: "#EEE",
     position: "absolute",
@@ -496,10 +496,10 @@ const styles = StyleSheet.create({
   navItem: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 8,
+    // paddingVertical: 0,
   },
   cartButton: {
-    marginTop: -20,
+    marginTop: 1,
   },
   cartIconContainer: {
     width: 56,
@@ -508,7 +508,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF4B6E",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#FF4B6E",
+    shadowColor: "#FFFFFF",
     shadowOffset: {
       width: 0,
       height: 4,
