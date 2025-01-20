@@ -26,6 +26,7 @@ export default function Cart() {
   };
 
   const cartItem = {
+    id: 1,
     title: "Nike Sneakers",
     subtitle: "Vision Alta Men's Shoes Size (All Colours)",
     price: 1500,
@@ -146,7 +147,20 @@ export default function Cart() {
 
         {/* Bottom Button */}
         <View style={styles.bottomButton}>
-          <TouchableOpacity style={styles.checkoutButton}>
+          <TouchableOpacity 
+            style={styles.checkoutButton}
+            onPress={() => router.push({
+              pathname: "/(screens)/shopping-bag",
+              params: {
+                id: cartItem.id,
+                title: cartItem.title,
+                subtitle: cartItem.subtitle,
+                price: cartItem.price,
+                image: cartItem.image,
+                size: cartItem.size,
+              }
+            })}
+          >
             <Text style={styles.checkoutText}>Place Order</Text>
           </TouchableOpacity>
         </View>

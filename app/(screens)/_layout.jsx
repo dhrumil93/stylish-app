@@ -55,6 +55,12 @@ export default function ScreensLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen 
+        name="shopping-bag/index"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 } 
