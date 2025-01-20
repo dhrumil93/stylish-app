@@ -31,7 +31,7 @@ export default function ShoppingBag() {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Shopping Bag</Text>
         <TouchableOpacity>
-          <AntDesign name="heart" size={24} color="black" />
+          <AntDesign name="hearto" size={24} color="#FF4B6E" />
         </TouchableOpacity>
       </View>
 
