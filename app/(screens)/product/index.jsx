@@ -66,6 +66,7 @@ export default function ProductDetail() {
                 setCurrentImageIndex(slide);
               }
             }}
+            scrollEventThrottle={16}
           >
             {images.map((image, index) => (
               <Image

@@ -264,7 +264,7 @@ export default function Trending() {
             <Text style={styles.navText}>Wishlist</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.navItem, styles.cartButton]}>
+          <TouchableOpacity style={[styles.navItem, styles.cartButton]} onPress={() => router.push('/(screens)/cart')}>
             <View style={styles.cartIconContainer}>
               <Feather name="shopping-cart" size={24} color="#FFFFFF" />
             </View>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -23,12 +23,48 @@ import { LinearGradient } from "expo-linear-gradient";
 const { width } = Dimensions.get("window");
 
 const categories = [
-  { id: 1, name: "Beauty", icon: {uri: "https://media.istockphoto.com/id/1296705483/photo/make-up-products-prsented-on-white-podiums-on-pink-pastel-background.jpg?s=2048x2048&w=is&k=20&c=GQEoBXmHX4kUlZCB0BwPvRqbKu0Bfi1yB8WvA_fG59w="} },
-  { id: 2, name: "Fashion", icon: {uri: "https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}},
-  { id: 3, name: "Kids", icon: {uri: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} },
-  { id: 4, name: "Mens", icon: {uri: "https://plus.unsplash.com/premium_photo-1669688174106-05f7334f1e64?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}},
-  { id: 5, name: "Womens", icon: {uri: "https://images.unsplash.com/photo-1728280098871-bfa0fafc17bf?q=80&w=2060&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} },
-  { id: 6, name: "Shoes", icon: {uri: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} },
+  {
+    id: 1,
+    name: "Beauty",
+    icon: {
+      uri: "https://media.istockphoto.com/id/1296705483/photo/make-up-products-prsented-on-white-podiums-on-pink-pastel-background.jpg?s=2048x2048&w=is&k=20&c=GQEoBXmHX4kUlZCB0BwPvRqbKu0Bfi1yB8WvA_fG59w=",
+    },
+  },
+  {
+    id: 2,
+    name: "Fashion",
+    icon: {
+      uri: "https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  },
+  {
+    id: 3,
+    name: "Kids",
+    icon: {
+      uri: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  },
+  {
+    id: 4,
+    name: "Mens",
+    icon: {
+      uri: "https://plus.unsplash.com/premium_photo-1669688174106-05f7334f1e64?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  },
+  {
+    id: 5,
+    name: "Womens",
+    icon: {
+      uri: "https://images.unsplash.com/photo-1728280098871-bfa0fafc17bf?q=80&w=2060&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  },
+  {
+    id: 6,
+    name: "Shoes",
+    icon: {
+      uri: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  },
 ];
 
 const bannerData = [
@@ -212,7 +248,9 @@ const trendingProducts = [
 const newArrivals = {
   title: "New Arrivals",
   subtitle: "Summer' 25 Collections",
-  image: { uri :"https://images.unsplash.com/photo-1520006403909-838d6b92c22e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"},
+  image: {
+    uri: "https://images.unsplash.com/photo-1520006403909-838d6b92c22e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
 };
 
 const sponsored = {
@@ -224,6 +262,7 @@ const sponsored = {
 
 export default function Home() {
   const router = useRouter();
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -312,6 +351,15 @@ export default function Home() {
               horizontal
               pagingEnabled
               showsHorizontalScrollIndicator={false}
+              onScroll={({ nativeEvent }) => {
+                const slide = Math.ceil(
+                  nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
+                );
+                if (currentBannerIndex !== slide) {
+                  setCurrentBannerIndex(slide);
+                }
+              }}
+              scrollEventThrottle={16}
             >
               {bannerData.map((banner) => (
                 <View key={banner.id} style={styles.bannerSlide}>
@@ -322,19 +370,11 @@ export default function Home() {
                   >
                     <View style={styles.bannerContent}>
                       <Text style={styles.bannerTitle}>{banner.title}</Text>
-                      <Text style={styles.bannerSubtitle}>
-                        {banner.subtitle}
-                      </Text>
-                      <Text style={styles.bannerDescription}>
-                        {banner.description}
-                      </Text>
+                      <Text style={styles.bannerSubtitle}>{banner.subtitle}</Text>
+                      <Text style={styles.bannerDescription}>{banner.description}</Text>
                       <TouchableOpacity style={styles.shopNowButton}>
                         <Text style={styles.shopNowText}>Shop Now</Text>
-                        <AntDesign
-                          name="arrowright"
-                          size={16}
-                          color="#FFFFFF"
-                        />
+                        <AntDesign name="arrowright" size={16} color="#FFFFFF" />
                       </TouchableOpacity>
                     </View>
                   </ImageBackground>
@@ -347,7 +387,7 @@ export default function Home() {
                   key={index}
                   style={[
                     styles.dot,
-                    index === 0 && styles.activeDot, // Add state if multiple banners
+                    index === currentBannerIndex && styles.activeDot,
                   ]}
                 />
               ))}
@@ -588,7 +628,10 @@ export default function Home() {
             <Text style={[styles.navText]}>Wishlist</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.navItem, styles.cartButton]}>
+          <TouchableOpacity
+            style={[styles.navItem, styles.cartButton]}
+            onPress={() => router.push("/(screens)/cart")}
+          >
             <View style={styles.cartIconContainer}>
               <Feather name="shopping-cart" size={24} color="#FFF" />
             </View>
@@ -762,13 +805,13 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#C4C4C4',
     marginHorizontal: 4,
-    opacity: 0.5,
   },
   activeDot: {
-    opacity: 0.5,
-    width: 16,
+    backgroundColor: '#C4C4C4',
+    width: 24,
+    borderRadius: 4,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -842,7 +885,7 @@ const styles = StyleSheet.create({
     color: "#FF4B6E",
   },
   dealContainer: {
-    backgroundColor: "#4A8CFF",
+    backgroundColor: "#4392F9",
     marginHorizontal: 16,
     borderRadius: 12,
     padding: 16,
@@ -891,7 +934,7 @@ const styles = StyleSheet.create({
   },
   productsScrollContainer: {
     paddingHorizontal: 16,
-    paddingRight:2,
+    paddingRight: 2,
   },
   productCard: {
     width: width * 0.6,
@@ -1095,7 +1138,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   trendingContainer: {
-    backgroundColor: "#FD6E87",
+    backgroundColor: "#FF4B6E",
     marginHorizontal: 16,
     borderRadius: 12,
     padding: 16,
@@ -1145,7 +1188,7 @@ const styles = StyleSheet.create({
   },
   trendingScrollContainer: {
     paddingHorizontal: 16,
-    paddingRight:2,
+    paddingRight: 2,
     paddingTop: 16,
   },
   trendingProductCard: {

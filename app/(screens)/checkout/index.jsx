@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,12 +8,38 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { AntDesign, Feather } from '@expo/vector-icons';
+} from "react-native";
+import { useRouter } from "expo-router";
+import { AntDesign, Feather } from "@expo/vector-icons";
 
 export default function Checkout() {
   const router = useRouter();
+
+  // Add state for all form fields
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "aashifa@gmail.com",
+    mobile: "",
+    gender: "",
+    dateOfBirth: "",
+    password: "••••••••••",
+    pincode: "450116",
+    address: "216 St Paul's Rd",
+    city: "London",
+    state: "N1 2LL",
+    country: "United Kingdom",
+    bankAccount: "204356XXXXXXX",
+    accountHolder: "Abhiraj Sisodiya",
+    ifscCode: "SBIN00428",
+  });
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -21,14 +47,9 @@ export default function Checkout() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Image 
-              source={{ 
-                uri: 'https://cdn-icons-png.flaticon.com/512/2732/2732652.png'
-              }}
-              style={[styles.backIcon, { tintColor: '#000' }]}
-            />
+            <AntDesign name="left" size={24} color="black" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Checkout</Text>
+          <Text style={styles.headerTitle}>Profile Details</Text>
           <View style={{ width: 24 }} />
         </View>
 
@@ -36,38 +57,33 @@ export default function Checkout() {
           {/* Profile Section */}
           <View style={styles.profileSection}>
             <Image
-              source={
-                require("../../../assets/images/profile.png")
-              }
+              source={require("../../../assets/images/profile.png")}
               style={styles.profileImage}
             />
-            <View style={styles.verifiedBadge}>
-              <Image 
-                source={{ 
-                  uri: 'https://cdn-icons-png.flaticon.com/512/7595/7595571.png'
-                }}
-                style={[styles.verifiedIcon, { tintColor: '#4392F9' }]}
-              />
-            </View>
+            <TouchableOpacity style={styles.editProfileButton}>
+              <Feather name="edit" size={16} color="#FFF" />
+            </TouchableOpacity>
           </View>
 
           {/* Personal Details */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Personal Details</Text>
+
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Email Address</Text>
               <TextInput
-                style={styles.input}
-                value="aashifa@gmail.com"
+                style={[styles.input, styles.disabledInput]}
+                value={formData.email}
                 editable={false}
               />
             </View>
+
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Password</Text>
               <View style={styles.passwordContainer}>
                 <TextInput
-                  style={styles.input}
-                  value="••••••••••"
+                  style={[styles.input, styles.disabledInput]}
+                  value={formData.password}
                   editable={false}
                   secureTextEntry
                 />
@@ -78,42 +94,49 @@ export default function Checkout() {
             </View>
           </View>
 
-          {/* Business Address Details */}
+          {/* Address Details */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Business Address Details</Text>
+            <Text style={styles.sectionTitle}>Address Details</Text>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Pincode</Text>
               <TextInput
                 style={styles.input}
-                value="450116"
+                value={formData.pincode}
+                onChangeText={(value) => handleChange("pincode", value)}
+                keyboardType="numeric"
               />
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Address</Text>
               <TextInput
                 style={styles.input}
-                value="216 St Paul's Rd,"
+                value={formData.address}
+                onChangeText={(value) => handleChange("address", value)}
+                multiline
               />
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>City</Text>
               <TextInput
                 style={styles.input}
-                value="London"
+                value={formData.city}
+                onChangeText={(value) => handleChange("city", value)}
               />
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>State</Text>
               <TextInput
                 style={styles.input}
-                value="N1 2LL,"
+                value={formData.state}
+                onChangeText={(value) => handleChange("state", value)}
               />
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Country</Text>
               <TextInput
                 style={styles.input}
-                value="United Kingdom"
+                value={formData.country}
+                onChangeText={(value) => handleChange("country", value)}
               />
             </View>
           </View>
@@ -125,28 +148,32 @@ export default function Checkout() {
               <Text style={styles.label}>Bank Account Number</Text>
               <TextInput
                 style={styles.input}
-                value="204356XXXXXXX"
+                value={formData.bankAccount}
+                onChangeText={(value) => handleChange("bankAccount", value)}
+                keyboardType="numeric"
               />
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Account Holder's Name</Text>
               <TextInput
                 style={styles.input}
-                value="Abhiraj Sisodiya"
+                value={formData.accountHolder}
+                onChangeText={(value) => handleChange("accountHolder", value)}
               />
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>IFSC Code</Text>
               <TextInput
                 style={styles.input}
-                value="SBIN00428"
+                value={formData.ifscCode}
+                onChangeText={(value) => handleChange("ifscCode", value)}
               />
             </View>
           </View>
 
           {/* Save Button */}
           <TouchableOpacity style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Save</Text>
+            <Text style={styles.saveButtonText}>Save Changes</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -157,45 +184,48 @@ export default function Checkout() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   container: {
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F5',
+    borderBottomColor: "#F5F5F5",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
   },
   profileSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 24,
-    position: 'relative',
+    position: "relative",
   },
   profileImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#F5F5F5',
-    resizeMode: 'cover',
+    backgroundColor: "#F5F5F5",
+    resizeMode: "cover",
   },
-  verifiedBadge: {
-    position: 'absolute',
+  editProfileButton: {
+    position: "absolute",
     bottom: 0,
-    right: '42%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 2,
-    shadowColor: '#000',
+    right: "42%",
+    backgroundColor: "#F83758",
+    borderRadius: 20,
+    width: 32,
+    height: 32,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -206,12 +236,12 @@ const styles = StyleSheet.create({
   },
   section: {
     paddingHorizontal: 16,
-    marginBottom: 24,
+    marginBottom: 18,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
     marginBottom: 16,
   },
   inputGroup: {
@@ -219,38 +249,38 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 12,
     fontSize: 14,
-    color: '#000',
-    backgroundColor: '#FFFFFF',
+    color: "#000",
+    backgroundColor: "#FFFFFF",
   },
   passwordContainer: {
-    position: 'relative',
+    position: "relative",
   },
   changePassword: {
-    position: 'absolute',
+    position: "absolute",
     right: 12,
     top: -35,
-    color: '#F83758',
+    color: "#F83758",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   saveButton: {
-    backgroundColor: '#F83758',
+    backgroundColor: "#F83758",
     marginHorizontal: 16,
-    marginVertical: 24,
-    paddingVertical: 16,
+    marginVertical: 18,
+    paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
-    shadowColor: '#F83758',
+    alignItems: "center",
+    shadowColor: "#F83758",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -260,18 +290,12 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   saveButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
-  backIcon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
+  disabledInput: {
+    backgroundColor: "#F5F5F5",
+    color: "#666",
   },
-  verifiedIcon: {
-    width: 16,
-    height: 16,
-    resizeMode: 'contain',
-  },
-}); 
+});
