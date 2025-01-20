@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,21 +7,21 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { AntDesign, Feather } from '@expo/vector-icons';
+} from "react-native";
+import { useRouter } from "expo-router";
+import { AntDesign, Feather } from "@expo/vector-icons";
 
 export default function Cart() {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
-  
+
   const increaseQuantity = () => {
-    setQuantity(prev => prev + 1);
+    setQuantity((prev) => prev + 1);
   };
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
-      setQuantity(prev => prev - 1);
+      setQuantity((prev) => prev - 1);
     }
   };
 
@@ -31,7 +31,8 @@ export default function Cart() {
     price: 1500,
     originalPrice: 2999,
     size: "7 UK",
-    image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80"
+    image:
+      "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80",
   };
 
   const address = {
@@ -40,7 +41,7 @@ export default function Cart() {
     city: "London",
     state: "N1 2LL",
     country: "United Kingdom",
-    pincode: "450116"
+    pincode: "450116",
   };
 
   const totalPrice = cartItem.price * quantity;
@@ -58,29 +59,58 @@ export default function Cart() {
           <Text style={styles.headerTitle}>Shopping Cart</Text>
           <View style={{ width: 24 }} />
         </View>
-
-        <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Delivery Address */}
+        <View style={styles.addressSection}>
+          <Text style={styles.sectionTitle}>Delivery Address</Text>
+          <View style={styles.addressCard}>
+            <View style={styles.addressHeader}>
+              <Feather name="map-pin" size={20} color="#666" />
+              <Text style={styles.addressType}>Home</Text>
+              <TouchableOpacity style={styles.changeButton}>
+                <Text style={styles.changeText}>Change</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.name}>{address.name}</Text>
+            <Text style={styles.address}>
+              {address.street}, {address.city},{"\n"}
+              {address.state}, {address.country} - {address.pincode}
+            </Text>
+          </View>
+        </View>
+        <ScrollView showsVerticalScrollIndicator={true}>
           {/* Cart Item */}
           <View style={styles.cartItem}>
-            <Image source={{ uri: cartItem.image }} style={styles.productImage} />
+            <Image
+              source={{ uri: cartItem.image }}
+              style={styles.productImage}
+            />
             <View style={styles.productInfo}>
               <Text style={styles.productTitle}>{cartItem.title}</Text>
               <Text style={styles.productSubtitle}>{cartItem.subtitle}</Text>
               <Text style={styles.size}>Size: {cartItem.size}</Text>
               <View style={styles.priceContainer}>
                 <Text style={styles.price}>₹{cartItem.price}</Text>
-                <Text style={styles.originalPrice}>₹{cartItem.originalPrice}</Text>
+                <Text style={styles.originalPrice}>
+                  ₹{cartItem.originalPrice}
+                </Text>
                 <Text style={styles.discount}>50% Off</Text>
               </View>
               <View style={styles.quantityContainer}>
-                <TouchableOpacity 
-                  style={[styles.quantityButton, quantity === 1 && styles.quantityButtonDisabled]}
+                <TouchableOpacity
+                  style={[
+                    styles.quantityButton,
+                    quantity === 1 && styles.quantityButtonDisabled,
+                  ]}
                   onPress={decreaseQuantity}
                 >
-                  <AntDesign name="minus" size={20} color={quantity === 1 ? "#CCC" : "#666"} />
+                  <AntDesign
+                    name="minus"
+                    size={20}
+                    color={quantity === 1 ? "#CCC" : "#666"}
+                  />
                 </TouchableOpacity>
                 <Text style={styles.quantity}>{quantity}</Text>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.quantityButton}
                   onPress={increaseQuantity}
                 >
@@ -90,30 +120,13 @@ export default function Cart() {
             </View>
           </View>
 
-          {/* Delivery Address */}
-          <View style={styles.addressSection}>
-            <Text style={styles.sectionTitle}>Delivery Address</Text>
-            <View style={styles.addressCard}>
-              <View style={styles.addressHeader}>
-                <Feather name="map-pin" size={20} color="#666" />
-                <Text style={styles.addressType}>Home</Text>
-                <TouchableOpacity style={styles.changeButton}>
-                  <Text style={styles.changeText}>Change</Text>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.name}>{address.name}</Text>
-              <Text style={styles.address}>
-                {address.street}, {address.city},{'\n'}
-                {address.state}, {address.country} - {address.pincode}
-              </Text>
-            </View>
-          </View>
-
           {/* Price Details */}
           <View style={styles.priceDetails}>
             <Text style={styles.sectionTitle}>Price Details</Text>
             <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Price ({quantity} item{quantity > 1 ? 's' : ''})</Text>
+              <Text style={styles.priceLabel}>
+                Price ({quantity} item{quantity > 1 ? "s" : ""})
+              </Text>
               <Text style={styles.priceValue}>₹{totalOriginalPrice}</Text>
             </View>
             <View style={styles.priceRow}>
@@ -145,30 +158,30 @@ export default function Cart() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   container: {
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F5',
+    borderBottomColor: "#F5F5F5",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
   },
   cartItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F5',
+    borderBottomColor: "#F5F5F5",
   },
   productImage: {
     width: 100,
@@ -181,165 +194,165 @@ const styles = StyleSheet.create({
   },
   productTitle: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#000',
+    fontWeight: "500",
+    color: "#000",
     marginBottom: 4,
   },
   productSubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginBottom: 8,
   },
   size: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginBottom: 8,
   },
   priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
   },
   price: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
     marginRight: 8,
   },
   originalPrice: {
     fontSize: 14,
-    color: '#666',
-    textDecorationLine: 'line-through',
+    color: "#666",
+    textDecorationLine: "line-through",
     marginRight: 8,
   },
   discount: {
     fontSize: 14,
-    color: '#00A36C',
-    fontWeight: '500',
+    color: "#00A36C",
+    fontWeight: "500",
   },
   quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   quantityButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#E8E8E8',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: "#E8E8E8",
+    justifyContent: "center",
+    alignItems: "center",
   },
   quantityButtonDisabled: {
-    borderColor: '#EEE',
-    backgroundColor: '#F5F5F5',
+    borderColor: "#EEE",
+    backgroundColor: "#F5F5F5",
   },
   quantity: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginHorizontal: 16,
   },
   addressSection: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F5',
+    borderBottomColor: "#F5F5F5",
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
     marginBottom: 16,
   },
   addressCard: {
-    backgroundColor: '#F8F8F8',
+    backgroundColor: "#F8F8F8",
     borderRadius: 8,
     padding: 16,
   },
   addressHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
   },
   addressType: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 8,
   },
   changeButton: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
   changeText: {
-    color: '#F83758',
+    color: "#F83758",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   name: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 4,
   },
   address: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     lineHeight: 20,
   },
   priceDetails: {
     padding: 16,
   },
   priceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 12,
   },
   priceLabel: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   priceValue: {
     fontSize: 14,
-    color: '#000',
+    color: "#000",
   },
   discountValue: {
     fontSize: 14,
-    color: '#00A36C',
+    color: "#00A36C",
   },
   freeDelivery: {
     fontSize: 14,
-    color: '#00A36C',
-    fontWeight: '500',
+    color: "#00A36C",
+    fontWeight: "500",
   },
   totalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#F5F5F5',
+    borderTopColor: "#F5F5F5",
   },
   totalLabel: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
   },
   totalValue: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
   },
   bottomButton: {
     padding: 16,
     borderTopWidth: 1,
-    borderTopColor: '#F5F5F5',
+    borderTopColor: "#F5F5F5",
   },
   checkoutButton: {
-    backgroundColor: '#F83758',
+    backgroundColor: "#F83758",
     paddingVertical: 16,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   checkoutText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
-}); 
+});

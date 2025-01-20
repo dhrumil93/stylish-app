@@ -16,7 +16,7 @@ export default function Welcome() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background_welcome.png')}
+      source={{uri : "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}}
       style={styles.background}
       resizeMode="cover"
     >

@@ -23,28 +23,41 @@ import { LinearGradient } from "expo-linear-gradient";
 const { width } = Dimensions.get("window");
 
 const categories = [
-  { id: 1, name: "Beauty", icon: require("../../assets/images/beauty.png") },
-  { id: 2, name: "Fashion", icon: require("../../assets/images/fashion.png") },
-  { id: 3, name: "Kids", icon: require("../../assets/images/kids.png") },
-  { id: 4, name: "Mens", icon: require("../../assets/images/mens.png") },
-  { id: 5, name: "Womens", icon: require("../../assets/images/womens.png") },
-  { id: 6, name: "Shoes", icon: require("../../assets/images/shoes.png") },
+  { id: 1, name: "Beauty", icon: {uri: "https://media.istockphoto.com/id/1296705483/photo/make-up-products-prsented-on-white-podiums-on-pink-pastel-background.jpg?s=2048x2048&w=is&k=20&c=GQEoBXmHX4kUlZCB0BwPvRqbKu0Bfi1yB8WvA_fG59w="} },
+  { id: 2, name: "Fashion", icon: {uri: "https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}},
+  { id: 3, name: "Kids", icon: {uri: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} },
+  { id: 4, name: "Mens", icon: {uri: "https://plus.unsplash.com/premium_photo-1669688174106-05f7334f1e64?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}},
+  { id: 5, name: "Womens", icon: {uri: "https://images.unsplash.com/photo-1728280098871-bfa0fafc17bf?q=80&w=2060&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} },
+  { id: 6, name: "Shoes", icon: {uri: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} },
 ];
 
 const bannerData = [
   {
     id: 1,
     title: "50-40% OFF",
-    subtitle: "Now in (product)",
-    description: "All colours",
-    image: require("../../assets/images/banner.png"),
+    subtitle: "Now in Clothes",
+    description: "All Brands",
+    image: {
+      uri: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
   },
   {
     id: 2,
+    title: "FLAT 30% OFF",
+    subtitle: "Now in Watches",
+    description: "Titan,Fossil & many more",
+    image: {
+      uri: "https://media.istockphoto.com/id/976983930/photo/watch.jpg?s=1024x1024&w=is&k=20&c=2DCAsylEpxsfgd6wamXHVd2OgbnVu6FN_pTxAm5zr-Y=",
+    },
+  },
+  {
+    id: 3,
     title: "50-40% OFF",
-    subtitle: "Now in (product)",
-    description: "All colours",
-    image: require("../../assets/images/banner.png"),
+    subtitle: "Now in Shoes",
+    description: "On Nike,USPA & Many more",
+    image: {
+      uri: "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2012&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
   },
   // Add more banners if needed
 ];
@@ -63,7 +76,9 @@ const products = [
     discount: "40% Off",
     rating: 4,
     reviews: 56890,
-    image: { uri: "https://images.unsplash.com/photo-1612336307429-8a898d10e223?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1612336307429-8a898d10e223?w=800&q=80",
+    },
   },
   {
     id: 2,
@@ -74,7 +89,9 @@ const products = [
     discount: "50% Off",
     rating: 4,
     reviews: 344567,
-    image: { uri: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
+    },
   },
   {
     id: 3,
@@ -85,7 +102,9 @@ const products = [
     discount: "50% Off",
     rating: 4,
     reviews: 344567,
-    image: { uri: "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=800&q=80",
+    },
   },
   {
     id: 4,
@@ -96,7 +115,9 @@ const products = [
     discount: "50% Off",
     rating: 4.8,
     reviews: 54678,
-    image: { uri: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80",
+    },
   },
   {
     id: 5,
@@ -107,7 +128,9 @@ const products = [
     discount: "50% Off",
     rating: 4.3,
     reviews: 35684,
-    image: { uri: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&q=80",
+    },
   },
   {
     id: 6,
@@ -118,7 +141,9 @@ const products = [
     discount: "50% Off",
     rating: 4.4,
     reviews: 77156,
-    image: { uri: "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=800&q=80",
+    },
   },
   {
     id: 7,
@@ -129,9 +154,11 @@ const products = [
     discount: "50% Off",
     rating: 4.6,
     reviews: 523456,
-    image: { uri: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80",
+    },
   },
- ];
+];
 
 const specialOffer = {
   title: "Special Offers",
@@ -154,7 +181,9 @@ const trendingProducts = [
     price: 650,
     originalPrice: 1599,
     discount: "60% off",
-    image: { uri: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80",
+    },
   },
   {
     id: 2,
@@ -163,7 +192,9 @@ const trendingProducts = [
     price: 650,
     originalPrice: 1250,
     discount: "70% off",
-    image: { uri: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80",
+    },
   },
   {
     id: 3,
@@ -172,14 +203,16 @@ const trendingProducts = [
     price: 750,
     originalPrice: 1999,
     discount: "65% off",
-    image: { uri: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80" }
+    image: {
+      uri: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80",
+    },
   },
 ];
 
 const newArrivals = {
   title: "New Arrivals",
   subtitle: "Summer' 25 Collections",
-  image: require("../../assets/images/summer_sale.png"),
+  image: { uri :"https://images.unsplash.com/photo-1520006403909-838d6b92c22e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"},
 };
 
 const sponsored = {
@@ -212,7 +245,7 @@ export default function Home() {
             />
             <Text style={styles.logoText}>Stylish</Text>
           </View>
-          <TouchableOpacity onPress={() => router.push('/(screens)/checkout/')}>
+          <TouchableOpacity onPress={() => router.push("/(screens)/checkout/")}>
             <Image
               source={require("../../assets/images/profile.png")}
               style={styles.profileIcon}
@@ -547,7 +580,7 @@ export default function Home() {
             onPress={() => router.push("/(screens)/home")}
           >
             <AntDesign name="home" size={24} color="#FF4B6E" />
-            <Text style={[styles.navText,styles.activeNavText]}>Home</Text>
+            <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
@@ -858,6 +891,7 @@ const styles = StyleSheet.create({
   },
   productsScrollContainer: {
     paddingHorizontal: 16,
+    paddingRight:2,
   },
   productCard: {
     width: width * 0.6,
@@ -877,9 +911,9 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   productImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     borderRadius: 8,
   },
   productInfo: {
@@ -1111,6 +1145,7 @@ const styles = StyleSheet.create({
   },
   trendingScrollContainer: {
     paddingHorizontal: 16,
+    paddingRight:2,
     paddingTop: 16,
   },
   trendingProductCard: {
@@ -1121,9 +1156,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   trendingProductImage: {
-    width: '100%',
+    width: "100%",
     height: 150,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     borderRadius: 8,
   },
   trendingProductInfo: {
