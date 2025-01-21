@@ -147,7 +147,7 @@ export default function Trending() {
               source={require("../../../assets/images/group34010.png")}
               style={styles.logoIcon}
             />
-            <Text style={styles.logoText}>Stylish</Text>
+            <Text style={styles.logoText}>Stylo</Text>
           </View>
           <TouchableOpacity onPress={() => router.push('/(screens)/checkout/')}>
             <Image
@@ -313,8 +313,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   logoIcon: {
-    width: 24,
-    height: 24,
+    width: 34,
+    height: 34,
     resizeMode: "contain",
   },
   logoText: {

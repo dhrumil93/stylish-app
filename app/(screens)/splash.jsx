@@ -44,11 +44,7 @@ export default function Splash() {
           style={styles.logoIcon}
           resizeMode="contain"
         />
-        <Image 
-          source={require('../../assets/images/stylish.png')}
-          style={styles.logoText}
-          resizeMode="contain"
-        />
+        <Text style={styles.logoText}>Stylo</Text>
       </Animated.View>
     </View>
   );
@@ -71,7 +67,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   logoText: {
-    width: width * 0.5,
-    height: width * 0.15,
-  }
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#4392F9",
+  },
 });

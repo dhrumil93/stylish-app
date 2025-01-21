@@ -148,7 +148,12 @@ export default function ShoppingBag() {
         </View>
         <TouchableOpacity
           style={styles.paymentButton}
-          onPress={() => router.push("/(screens)/checkout")}
+          onPress={() => router.push({
+            pathname: "/(screens)/payment",
+            params: {
+              amount: orderAmount.toFixed(2)
+            }
+          })}
         >
           <Text style={styles.paymentButtonText}>Proceed to Payment</Text>
         </TouchableOpacity>

@@ -61,6 +61,18 @@ export default function ScreensLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen 
+        name="payment/index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen 
+        name="order-confirmation/index"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 } 
