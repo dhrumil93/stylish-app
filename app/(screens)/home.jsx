@@ -10,6 +10,8 @@ import {
   Dimensions,
   ImageBackground,
   SafeAreaView,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import {
@@ -265,390 +267,406 @@ export default function Home() {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity>
-            <Image
-              source={{
-                uri: "https://cdn-icons-png.flaticon.com/128/7216/7216128.png",
-              }}
-              style={[styles.menuIcon, { tintColor: "#000" }]}
-            />
-          </TouchableOpacity>
-          <View style={styles.logoContainer}>
-            <Image
-              source={require("../../assets/images/group34010.png")}
-              style={styles.logoIcon}
-            />
-            <Text style={styles.logoText}>Stylo</Text>
-          </View>
-          <TouchableOpacity onPress={() => router.push("/(screens)/checkout/")}>
-            <Image
-              source={require("../../assets/images/profile.png")}
-              style={styles.profileIcon}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: 100,
-          }}
-        >
-          {/* Search Bar */}
-          <View style={styles.searchContainer}>
-            <Image
-              source={{
-                uri: "https://cdn-icons-png.flaticon.com/128/149/149852.png",
-              }}
-              style={[styles.searchIcon, { tintColor: "#666" }]}
-            />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search any Product..."
-              placeholderTextColor="#666"
-            />
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <SafeAreaView style={[styles.safeArea, {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }]}>
+        <View style={styles.container}>
+          {/* Header */}
+          <View style={styles.header}>
             <TouchableOpacity>
               <Image
                 source={{
-                  uri: "https://cdn-icons-png.flaticon.com/128/709/709682.png",
+                  uri: "https://cdn-icons-png.flaticon.com/128/7216/7216128.png",
                 }}
-                style={[styles.micIcon, { tintColor: "#666" }]}
+                style={[styles.menuIcon, { tintColor: "#000" }]}
+              />
+            </TouchableOpacity>
+            <View style={styles.logoContainer}>
+              <Image
+                source={require("../../assets/images/group34010.png")}
+                style={styles.logoIcon}
+              />
+              <Text style={styles.logoText}>Stylo</Text>
+            </View>
+            <TouchableOpacity onPress={() => router.push("/(screens)/checkout/")}>
+              <Image
+                source={{
+                  uri: "https://images.unsplash.com/photo-1502323777036-f29e3972d82f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                }}
+                style={styles.profileIcon}
               />
             </TouchableOpacity>
           </View>
-          <View style={styles.subHeader}>
-            <Text style={styles.headerTitle}>All Featured</Text>
-            <View style={styles.headerRight}>
-              <TouchableOpacity style={styles.sortButton}>
-                <Text style={styles.sortText}>Sort</Text>
-                <Feather name="chevron-down" size={16} color="#000" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.filterButton}>
-                <Text style={styles.filterText}>Filter</Text>
-                <Feather name="filter" size={16} color="#000" />
-              </TouchableOpacity>
-            </View>
-          </View>
-          {/* Categories */}
-          <View style={styles.categoriesContainer}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {categories.map((category) => (
-                <TouchableOpacity key={category.id} style={styles.categoryItem}>
-                  <Image source={category.icon} style={styles.categoryIcon} />
-                  <Text style={styles.categoryText}>{category.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
 
-          {/* Banner Slider */}
-          <View style={styles.bannerContainer}>
-            <ScrollView
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              onScroll={({ nativeEvent }) => {
-                const slide = Math.ceil(
-                  nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
-                );
-                if (currentBannerIndex !== slide) {
-                  setCurrentBannerIndex(slide);
-                }
-              }}
-              scrollEventThrottle={16}
-            >
-              {bannerData.map((banner) => (
-                <View key={banner.id} style={styles.bannerSlide}>
-                  <ImageBackground
-                    source={banner.image}
-                    style={styles.bannerImage}
-                    imageStyle={{ borderRadius: 12 }}
-                  >
-                    <View style={styles.bannerContent}>
-                      <Text style={styles.bannerTitle}>{banner.title}</Text>
-                      <Text style={styles.bannerSubtitle}>{banner.subtitle}</Text>
-                      <Text style={styles.bannerDescription}>{banner.description}</Text>
-                      <TouchableOpacity style={styles.shopNowButton}>
-                        <Text style={styles.shopNowText}>Shop Now</Text>
-                        <AntDesign name="arrowright" size={16} color="#FFFFFF" />
-                      </TouchableOpacity>
-                    </View>
-                  </ImageBackground>
-                </View>
-              ))}
-            </ScrollView>
-            <View style={styles.paginationDots}>
-              {bannerData.map((_, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.dot,
-                    index === currentBannerIndex && styles.activeDot,
-                  ]}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: 100,
+            }}
+          >
+            {/* Search Bar */}
+            <View style={styles.searchContainer}>
+              <Image
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/128/149/149852.png",
+                }}
+                style={[styles.searchIcon, { tintColor: "#666" }]}
+              />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search any Product..."
+                placeholderTextColor="#666"
+              />
+              <TouchableOpacity>
+                <Image
+                  source={{
+                    uri: "https://cdn-icons-png.flaticon.com/128/709/709682.png",
+                  }}
+                  style={[styles.micIcon, { tintColor: "#666" }]}
                 />
-              ))}
-            </View>
-          </View>
-
-          {/* Deal of the Day */}
-          <View style={styles.dealContainer}>
-            <View style={styles.dealHeader}>
-              <View style={styles.dealTitleContainer}>
-                <Text style={styles.dealTitle}>Deal of the Day</Text>
-                <View style={styles.timerContainer}>
-                  <MaterialCommunityIcons
-                    name="clock-outline"
-                    size={16}
-                    color="#FFFFFF"
-                  />
-                  <Text style={styles.timerText}>
-                    {dealOfTheDay.timeRemaining} remaining
-                  </Text>
-                </View>
-              </View>
-              <TouchableOpacity style={styles.viewAllButton}>
-                <Text style={styles.viewAllText}>View all</Text>
-                <AntDesign name="arrowright" size={16} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
-          </View>
-
-          {/* Products Section */}
-          <View style={styles.productsSection}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.productsScrollContainer}
-            >
-              {products.map((product) => (
-                <TouchableOpacity key={product.id} style={styles.productCard}>
-                  <Image source={product.image} style={styles.productImage} />
-                  <View style={styles.productInfo}>
-                    <Text style={styles.productTitle} numberOfLines={1}>
-                      {product.title}
-                    </Text>
-                    <Text style={styles.productDescription} numberOfLines={2}>
-                      {product.description}
-                    </Text>
-                    <View style={styles.priceContainer}>
-                      <Text style={styles.price}>₹{product.price}</Text>
-                      <Text style={styles.originalPrice}>
-                        ₹{product.originalPrice}
-                      </Text>
-                      <Text style={styles.discount}>{product.discount}</Text>
-                    </View>
-                    <View style={styles.ratingContainer}>
-                      <View style={styles.stars}>
-                        {[...Array(5)].map((_, index) => (
-                          <AntDesign
-                            key={index}
-                            name={index < product.rating ? "star" : "staro"}
-                            size={16}
-                            color={index < product.rating ? "#FFD700" : "#666"}
-                          />
-                        ))}
-                      </View>
-                      <Text style={styles.reviews}>{product.reviews}</Text>
-                    </View>
-                  </View>
+            <View style={styles.subHeader}>
+              <Text style={styles.headerTitle}>All Featured</Text>
+              <View style={styles.headerRight}>
+                <TouchableOpacity style={styles.sortButton}>
+                  <Text style={styles.sortText}>Sort</Text>
+                  <Feather name="chevron-down" size={16} color="#000" />
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-
-          {/* Special Offers Section */}
-          <View style={styles.specialOfferContainer}>
-            <View style={styles.specialOfferContent}>
-              <Image
-                source={specialOffer.icon}
-                style={styles.specialOfferIcon}
-              />
-              <View style={styles.specialOfferTextContainer}>
-                <View style={styles.specialOfferHeader}>
-                  <Text style={styles.specialOfferTitle}>
-                    {specialOffer.title}
-                  </Text>
-                  <Text style={styles.specialOfferEmoji}>
-                    {specialOffer.emoji}
-                  </Text>
-                </View>
-                <Text style={styles.specialOfferDescription}>
-                  {specialOffer.description}
-                </Text>
+                <TouchableOpacity style={styles.filterButton}>
+                  <Text style={styles.filterText}>Filter</Text>
+                  <Feather name="filter" size={16} color="#000" />
+                </TouchableOpacity>
               </View>
             </View>
-          </View>
-
-          {/* Flat and Heels Section */}
-          <View style={styles.flatAndHeelsContainer}>
-            {/* Background with Gradient and Pattern */}
-            <View style={styles.heelsBackground}>
-              <LinearGradient
-                colors={["#EFAD18", "#F8D7B4"]}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 0.5 }}
-                style={styles.heelsGradient}
-              />
-              <Image
-                source={require("../../assets/images/horizontal_parts.png")}
-                style={styles.heelsPattern}
-              />
+            {/* Categories */}
+            <View style={styles.categoriesContainer}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {categories.map((category) => (
+                  <TouchableOpacity key={category.id} style={styles.categoryItem}>
+                    <Image source={category.icon} style={styles.categoryIcon} />
+                    <Text style={styles.categoryText}>{category.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
 
-            {/* Content */}
-            <View style={styles.heelsContent}>
-              <Image
-                source={require("../../assets/images/heels.png")}
-                style={styles.heelsImage}
-              />
-              <View style={styles.heelsTextContainer}>
-                <Text style={styles.heelsTitle}>Flat and Heels</Text>
-                <Text style={styles.heelsDescription}>
-                  Stand a chance to get rewarded
-                </Text>
-                <TouchableOpacity style={styles.visitButton}>
-                  <Text style={styles.visitButtonText}>Visit now</Text>
+            {/* Banner Slider */}
+            <View style={styles.bannerContainer}>
+              <ScrollView
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onScroll={({ nativeEvent }) => {
+                  const slide = Math.ceil(
+                    nativeEvent.contentOffset.x /
+                      nativeEvent.layoutMeasurement.width
+                  );
+                  if (currentBannerIndex !== slide) {
+                    setCurrentBannerIndex(slide);
+                  }
+                }}
+                scrollEventThrottle={16}
+              >
+                {bannerData.map((banner) => (
+                  <View key={banner.id} style={styles.bannerSlide}>
+                    <ImageBackground
+                      source={banner.image}
+                      style={styles.bannerImage}
+                      imageStyle={{ borderRadius: 12 }}
+                    >
+                      <View style={styles.bannerContent}>
+                        <Text style={styles.bannerTitle}>{banner.title}</Text>
+                        <Text style={styles.bannerSubtitle}>
+                          {banner.subtitle}
+                        </Text>
+                        <Text style={styles.bannerDescription}>
+                          {banner.description}
+                        </Text>
+                        <TouchableOpacity style={styles.shopNowButton}>
+                          <Text style={styles.shopNowText}>Shop Now</Text>
+                          <AntDesign
+                            name="arrowright"
+                            size={16}
+                            color="#FFFFFF"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
+                  </View>
+                ))}
+              </ScrollView>
+              <View style={styles.paginationDots}>
+                {bannerData.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.dot,
+                      index === currentBannerIndex && styles.activeDot,
+                    ]}
+                  />
+                ))}
+              </View>
+            </View>
+
+            {/* Deal of the Day */}
+            <View style={styles.dealContainer}>
+              <View style={styles.dealHeader}>
+                <View style={styles.dealTitleContainer}>
+                  <Text style={styles.dealTitle}>Deal of the Day</Text>
+                  <View style={styles.timerContainer}>
+                    <MaterialCommunityIcons
+                      name="clock-outline"
+                      size={16}
+                      color="#FFFFFF"
+                    />
+                    <Text style={styles.timerText}>
+                      {dealOfTheDay.timeRemaining} remaining
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity style={styles.viewAllButton}>
+                  <Text style={styles.viewAllText}>View all</Text>
                   <AntDesign name="arrowright" size={16} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
 
-          {/* Trending Products Section */}
-          <View style={styles.trendingContainer}>
-            {/* Header Section */}
-            <View style={styles.trendingHeader}>
-              <View style={styles.trendingTitleContainer}>
-                <Text style={styles.trendingTitle}>Trending Products</Text>
-                <View style={styles.dateContainer}>
-                  <MaterialCommunityIcons
-                    name="calendar"
-                    size={18}
-                    color="#FFFFFF"
-                  />
-                  <Text style={styles.dateText}>Last Date 29/02/22</Text>
+            {/* Products Section */}
+            <View style={styles.productsSection}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.productsScrollContainer}
+              >
+                {products.map((product) => (
+                  <TouchableOpacity key={product.id} style={styles.productCard}>
+                    <Image source={product.image} style={styles.productImage} />
+                    <View style={styles.productInfo}>
+                      <Text style={styles.productTitle} numberOfLines={1}>
+                        {product.title}
+                      </Text>
+                      <Text style={styles.productDescription} numberOfLines={2}>
+                        {product.description}
+                      </Text>
+                      <View style={styles.priceContainer}>
+                        <Text style={styles.price}>₹{product.price}</Text>
+                        <Text style={styles.originalPrice}>
+                          ₹{product.originalPrice}
+                        </Text>
+                        <Text style={styles.discount}>{product.discount}</Text>
+                      </View>
+                      <View style={styles.ratingContainer}>
+                        <View style={styles.stars}>
+                          {[...Array(5)].map((_, index) => (
+                            <AntDesign
+                              key={index}
+                              name={index < product.rating ? "star" : "staro"}
+                              size={16}
+                              color={index < product.rating ? "#FFD700" : "#666"}
+                            />
+                          ))}
+                        </View>
+                        <Text style={styles.reviews}>{product.reviews}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+
+            {/* Special Offers Section */}
+            <View style={styles.specialOfferContainer}>
+              <View style={styles.specialOfferContent}>
+                <Image
+                  source={specialOffer.icon}
+                  style={styles.specialOfferIcon}
+                />
+                <View style={styles.specialOfferTextContainer}>
+                  <View style={styles.specialOfferHeader}>
+                    <Text style={styles.specialOfferTitle}>
+                      {specialOffer.title}
+                    </Text>
+                    <Text style={styles.specialOfferEmoji}>
+                      {specialOffer.emoji}
+                    </Text>
+                  </View>
+                  <Text style={styles.specialOfferDescription}>
+                    {specialOffer.description}
+                  </Text>
                 </View>
               </View>
-              <TouchableOpacity
-                style={styles.viewAllButton}
-                onPress={() => router.push("/(screens)/trending/")}
-              >
-                <Text style={styles.viewAllText}>View all</Text>
-                <AntDesign name="arrowright" size={16} color="#FFFFFF" />
-              </TouchableOpacity>
             </View>
-          </View>
 
-          {/* Trending Products Cards */}
-          <View style={styles.trendingCardsContainer}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.trendingScrollContainer}
-            >
-              {trendingProducts.map((product) => (
-                <TouchableOpacity
-                  key={product.id}
-                  style={styles.trendingProductCard}
-                >
-                  <Image
-                    source={product.image}
-                    style={styles.trendingProductImage}
-                  />
-                  <View style={styles.trendingProductInfo}>
-                    <Text style={styles.trendingProductTitle} numberOfLines={2}>
-                      {product.title}
-                    </Text>
-                    <Text style={styles.trendingProductSubtitle}>
-                      {product.subtitle}
-                    </Text>
-                    <View style={styles.trendingPriceContainer}>
-                      <Text style={styles.trendingPrice}>₹{product.price}</Text>
-                      <Text style={styles.trendingOriginalPrice}>
-                        ₹{product.originalPrice}
-                      </Text>
-                      <Text style={styles.trendingDiscount}>
-                        {product.discount}
-                      </Text>
-                    </View>
+            {/* Flat and Heels Section */}
+            <View style={styles.flatAndHeelsContainer}>
+              {/* Background with Gradient and Pattern */}
+              <View style={styles.heelsBackground}>
+                <LinearGradient
+                  colors={["#EFAD18", "#F8D7B4"]}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 0.5 }}
+                  style={styles.heelsGradient}
+                />
+                <Image
+                  source={require("../../assets/images/horizontal_parts.png")}
+                  style={styles.heelsPattern}
+                />
+              </View>
+
+              {/* Content */}
+              <View style={styles.heelsContent}>
+                <Image
+                  source={require("../../assets/images/heels.png")}
+                  style={styles.heelsImage}
+                />
+                <View style={styles.heelsTextContainer}>
+                  <Text style={styles.heelsTitle}>Flat and Heels</Text>
+                  <Text style={styles.heelsDescription}>
+                    Stand a chance to get rewarded
+                  </Text>
+                  <TouchableOpacity style={styles.visitButton}>
+                    <Text style={styles.visitButtonText}>Visit now</Text>
+                    <AntDesign name="arrowright" size={16} color="#FFFFFF" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
+            {/* Trending Products Section */}
+            <View style={styles.trendingContainer}>
+              {/* Header Section */}
+              <View style={styles.trendingHeader}>
+                <View style={styles.trendingTitleContainer}>
+                  <Text style={styles.trendingTitle}>Trending Products</Text>
+                  <View style={styles.dateContainer}>
+                    <MaterialCommunityIcons
+                      name="calendar"
+                      size={18}
+                      color="#FFFFFF"
+                    />
+                    <Text style={styles.dateText}>Last Date 29/02/22</Text>
                   </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.viewAllButton}
+                  onPress={() => router.push("/(screens)/trending/")}
+                >
+                  <Text style={styles.viewAllText}>View all</Text>
+                  <AntDesign name="arrowright" size={16} color="#FFFFFF" />
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-
-          {/* New Arrivals Section */}
-          <View style={styles.newArrivalsContainer}>
-            <Image source={newArrivals.image} style={styles.newArrivalsImage} />
-            <View style={styles.newArrivalsContent}>
-              <View style={styles.newArrivalsTextContainer}>
-                <Text style={styles.newArrivalsTitle}>{newArrivals.title}</Text>
-                <Text style={styles.newArrivalsSubtitle}>
-                  {newArrivals.subtitle}
-                </Text>
               </View>
-              <TouchableOpacity style={styles.newArrivalsButton}>
-                <Text style={styles.newArrivalsButtonText}>View all</Text>
-                <AntDesign name="arrowright" size={16} color="#FFFFFF" />
+            </View>
+
+            {/* Trending Products Cards */}
+            <View style={styles.trendingCardsContainer}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.trendingScrollContainer}
+              >
+                {trendingProducts.map((product) => (
+                  <TouchableOpacity
+                    key={product.id}
+                    style={styles.trendingProductCard}
+                  >
+                    <Image
+                      source={product.image}
+                      style={styles.trendingProductImage}
+                    />
+                    <View style={styles.trendingProductInfo}>
+                      <Text style={styles.trendingProductTitle} numberOfLines={2}>
+                        {product.title}
+                      </Text>
+                      <Text style={styles.trendingProductSubtitle}>
+                        {product.subtitle}
+                      </Text>
+                      <View style={styles.trendingPriceContainer}>
+                        <Text style={styles.trendingPrice}>₹{product.price}</Text>
+                        <Text style={styles.trendingOriginalPrice}>
+                          ₹{product.originalPrice}
+                        </Text>
+                        <Text style={styles.trendingDiscount}>
+                          {product.discount}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+
+            {/* New Arrivals Section */}
+            <View style={styles.newArrivalsContainer}>
+              <Image source={newArrivals.image} style={styles.newArrivalsImage} />
+              <View style={styles.newArrivalsContent}>
+                <View style={styles.newArrivalsTextContainer}>
+                  <Text style={styles.newArrivalsTitle}>{newArrivals.title}</Text>
+                  <Text style={styles.newArrivalsSubtitle}>
+                    {newArrivals.subtitle}
+                  </Text>
+                </View>
+                <TouchableOpacity style={styles.newArrivalsButton}>
+                  <Text style={styles.newArrivalsButtonText}>View all</Text>
+                  <AntDesign name="arrowright" size={16} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Sponsored Section */}
+            <View style={styles.sponsoredContainer}>
+              <Text style={styles.sponsoredTitle}>{sponsored.title}</Text>
+              <TouchableOpacity style={styles.sponsoredCard}>
+                <Image source={sponsored.image} style={styles.sponsoredImage} />
+                <View style={styles.discountOverlay}>
+                  <Text style={styles.discountText}>{sponsored.discount}</Text>
+                </View>
+                <View style={styles.sponsoredFooter}>
+                  <Text style={styles.sponsoredLink}>{sponsored.link}</Text>
+                  <AntDesign name="right" size={20} color="#000" />
+                </View>
               </TouchableOpacity>
             </View>
-          </View>
+          </ScrollView>
+          {/* Bottom Navigation */}
+          <View style={styles.bottomNav}>
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => router.push("/(screens)/home")}
+            >
+              <AntDesign name="home" size={24} color="#FF4B6E" />
+              <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
+            </TouchableOpacity>
 
-          {/* Sponsored Section */}
-          <View style={styles.sponsoredContainer}>
-            <Text style={styles.sponsoredTitle}>{sponsored.title}</Text>
-            <TouchableOpacity style={styles.sponsoredCard}>
-              <Image source={sponsored.image} style={styles.sponsoredImage} />
-              <View style={styles.discountOverlay}>
-                <Text style={styles.discountText}>{sponsored.discount}</Text>
-              </View>
-              <View style={styles.sponsoredFooter}>
-                <Text style={styles.sponsoredLink}>{sponsored.link}</Text>
-                <AntDesign name="right" size={20} color="#000" />
+            <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
+              <AntDesign name="hearto" size={24} color="#000000" />
+              <Text style={[styles.navText]}>Wishlist</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.navItem, styles.cartButton]}
+              onPress={() => router.push("/(screens)/cart")}
+            >
+              <View style={styles.cartIconContainer}>
+                <Feather name="shopping-cart" size={24} color="#FFF" />
               </View>
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.navItem}>
+              <Feather name="search" size={24} color="#000000" />
+              <Text style={styles.navText}>Search</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.navItem}>
+              <Ionicons name="settings-outline" size={24} color="#000000" />
+              <Text style={styles.navText}>Setting</Text>
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-        {/* Bottom Navigation */}
-        <View style={styles.bottomNav}>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => router.push("/(screens)/home")}
-          >
-            <AntDesign name="home" size={24} color="#FF4B6E" />
-            <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
-            <AntDesign name="hearto" size={24} color="#000000" />
-            <Text style={[styles.navText]}>Wishlist</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.navItem, styles.cartButton]}
-            onPress={() => router.push("/(screens)/cart")}
-          >
-            <View style={styles.cartIconContainer}>
-              <Feather name="shopping-cart" size={24} color="#FFF" />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navItem}>
-            <Feather name="search" size={24} color="#000000" />
-            <Text style={styles.navText}>Search</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="settings-outline" size={24} color="#000000" />
-            <Text style={styles.navText}>Setting</Text>
-          </TouchableOpacity>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -805,11 +823,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#C4C4C4',
+    backgroundColor: "#C4C4C4",
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: '#C4C4C4',
+    backgroundColor: "#C4C4C4",
     width: 24,
     borderRadius: 4,
   },

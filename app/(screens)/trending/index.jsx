@@ -8,6 +8,8 @@ import {
   TextInput,
   Dimensions,
   SafeAreaView,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Feather, AntDesign, Ionicons } from "@expo/vector-icons";
@@ -130,35 +132,41 @@ export default function Trending() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity>
-            <Image
-              source={{
-                uri: "https://cdn-icons-png.flaticon.com/128/7216/7216128.png",
-              }}
-              style={[styles.menuIcon, { tintColor: "#000" }]}
-            />
-          </TouchableOpacity>
-          <View style={styles.logoContainer}>
-            <Image
-              source={require("../../../assets/images/group34010.png")}
-              style={styles.logoIcon}
-            />
-            <Text style={styles.logoText}>Stylo</Text>
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <SafeAreaView style={[styles.safeArea, { 
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
+      }]}>
+        <View style={styles.container}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity>
+              <Image
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/128/7216/7216128.png",
+                }}
+                style={[styles.menuIcon, { tintColor: "#000" }]}
+              />
+            </TouchableOpacity>
+            <View style={styles.logoContainer}>
+              <Image
+                source={require("../../../assets/images/group34010.png")}
+                style={styles.logoIcon}
+              />
+              <Text style={styles.logoText}>Stylo</Text>
+            </View>
+            <TouchableOpacity onPress={() => router.push("/(screens)/checkout/")}>
+              <Image
+                source={{
+                  uri: "https://images.unsplash.com/photo-1502323777036-f29e3972d82f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                }}
+                style={styles.profileIcon}
+              />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => router.push('/(screens)/checkout/')}>
-            <Image
-              source={require("../../../assets/images/profile.png")}
-              style={styles.profileIcon}
-            />
-          </TouchableOpacity>
-        </View>
 
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
+          {/* Search Bar */}
+          <View style={styles.searchContainer}>
             <Image
               source={{
                 uri: "https://cdn-icons-png.flaticon.com/128/149/149852.png",
@@ -179,109 +187,113 @@ export default function Trending() {
               />
             </TouchableOpacity>
           </View>
-          
-        {/* Sub Header */}
-        <View style={styles.subHeader}>
-          <Text style={styles.headerTitle}>52,082+ Items</Text>
-          <View style={styles.headerRight}>
-            <TouchableOpacity style={styles.sortButton}>
-              <Text style={styles.sortText}>Sort</Text>
-              <AntDesign name="down" size={14} color="#000" />
+
+          {/* Sub Header */}
+          <View style={styles.subHeader}>
+            <Text style={styles.headerTitle}>52,082+ Items</Text>
+            <View style={styles.headerRight}>
+              <TouchableOpacity style={styles.sortButton}>
+                <Text style={styles.sortText}>Sort</Text>
+                <AntDesign name="down" size={14} color="#000" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.filterButton}>
+                <Text style={styles.filterText}>Filter</Text>
+                <Image
+                  source={require("../../../assets/images/filter.png")}
+                  style={styles.filterIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Products Grid */}
+          <MasonryList
+            data={products}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+            contentContainerStyle={styles.productsContainer}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item: product }) => (
+              <TouchableOpacity
+                style={styles.productCard}
+                onPress={() => router.push("/product")}
+              >
+                <Image
+                  source={{ uri: product.image }}
+                  style={[
+                    styles.productImage,
+                    { height: product.id % 2 === 0 ? 180 : 220 }, // Alternate heights
+                  ]}
+                />
+                <View style={styles.productInfo}>
+                  <Text style={styles.productTitle} numberOfLines={1}>
+                    {product.title}
+                  </Text>
+                  <Text style={styles.productSubtitle} numberOfLines={2}>
+                    {product.subtitle}
+                  </Text>
+                  <Text style={styles.productPrice}>
+                    ₹{product.price.toLocaleString()}
+                  </Text>
+                  <View style={styles.ratingContainer}>
+                    <View style={styles.stars}>
+                      {[...Array(5)].map((_, index) => (
+                        <AntDesign
+                          key={index}
+                          name={
+                            index < Math.floor(product.rating) ? "star" : "staro"
+                          }
+                          size={12}
+                          color="#FFD700"
+                        />
+                      ))}
+                    </View>
+                    <Text style={styles.reviews}>
+                      {product.reviews.toLocaleString()}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+
+          {/* Bottom Navigation */}
+          <View style={styles.bottomNav}>
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => router.push("/(screens)/home")}
+            >
+              <AntDesign name="home" size={24} color="#FF4B6E" />
+              <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.filterButton}>
-              <Text style={styles.filterText}>Filter</Text>
-              <Image
-                source={require("../../../assets/images/filter.png")}
-                style={styles.filterIcon}
-              />
+
+            <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
+              <AntDesign name="hearto" size={24} color="#000000" />
+              <Text style={styles.navText}>Wishlist</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.navItem, styles.cartButton]}
+              onPress={() => router.push("/(screens)/cart")}
+            >
+              <View style={styles.cartIconContainer}>
+                <Feather name="shopping-cart" size={24} color="#FFFFFF" />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.navItem}>
+              <Feather name="search" size={24} color="#000000" />
+              <Text style={styles.navText}>Search</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.navItem}>
+              <Ionicons name="settings-outline" size={24} color="#000000" />
+              <Text style={styles.navText}>Setting</Text>
             </TouchableOpacity>
           </View>
         </View>
-
-        {/* Products Grid */}
-        <MasonryList
-          data={products}
-          keyExtractor={(item) => item.id.toString()}
-          numColumns={2}
-          contentContainerStyle={styles.productsContainer}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item: product }) => (
-            <TouchableOpacity 
-              style={styles.productCard}
-              onPress={() => router.push('/product')}
-            >
-              <Image
-                source={{ uri: product.image }}
-                style={[
-                  styles.productImage,
-                  { height: product.id % 2 === 0 ? 180 : 220 }, // Alternate heights
-                ]}
-              />
-              <View style={styles.productInfo}>
-                <Text style={styles.productTitle} numberOfLines={1}>
-                  {product.title}
-                </Text>
-                <Text style={styles.productSubtitle} numberOfLines={2}>
-                  {product.subtitle}
-                </Text>
-                <Text style={styles.productPrice}>
-                  ₹{product.price.toLocaleString()}
-                </Text>
-                <View style={styles.ratingContainer}>
-                  <View style={styles.stars}>
-                    {[...Array(5)].map((_, index) => (
-                      <AntDesign
-                        key={index}
-                        name={
-                          index < Math.floor(product.rating) ? "star" : "staro"
-                        }
-                        size={12}
-                        color="#FFD700"
-                      />
-                    ))}
-                  </View>
-                  <Text style={styles.reviews}>
-                    {product.reviews.toLocaleString()}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
-
-        {/* Bottom Navigation */}
-        <View style={styles.bottomNav}>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => router.push("/(screens)/home")}
-          >
-            <AntDesign name="home" size={24} color="#FF4B6E" />
-            <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
-            <AntDesign name="hearto" size={24} color="#000000" />
-            <Text style={styles.navText}>Wishlist</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.navItem, styles.cartButton]} onPress={() => router.push('/(screens)/cart')}>
-            <View style={styles.cartIconContainer}>
-              <Feather name="shopping-cart" size={24} color="#FFFFFF" />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navItem}>
-            <Feather name="search" size={24} color="#000000" />
-            <Text style={styles.navText}>Search</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="settings-outline" size={24} color="#000000" />
-            <Text style={styles.navText}>Setting</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }
 

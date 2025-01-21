@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
@@ -50,122 +52,127 @@ export default function Cart() {
   const totalDiscount = totalOriginalPrice - totalPrice;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <AntDesign name="left" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Shopping Cart</Text>
-          <View style={{ width: 24 }} />
-        </View>
-        {/* Delivery Address */}
-        <View style={styles.addressSection}>
-          <Text style={styles.sectionTitle}>Delivery Address</Text>
-          <View style={styles.addressCard}>
-            <View style={styles.addressHeader}>
-              <Feather name="map-pin" size={20} color="#666" />
-              <Text style={styles.addressType}>Home</Text>
-              <TouchableOpacity style={styles.changeButton}>
-                <Text style={styles.changeText}>Change</Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.name}>{address.name}</Text>
-            <Text style={styles.address}>
-              {address.street}, {address.city},{"\n"}
-              {address.state}, {address.country} - {address.pincode}
-            </Text>
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <SafeAreaView style={[styles.safeArea, {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }]}>
+        <View style={styles.container}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <AntDesign name="left" size={24} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Shopping Cart</Text>
+            <View style={{ width: 24 }} />
           </View>
-        </View>
-        <ScrollView showsVerticalScrollIndicator={true}>
-          {/* Cart Item */}
-          <View style={styles.cartItem}>
-            <Image
-              source={{ uri: cartItem.image }}
-              style={styles.productImage}
-            />
-            <View style={styles.productInfo}>
-              <Text style={styles.productTitle}>{cartItem.title}</Text>
-              <Text style={styles.productSubtitle}>{cartItem.subtitle}</Text>
-              <Text style={styles.size}>Size: {cartItem.size}</Text>
-              <View style={styles.priceContainer}>
-                <Text style={styles.price}>₹{cartItem.price}</Text>
-                <Text style={styles.originalPrice}>
-                  ₹{cartItem.originalPrice}
-                </Text>
-                <Text style={styles.discount}>50% Off</Text>
-              </View>
-              <View style={styles.quantityContainer}>
-                <TouchableOpacity
-                  style={[
-                    styles.quantityButton,
-                    quantity === 1 && styles.quantityButtonDisabled,
-                  ]}
-                  onPress={decreaseQuantity}
-                >
-                  <AntDesign
-                    name="minus"
-                    size={20}
-                    color={quantity === 1 ? "#CCC" : "#666"}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.quantity}>{quantity}</Text>
-                <TouchableOpacity
-                  style={styles.quantityButton}
-                  onPress={increaseQuantity}
-                >
-                  <AntDesign name="plus" size={20} color="#666" />
+          {/* Delivery Address */}
+          <View style={styles.addressSection}>
+            <Text style={styles.sectionTitle}>Delivery Address</Text>
+            <View style={styles.addressCard}>
+              <View style={styles.addressHeader}>
+                <Feather name="map-pin" size={20} color="#666" />
+                <Text style={styles.addressType}>Home</Text>
+                <TouchableOpacity style={styles.changeButton}>
+                  <Text style={styles.changeText}>Change</Text>
                 </TouchableOpacity>
               </View>
-            </View>
-          </View>
-
-          {/* Price Details */}
-          <View style={styles.priceDetails}>
-            <Text style={styles.sectionTitle}>Price Details</Text>
-            <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>
-                Price ({quantity} item{quantity > 1 ? "s" : ""})
+              <Text style={styles.name}>{address.name}</Text>
+              <Text style={styles.address}>
+                {address.street}, {address.city},{"\n"}
+                {address.state}, {address.country} - {address.pincode}
               </Text>
-              <Text style={styles.priceValue}>₹{totalOriginalPrice}</Text>
-            </View>
-            <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Discount</Text>
-              <Text style={styles.discountValue}>-₹{totalDiscount}</Text>
-            </View>
-            <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Delivery Charges</Text>
-              <Text style={styles.freeDelivery}>Free</Text>
-            </View>
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total Amount</Text>
-              <Text style={styles.totalValue}>₹{totalPrice}</Text>
             </View>
           </View>
-        </ScrollView>
+          <ScrollView showsVerticalScrollIndicator={true}>
+            {/* Cart Item */}
+            <View style={styles.cartItem}>
+              <Image
+                source={{ uri: cartItem.image }}
+                style={styles.productImage}
+              />
+              <View style={styles.productInfo}>
+                <Text style={styles.productTitle}>{cartItem.title}</Text>
+                <Text style={styles.productSubtitle}>{cartItem.subtitle}</Text>
+                <Text style={styles.size}>Size: {cartItem.size}</Text>
+                <View style={styles.priceContainer}>
+                  <Text style={styles.price}>₹{cartItem.price}</Text>
+                  <Text style={styles.originalPrice}>
+                    ₹{cartItem.originalPrice}
+                  </Text>
+                  <Text style={styles.discount}>50% Off</Text>
+                </View>
+                <View style={styles.quantityContainer}>
+                  <TouchableOpacity
+                    style={[
+                      styles.quantityButton,
+                      quantity === 1 && styles.quantityButtonDisabled,
+                    ]}
+                    onPress={decreaseQuantity}
+                  >
+                    <AntDesign
+                      name="minus"
+                      size={20}
+                      color={quantity === 1 ? "#CCC" : "#666"}
+                    />
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{quantity}</Text>
+                  <TouchableOpacity
+                    style={styles.quantityButton}
+                    onPress={increaseQuantity}
+                  >
+                    <AntDesign name="plus" size={20} color="#666" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
 
-        {/* Bottom Button */}
-        <View style={styles.bottomButton}>
-          <TouchableOpacity 
-            style={styles.checkoutButton}
-            onPress={() => router.push({
-              pathname: "/(screens)/shopping-bag",
-              params: {
-                id: cartItem.id,
-                title: cartItem.title,
-                subtitle: cartItem.subtitle,
-                price: cartItem.price,
-                image: cartItem.image,
-                size: cartItem.size,
-              }
-            })}
-          >
-            <Text style={styles.checkoutText}>Place Order</Text>
-          </TouchableOpacity>
+            {/* Price Details */}
+            <View style={styles.priceDetails}>
+              <Text style={styles.sectionTitle}>Price Details</Text>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>
+                  Price ({quantity} item{quantity > 1 ? "s" : ""})
+                </Text>
+                <Text style={styles.priceValue}>₹{totalOriginalPrice}</Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Discount</Text>
+                <Text style={styles.discountValue}>-₹{totalDiscount}</Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Delivery Charges</Text>
+                <Text style={styles.freeDelivery}>Free</Text>
+              </View>
+              <View style={styles.totalRow}>
+                <Text style={styles.totalLabel}>Total Amount</Text>
+                <Text style={styles.totalValue}>₹{totalPrice}</Text>
+              </View>
+            </View>
+          </ScrollView>
+
+          {/* Bottom Button */}
+          <View style={styles.bottomButton}>
+            <TouchableOpacity 
+              style={styles.checkoutButton}
+              onPress={() => router.push({
+                pathname: "/(screens)/shopping-bag",
+                params: {
+                  id: cartItem.id,
+                  title: cartItem.title,
+                  subtitle: cartItem.subtitle,
+                  price: cartItem.price,
+                  image: cartItem.image,
+                  size: cartItem.size,
+                }
+              })}
+            >
+              <Text style={styles.checkoutText}>Place Order</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }
 

@@ -8,6 +8,8 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
@@ -42,142 +44,149 @@ export default function Checkout() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <AntDesign name="left" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Profile Details</Text>
-          <View style={{ width: 24 }} />
-        </View>
-
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Profile Section */}
-          <View style={styles.profileSection}>
-            <Image
-              source={require("../../../assets/images/profile.png")}
-              style={styles.profileImage}
-            />
-            <TouchableOpacity style={styles.editProfileButton}>
-              <Feather name="edit" size={16} color="#FFF" />
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <SafeAreaView style={[styles.safeArea, {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }]}>
+        <View style={styles.container}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <AntDesign name="left" size={24} color="black" />
             </TouchableOpacity>
+            <Text style={styles.headerTitle}>Profile Details</Text>
+            <View style={{ width: 24 }} />
           </View>
 
-          {/* Personal Details */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Personal Details</Text>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email Address</Text>
-              <TextInput
-                style={[styles.input, styles.disabledInput]}
-                value={formData.email}
-                editable={false}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Profile Section */}
+            <View style={styles.profileSection}>
+              <Image
+                source={{
+                  uri: "https://images.unsplash.com/photo-1502323777036-f29e3972d82f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                }}
+                style={styles.profileImage}
               />
+              <TouchableOpacity style={styles.editProfileButton}>
+                <Feather name="edit" size={16} color="#FFF" />
+              </TouchableOpacity>
             </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
-              <View style={styles.passwordContainer}>
+            {/* Personal Details */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Personal Details</Text>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Email Address</Text>
                 <TextInput
                   style={[styles.input, styles.disabledInput]}
-                  value={formData.password}
+                  value={formData.email}
                   editable={false}
-                  secureTextEntry
                 />
-                <TouchableOpacity>
-                  <Text style={styles.changePassword}>Change Password</Text>
-                </TouchableOpacity>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={[styles.input, styles.disabledInput]}
+                    value={formData.password}
+                    editable={false}
+                    secureTextEntry
+                  />
+                  <TouchableOpacity>
+                    <Text style={styles.changePassword}>Change Password</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
 
-          {/* Address Details */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Address Details</Text>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Pincode</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.pincode}
-                onChangeText={(value) => handleChange("pincode", value)}
-                keyboardType="numeric"
-              />
+            {/* Address Details */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Address Details</Text>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Pincode</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.pincode}
+                  onChangeText={(value) => handleChange("pincode", value)}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Address</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.address}
+                  onChangeText={(value) => handleChange("address", value)}
+                  multiline
+                />
+              </View>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>City</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.city}
+                  onChangeText={(value) => handleChange("city", value)}
+                />
+              </View>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>State</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.state}
+                  onChangeText={(value) => handleChange("state", value)}
+                />
+              </View>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Country</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.country}
+                  onChangeText={(value) => handleChange("country", value)}
+                />
+              </View>
             </View>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Address</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.address}
-                onChangeText={(value) => handleChange("address", value)}
-                multiline
-              />
-            </View>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>City</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.city}
-                onChangeText={(value) => handleChange("city", value)}
-              />
-            </View>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>State</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.state}
-                onChangeText={(value) => handleChange("state", value)}
-              />
-            </View>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Country</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.country}
-                onChangeText={(value) => handleChange("country", value)}
-              />
-            </View>
-          </View>
 
-          {/* Bank Account Details */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Bank Account Details</Text>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Bank Account Number</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.bankAccount}
-                onChangeText={(value) => handleChange("bankAccount", value)}
-                keyboardType="numeric"
-              />
+            {/* Bank Account Details */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Bank Account Details</Text>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Bank Account Number</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.bankAccount}
+                  onChangeText={(value) => handleChange("bankAccount", value)}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Account Holder's Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.accountHolder}
+                  onChangeText={(value) => handleChange("accountHolder", value)}
+                />
+              </View>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>IFSC Code</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.ifscCode}
+                  onChangeText={(value) => handleChange("ifscCode", value)}
+                />
+              </View>
             </View>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Account Holder's Name</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.accountHolder}
-                onChangeText={(value) => handleChange("accountHolder", value)}
-              />
-            </View>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>IFSC Code</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.ifscCode}
-                onChangeText={(value) => handleChange("ifscCode", value)}
-              />
-            </View>
-          </View>
 
-          {/* Save Button */}
-          <TouchableOpacity style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Save Changes</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+            {/* Save Button */}
+            <TouchableOpacity style={styles.saveButton}>
+              <Text style={styles.saveButtonText}>Save Changes</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
 

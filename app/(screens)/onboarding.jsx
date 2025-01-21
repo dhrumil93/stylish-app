@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
@@ -39,43 +39,48 @@ export default function Onboarding() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.pageIndicator}>{`${currentIndex + 1}/${onboardingData.length}`}</Text>
-        <TouchableOpacity onPress={handleSkip}>
-          <Text style={styles.skipText}>Skip</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.content}>
-        <Image 
-          source={onboardingData[currentIndex].image}
-          style={styles.image}
-          resizeMode="contain"
-        />
-        <Text style={styles.title}>{onboardingData[currentIndex].title}</Text>
-        <Text style={styles.description}>{onboardingData[currentIndex].description}</Text>
-      </View>
-
-      <View style={styles.footer}>
-        <View style={styles.pagination}>
-          {onboardingData.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.paginationDot,
-                index === currentIndex && styles.paginationDotActive
-              ]}
-            />
-          ))}
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <View style={[styles.container, {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }]}>
+        <View style={styles.header}>
+          <Text style={styles.pageIndicator}>{`${currentIndex + 1}/${onboardingData.length}`}</Text>
+          <TouchableOpacity onPress={handleSkip}>
+            <Text style={styles.skipText}>Skip</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-          <Text style={styles.nextButtonText}>
-            {currentIndex === onboardingData.length - 1 ? 'Get Started' : 'Next'}
-          </Text>
-        </TouchableOpacity>
+
+        <View style={styles.content}>
+          <Image 
+            source={onboardingData[currentIndex].image}
+            style={styles.image}
+            resizeMode="contain"
+          />
+          <Text style={styles.title}>{onboardingData[currentIndex].title}</Text>
+          <Text style={styles.description}>{onboardingData[currentIndex].description}</Text>
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.pagination}>
+            {onboardingData.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.paginationDot,
+                  index === currentIndex && styles.paginationDotActive
+                ]}
+              />
+            ))}
+          </View>
+          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+            <Text style={styles.nextButtonText}>
+              {currentIndex === onboardingData.length - 1 ? 'Get Started' : 'Next'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 

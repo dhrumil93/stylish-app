@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Image, StyleSheet, Dimensions, Animated } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, Animated, StatusBar, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -37,16 +37,21 @@ export default function Splash() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.logoContainer, { opacity: fadeAnim }]}>
-        <Image 
-          source={require('../../assets/images/group34010.png')}
-          style={styles.logoIcon}
-          resizeMode="contain"
-        />
-        <Text style={styles.logoText}>Stylo</Text>
-      </Animated.View>
-    </View>
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <View style={[styles.container, {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }]}>
+        <Animated.View style={[styles.logoContainer, { opacity: fadeAnim }]}>
+          <Image 
+            source={require('../../assets/images/group34010.png')}
+            style={styles.logoIcon}
+            resizeMode="contain"
+          />
+          <Text style={styles.logoText}>Stylo</Text>
+        </Animated.View>
+      </View>
+    </>
   );
 }
 

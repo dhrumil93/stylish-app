@@ -8,6 +8,8 @@ import {
   ScrollView,
   SafeAreaView,
   Dimensions,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import {
@@ -35,310 +37,315 @@ export default function ProductDetail() {
   const sizes = ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"];
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Header - Fixed */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <AntDesign name="left" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cartButton}>
-            <AntDesign name="shoppingcart" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Scrollable Content */}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 90 }} // Add padding for bottom elements
-        >
-          {/* Image Slider */}
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={({ nativeEvent }) => {
-              const slide = Math.ceil(
-                nativeEvent.contentOffset.x /
-                  nativeEvent.layoutMeasurement.width
-              );
-              if (currentImageIndex !== slide) {
-                setCurrentImageIndex(slide);
-              }
-            }}
-            scrollEventThrottle={16}
-          >
-            {images.map((image, index) => (
-              <Image
-                key={index}
-                source={{ uri: image }}
-                style={styles.productImage}
-              />
-            ))}
-          </ScrollView>
-
-          {/* Pagination Dots */}
-          <View style={styles.pagination}>
-            {images.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.paginationDot,
-                  index === currentImageIndex && styles.paginationDotActive,
-                ]}
-              />
-            ))}
+    <>
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <SafeAreaView style={[styles.safeArea, { 
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
+      }]}>
+        <View style={styles.container}>
+          {/* Header - Fixed */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <AntDesign name="left" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cartButton}>
+              <AntDesign name="shoppingcart" size={24} color="black" />
+            </TouchableOpacity>
           </View>
 
-          {/* Product Info */}
-          <View style={styles.productInfo}>
-            <Text style={styles.productTitle}>Nike Sneakers</Text>
-            <Text style={styles.productSubtitle}>
-              Vision Alta Men's Shoes Size (All Colours)
-            </Text>
+          {/* Scrollable Content */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 90 }} // Add padding for bottom elements
+          >
+            {/* Image Slider */}
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={({ nativeEvent }) => {
+                const slide = Math.ceil(
+                  nativeEvent.contentOffset.x /
+                    nativeEvent.layoutMeasurement.width
+                );
+                if (currentImageIndex !== slide) {
+                  setCurrentImageIndex(slide);
+                }
+              }}
+              scrollEventThrottle={16}
+            >
+              {images.map((image, index) => (
+                <Image
+                  key={index}
+                  source={{ uri: image }}
+                  style={styles.productImage}
+                />
+              ))}
+            </ScrollView>
 
-            {/* Rating */}
-            <View style={styles.ratingContainer}>
-              <View style={styles.stars}>
-                {[...Array(5)].map((_, index) => (
-                  <AntDesign
-                    key={index}
-                    name={index < 4 ? "star" : "staro"}
-                    size={16}
-                    color="#FFD700"
-                  />
-                ))}
-              </View>
-              <Text style={styles.reviews}>56,890</Text>
-            </View>
-
-            {/* Price */}
-            <View style={styles.priceContainer}>
-              <Text style={styles.price}>₹1,500</Text>
-              <Text style={styles.originalPrice}>₹2,999</Text>
-              <Text style={styles.discount}>50% Off</Text>
-            </View>
-
-            {/* Size Selection */}
-            <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
-            <View style={styles.sizeContainer}>
-              {sizes.map((size) => (
-                <TouchableOpacity
-                  key={size}
+            {/* Pagination Dots */}
+            <View style={styles.pagination}>
+              {images.map((_, index) => (
+                <View
+                  key={index}
                   style={[
-                    styles.sizeButton,
-                    selectedSize === size && styles.selectedSizeButton,
+                    styles.paginationDot,
+                    index === currentImageIndex && styles.paginationDotActive,
                   ]}
-                  onPress={() => setSelectedSize(size)}
-                >
-                  <Text
-                    style={[
-                      styles.sizeText,
-                      selectedSize === size && styles.selectedSizeText,
-                    ]}
-                  >
-                    {size}
-                  </Text>
-                </TouchableOpacity>
+                />
               ))}
             </View>
 
-            {/* Product Details */}
-            <Text style={styles.detailsTitle}>Product Details</Text>
-            <Text style={styles.detailsText}>
-              Perhaps the most iconic sneaker of all-time, this original
-              "Chicago" 7 colorway is the cornerstone to any sneaker collection.
-              Made famous in 1985 by Michael Jordan, the shoe has stood the test
-              of time, becoming the most famous colorway of the Air Jordan 1.
-              This 2015 release saw the ...
-            </Text>
+            {/* Product Info */}
+            <View style={styles.productInfo}>
+              <Text style={styles.productTitle}>Nike Sneakers</Text>
+              <Text style={styles.productSubtitle}>
+                Vision Alta Men's Shoes Size (All Colours)
+              </Text>
 
-            {/* Store Info */}
-            <View style={styles.storeInfo}>
-              <View style={styles.storeInfoItem}>
-                <Feather name="map-pin" size={18} color="#666" />
-                <Text style={styles.storeText}>Nearest Store</Text>
+              {/* Rating */}
+              <View style={styles.ratingContainer}>
+                <View style={styles.stars}>
+                  {[...Array(5)].map((_, index) => (
+                    <AntDesign
+                      key={index}
+                      name={index < 4 ? "star" : "staro"}
+                      size={16}
+                      color="#FFD700"
+                    />
+                  ))}
+                </View>
+                <Text style={styles.reviews}>56,890</Text>
               </View>
-              <View style={styles.storeInfoItem}>
-                <MaterialCommunityIcons
-                  name="crown-outline"
-                  size={18}
-                  color="#F83758"
-                />
-                <Text style={styles.vipText}>VIP</Text>
+
+              {/* Price */}
+              <View style={styles.priceContainer}>
+                <Text style={styles.price}>₹1,500</Text>
+                <Text style={styles.originalPrice}>₹2,999</Text>
+                <Text style={styles.discount}>50% Off</Text>
               </View>
-              <View style={styles.storeInfoItem}>
-                <MaterialCommunityIcons
-                  name="refresh"
-                  size={18}
-                  color="#F83758"
-                />
-                <Text style={styles.returnText}>Return policy</Text>
+
+              {/* Size Selection */}
+              <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
+              <View style={styles.sizeContainer}>
+                {sizes.map((size) => (
+                  <TouchableOpacity
+                    key={size}
+                    style={[
+                      styles.sizeButton,
+                      selectedSize === size && styles.selectedSizeButton,
+                    ]}
+                    onPress={() => setSelectedSize(size)}
+                  >
+                    <Text
+                      style={[
+                        styles.sizeText,
+                        selectedSize === size && styles.selectedSizeText,
+                      ]}
+                    >
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Product Details */}
+              <Text style={styles.detailsTitle}>Product Details</Text>
+              <Text style={styles.detailsText}>
+                Perhaps the most iconic sneaker of all-time, this original
+                "Chicago" 7 colorway is the cornerstone to any sneaker collection.
+                Made famous in 1985 by Michael Jordan, the shoe has stood the test
+                of time, becoming the most famous colorway of the Air Jordan 1.
+                This 2015 release saw the ...
+              </Text>
+
+              {/* Store Info */}
+              <View style={styles.storeInfo}>
+                <View style={styles.storeInfoItem}>
+                  <Feather name="map-pin" size={18} color="#666" />
+                  <Text style={styles.storeText}>Nearest Store</Text>
+                </View>
+                <View style={styles.storeInfoItem}>
+                  <MaterialCommunityIcons
+                    name="crown-outline"
+                    size={18}
+                    color="#F83758"
+                  />
+                  <Text style={styles.vipText}>VIP</Text>
+                </View>
+                <View style={styles.storeInfoItem}>
+                  <MaterialCommunityIcons
+                    name="refresh"
+                    size={18}
+                    color="#F83758"
+                  />
+                  <Text style={styles.returnText}>Return policy</Text>
+                </View>
               </View>
             </View>
-          </View>
 
-          {/* Bottom Buttons */}
-          <View style={styles.bottomButtons}>
-            <TouchableOpacity style={styles.viewSimilarButton}>
-              <Feather
-                name="shopping-cart"
-                size={20}
+            {/* Bottom Buttons */}
+            <View style={styles.bottomButtons}>
+              <TouchableOpacity style={styles.viewSimilarButton}>
+                <Feather
+                  name="shopping-cart"
+                  size={20}
+                  color="#F83758"
+                  style={styles.buttonIcon}
+                />
+                <Text style={styles.viewSimilarText}>View Cart</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.addToCartButton}
+                onPress={() => router.push("/(screens)/cart")}
+              >
+                <Text style={styles.addToCartText}>Add to Cart</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Delivery Info */}
+            <View style={styles.deliveryInfo}>
+              <MaterialCommunityIcons
+                name="truck-delivery-outline"
+                size={32}
                 color="#F83758"
-                style={styles.buttonIcon}
+                style={styles.deliveryIcon}
               />
-              <Text style={styles.viewSimilarText}>View Cart</Text>
-            </TouchableOpacity>
+              <View style={styles.deliveryContent}>
+                <Text style={styles.deliveryLabel}>Delivery in</Text>
+                <Text style={styles.deliveryTime}>1 within Hour</Text>
+              </View>
+            </View>
+
+            {/* Compare Actions */}
+            <View style={styles.compareActions}>
+              <TouchableOpacity style={styles.compareButton}>
+                <Feather name="eye" size={20} color="#666" />
+                <Text style={styles.compareButtonText}>View Similar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.compareButton}>
+                <MaterialCommunityIcons name="compare" size={20} color="#666" />
+                <Text style={styles.compareButtonText}>Add to Compare</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Similar Products Section */}
+            <View style={styles.similarSection}>
+              <View style={styles.similarHeader}>
+                <Text style={styles.similarTitle}>Similar To</Text>
+                <Text style={styles.itemCount}>282+ Items</Text>
+                <View style={styles.filterContainer}>
+                  <TouchableOpacity style={styles.filterButton}>
+                    <Text style={styles.filterText}>Sort</Text>
+                    <AntDesign name="down" size={16} color="#000" />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.filterButton}>
+                    <Text style={styles.filterText}>Filter</Text>
+                    <Feather name="filter" size={16} color="#000" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Similar Products */}
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.similarProducts}
+              >
+                <TouchableOpacity style={styles.similarCard}>
+                  <Image
+                    source={{
+                      uri: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80",
+                    }}
+                    style={styles.similarImage}
+                  />
+                  <View style={styles.similarInfo}>
+                    <Text style={styles.similarProductTitle}>Nike Sneakers</Text>
+                    <Text style={styles.similarProductSubtitle}>
+                      Nike Air Jordan Retro 1 Low Mystic Black
+                    </Text>
+                    <Text style={styles.similarPrice}>₹1,900</Text>
+                    <View style={styles.similarRating}>
+                      {[...Array(5)].map((_, i) => (
+                        <AntDesign
+                          key={i}
+                          name={i < 4 ? "star" : "staro"}
+                          size={12}
+                          color="#FFD700"
+                        />
+                      ))}
+                      <Text style={styles.similarReviews}>46,890</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.similarCard}>
+                  <Image
+                    source={{
+                      uri: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80",
+                    }}
+                    style={styles.similarImage}
+                  />
+                  <View style={styles.similarInfo}>
+                    <Text style={styles.similarProductTitle}>Nike Sneakers</Text>
+                    <Text style={styles.similarProductSubtitle}>
+                      Mid Peach Mocha Shoes For Man White Black Pink S...
+                    </Text>
+                    <Text style={styles.similarPrice}>₹1,900</Text>
+                    <View style={styles.similarRating}>
+                      {[...Array(5)].map((_, i) => (
+                        <AntDesign
+                          key={i}
+                          name={i < 4 ? "star" : "staro"}
+                          size={12}
+                          color="#FFD700"
+                        />
+                      ))}
+                      <Text style={styles.similarReviews}>2,56,890</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+          </ScrollView>
+
+          {/* Bottom Navigation - Fixed */}
+          <View style={styles.bottomNav}>
             <TouchableOpacity
-              style={styles.addToCartButton}
+              style={styles.navItem}
+              onPress={() => router.push("/(screens)/home")}
+            >
+              <AntDesign name="home" size={24} color="#000000" />
+              <Text style={styles.navText}>Home</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.navItem}>
+              <AntDesign name="hearto" size={24} color="#000000" />
+              <Text style={styles.navText}>Wishlist</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.navItem, styles.cartButton]}
               onPress={() => router.push("/(screens)/cart")}
             >
-              <Text style={styles.addToCartText}>Add to Cart</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Delivery Info */}
-          <View style={styles.deliveryInfo}>
-            <MaterialCommunityIcons
-              name="truck-delivery-outline"
-              size={32}
-              color="#F83758"
-              style={styles.deliveryIcon}
-            />
-            <View style={styles.deliveryContent}>
-              <Text style={styles.deliveryLabel}>Delivery in</Text>
-              <Text style={styles.deliveryTime}>1 within Hour</Text>
-            </View>
-          </View>
-
-          {/* Compare Actions */}
-          <View style={styles.compareActions}>
-            <TouchableOpacity style={styles.compareButton}>
-              <Feather name="eye" size={20} color="#666" />
-              <Text style={styles.compareButtonText}>View Similar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.compareButton}>
-              <MaterialCommunityIcons name="compare" size={20} color="#666" />
-              <Text style={styles.compareButtonText}>Add to Compare</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Similar Products Section */}
-          <View style={styles.similarSection}>
-            <View style={styles.similarHeader}>
-              <Text style={styles.similarTitle}>Similar To</Text>
-              <Text style={styles.itemCount}>282+ Items</Text>
-              <View style={styles.filterContainer}>
-                <TouchableOpacity style={styles.filterButton}>
-                  <Text style={styles.filterText}>Sort</Text>
-                  <AntDesign name="down" size={16} color="#000" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.filterButton}>
-                  <Text style={styles.filterText}>Filter</Text>
-                  <Feather name="filter" size={16} color="#000" />
-                </TouchableOpacity>
+              <View style={styles.cartIconContainer}>
+                <Feather name="shopping-cart" size={24} color="#FFF" />
               </View>
-            </View>
+            </TouchableOpacity>
 
-            {/* Similar Products */}
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.similarProducts}
-            >
-              <TouchableOpacity style={styles.similarCard}>
-                <Image
-                  source={{
-                    uri: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80",
-                  }}
-                  style={styles.similarImage}
-                />
-                <View style={styles.similarInfo}>
-                  <Text style={styles.similarProductTitle}>Nike Sneakers</Text>
-                  <Text style={styles.similarProductSubtitle}>
-                    Nike Air Jordan Retro 1 Low Mystic Black
-                  </Text>
-                  <Text style={styles.similarPrice}>₹1,900</Text>
-                  <View style={styles.similarRating}>
-                    {[...Array(5)].map((_, i) => (
-                      <AntDesign
-                        key={i}
-                        name={i < 4 ? "star" : "staro"}
-                        size={12}
-                        color="#FFD700"
-                      />
-                    ))}
-                    <Text style={styles.similarReviews}>46,890</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
+            <TouchableOpacity style={styles.navItem}>
+              <Feather name="search" size={24} color="#000000" />
+              <Text style={styles.navText}>Search</Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity style={styles.similarCard}>
-                <Image
-                  source={{
-                    uri: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80",
-                  }}
-                  style={styles.similarImage}
-                />
-                <View style={styles.similarInfo}>
-                  <Text style={styles.similarProductTitle}>Nike Sneakers</Text>
-                  <Text style={styles.similarProductSubtitle}>
-                    Mid Peach Mocha Shoes For Man White Black Pink S...
-                  </Text>
-                  <Text style={styles.similarPrice}>₹1,900</Text>
-                  <View style={styles.similarRating}>
-                    {[...Array(5)].map((_, i) => (
-                      <AntDesign
-                        key={i}
-                        name={i < 4 ? "star" : "staro"}
-                        size={12}
-                        color="#FFD700"
-                      />
-                    ))}
-                    <Text style={styles.similarReviews}>2,56,890</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </ScrollView>
+            <TouchableOpacity style={styles.navItem}>
+              <Ionicons name="settings-outline" size={24} color="#000000" />
+              <Text style={styles.navText}>Setting</Text>
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-
-        {/* Bottom Navigation - Fixed */}
-        <View style={styles.bottomNav}>
-          <TouchableOpacity
-            style={styles.navItem}
-            onPress={() => router.push("/(screens)/home")}
-          >
-            <AntDesign name="home" size={24} color="#000000" />
-            <Text style={styles.navText}>Home</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navItem}>
-            <AntDesign name="hearto" size={24} color="#000000" />
-            <Text style={styles.navText}>Wishlist</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.navItem, styles.cartButton]}
-            onPress={() => router.push("/(screens)/cart")}
-          >
-            <View style={styles.cartIconContainer}>
-              <Feather name="shopping-cart" size={24} color="#FFF" />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navItem}>
-            <Feather name="search" size={24} color="#000000" />
-            <Text style={styles.navText}>Search</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navItem}>
-            <Ionicons name="settings-outline" size={24} color="#000000" />
-            <Text style={styles.navText}>Setting</Text>
-          </TouchableOpacity>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }
 

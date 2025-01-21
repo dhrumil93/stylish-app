@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -50,100 +52,105 @@ export default function Payment() {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <AntDesign name="left" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Payment Methods</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Order Amount */}
-        <View style={styles.amountContainer}>
-          <Text style={styles.amountLabel}>Order Amount</Text>
-          <Text style={styles.amount}>₹{params.amount || "0.00"}</Text>
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <SafeAreaView style={[styles.container, {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }]}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <AntDesign name="left" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Payment Methods</Text>
+          <View style={{ width: 24 }} />
         </View>
 
-        {/* Payment Methods */}
-        <View style={styles.methodsContainer}>
-          {paymentMethods.map((method) => (
-            <TouchableOpacity
-              key={method.id}
-              style={[
-                styles.methodCard,
-                selectedMethod === method.id && styles.selectedMethod,
-              ]}
-              onPress={() => setSelectedMethod(method.id)}
-            >
-              <View style={styles.methodLeft}>
-                <MaterialCommunityIcons
-                  name={method.icon}
-                  size={24}
-                  color={selectedMethod === method.id ? "#FF4B6E" : "#666"}
-                />
-                <View style={styles.methodInfo}>
-                  <Text style={styles.methodTitle}>{method.title}</Text>
-                  <Text style={styles.methodDescription}>
-                    {method.description}
-                  </Text>
-                </View>
-              </View>
-              <View
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Order Amount */}
+          <View style={styles.amountContainer}>
+            <Text style={styles.amountLabel}>Order Amount</Text>
+            <Text style={styles.amount}>₹{params.amount || "0.00"}</Text>
+          </View>
+
+          {/* Payment Methods */}
+          <View style={styles.methodsContainer}>
+            {paymentMethods.map((method) => (
+              <TouchableOpacity
+                key={method.id}
                 style={[
-                  styles.radioButton,
-                  selectedMethod === method.id && styles.radioButtonSelected,
+                  styles.methodCard,
+                  selectedMethod === method.id && styles.selectedMethod,
                 ]}
+                onPress={() => setSelectedMethod(method.id)}
               >
-                {selectedMethod === method.id && (
-                  <View style={styles.radioButtonInner} />
-                )}
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+                <View style={styles.methodLeft}>
+                  <MaterialCommunityIcons
+                    name={method.icon}
+                    size={24}
+                    color={selectedMethod === method.id ? "#FF4B6E" : "#666"}
+                  />
+                  <View style={styles.methodInfo}>
+                    <Text style={styles.methodTitle}>{method.title}</Text>
+                    <Text style={styles.methodDescription}>
+                      {method.description}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    styles.radioButton,
+                    selectedMethod === method.id && styles.radioButtonSelected,
+                  ]}
+                >
+                  {selectedMethod === method.id && (
+                    <View style={styles.radioButtonInner} />
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-        {/* Offers Section */}
-        <View style={styles.offersSection}>
-          <Text style={styles.sectionTitle}>Bank Offers</Text>
-          <View style={styles.offerCard}>
-            <MaterialCommunityIcons
-              name="tag-outline"
-              size={24}
-              color="#FF4B6E"
-            />
-            <View style={styles.offerInfo}>
-              <Text style={styles.offerTitle}>
-                10% instant discount on HDFC Bank Cards
-              </Text>
-              <Text style={styles.offerTerms}>
-                Min. transaction amount: ₹2,000
-              </Text>
+          {/* Offers Section */}
+          <View style={styles.offersSection}>
+            <Text style={styles.sectionTitle}>Bank Offers</Text>
+            <View style={styles.offerCard}>
+              <MaterialCommunityIcons
+                name="tag-outline"
+                size={24}
+                color="#FF4B6E"
+              />
+              <View style={styles.offerInfo}>
+                <Text style={styles.offerTitle}>
+                  10% instant discount on HDFC Bank Cards
+                </Text>
+                <Text style={styles.offerTerms}>
+                  Min. transaction amount: ₹2,000
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
 
-      {/* Bottom Payment Button */}
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.payButton}
-          onPress={() => {
-            router.push({
-              pathname: "/(screens)/order-confirmation",
-              params: {
-                amount: params.amount,
-                paymentMethod: selectedMethod
-              }
-            });
-          }}
-        >
-          <Text style={styles.payButtonText}>Pay Now</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+        {/* Bottom Payment Button */}
+        <View style={styles.bottomContainer}>
+          <TouchableOpacity
+            style={styles.payButton}
+            onPress={() => {
+              router.push({
+                pathname: "/(screens)/order-confirmation",
+                params: {
+                  amount: params.amount,
+                  paymentMethod: selectedMethod
+                }
+              });
+            }}
+          >
+            <Text style={styles.payButtonText}>Pay Now</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
 

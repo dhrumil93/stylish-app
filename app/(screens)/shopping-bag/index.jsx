@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -23,142 +25,147 @@ export default function ShoppingBag() {
   const deliveryFee = 0; // Free delivery
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <AntDesign name="left" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Shopping Bag</Text>
-        <TouchableOpacity>
-          <AntDesign name="hearto" size={24} color="#FF4B6E" />
-        </TouchableOpacity>
-      </View>
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <SafeAreaView style={[styles.container, {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }]}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <AntDesign name="left" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Shopping Bag</Text>
+          <TouchableOpacity>
+            <AntDesign name="hearto" size={24} color="#FF4B6E" />
+          </TouchableOpacity>
+        </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Product Card */}
-        <View style={styles.productCard}>
-          <Image source={{ uri: params.image }} style={styles.productImage} />
-          <View style={styles.productInfo}>
-            <Text style={styles.productTitle}>{params.title}</Text>
-            <Text style={styles.productSubtitle}>{params.subtitle}</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Product Card */}
+          <View style={styles.productCard}>
+            <Image source={{ uri: params.image }} style={styles.productImage} />
+            <View style={styles.productInfo}>
+              <Text style={styles.productTitle}>{params.title}</Text>
+              <Text style={styles.productSubtitle}>{params.subtitle}</Text>
 
-            {/* Size Selector */}
-            <View style={styles.sizeContainer}>
-              <Text style={styles.label}>Size</Text>
-              <TouchableOpacity style={styles.sizeButton}>
-                <Text style={styles.selectedSize}>{selectedSize}</Text>
-                <AntDesign name="down" size={12} color="#666" />
+              {/* Size Selector */}
+              <View style={styles.sizeContainer}>
+                <Text style={styles.label}>Size</Text>
+                <TouchableOpacity style={styles.sizeButton}>
+                  <Text style={styles.selectedSize}>{selectedSize}</Text>
+                  <AntDesign name="down" size={12} color="#666" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Quantity Selector */}
+              <View style={styles.quantityContainer}>
+                <Text style={styles.label}>Qty</Text>
+                <View style={styles.quantityControls}>
+                  <TouchableOpacity
+                    style={[
+                      styles.quantityButton,
+                      quantity === 1 && styles.quantityButtonDisabled,
+                    ]}
+                    onPress={() => quantity > 1 && setQuantity(quantity - 1)}
+                  >
+                    <AntDesign
+                      name="minus"
+                      size={16}
+                      color={quantity === 1 ? "#CCC" : "#666"}
+                    />
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{quantity}</Text>
+                  <TouchableOpacity
+                    style={styles.quantityButton}
+                    onPress={() => setQuantity(quantity + 1)}
+                  >
+                    <AntDesign name="plus" size={16} color="#666" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <Text style={styles.deliveryDate}>Delivery by 10 May 2999</Text>
+            </View>
+          </View>
+
+          {/* Coupons Section */}
+          <View style={styles.couponSection}>
+            <View style={styles.couponLeft}>
+              <MaterialCommunityIcons
+                name="ticket-percent-outline"
+                size={24}
+                color="#000000"
+                style={styles.couponIcon}
+              />
+              <Text style={styles.couponText}>Apply Coupons</Text>
+            </View>
+            <TouchableOpacity>
+              <Text style={styles.selectText}>Select</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Order Details */}
+          <View style={styles.orderDetails}>
+            <Text style={styles.sectionTitle}>Order Payment Details</Text>
+
+            <View style={styles.priceRow}>
+              <Text style={styles.priceLabel}>Order Amount</Text>
+              <Text style={styles.priceValue}>₹ {orderAmount.toFixed(2)}</Text>
+            </View>
+
+            <View style={styles.priceRow}>
+              <Text style={styles.priceLabel}>Convenience</Text>
+              <TouchableOpacity>
+                <Text style={styles.knowMore}>Know More</Text>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text style={styles.applyCoupon}>Apply Coupon</Text>
               </TouchableOpacity>
             </View>
 
-            {/* Quantity Selector */}
-            <View style={styles.quantityContainer}>
-              <Text style={styles.label}>Qty</Text>
-              <View style={styles.quantityControls}>
-                <TouchableOpacity
-                  style={[
-                    styles.quantityButton,
-                    quantity === 1 && styles.quantityButtonDisabled,
-                  ]}
-                  onPress={() => quantity > 1 && setQuantity(quantity - 1)}
-                >
-                  <AntDesign
-                    name="minus"
-                    size={16}
-                    color={quantity === 1 ? "#CCC" : "#666"}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.quantity}>{quantity}</Text>
-                <TouchableOpacity
-                  style={styles.quantityButton}
-                  onPress={() => setQuantity(quantity + 1)}
-                >
-                  <AntDesign name="plus" size={16} color="#666" />
-                </TouchableOpacity>
-              </View>
+            <View style={styles.priceRow}>
+              <Text style={styles.priceLabel}>Delivery Fee</Text>
+              <Text style={styles.freeDelivery}>Free</Text>
             </View>
 
-            <Text style={styles.deliveryDate}>Delivery by 10 May 2999</Text>
-          </View>
-        </View>
-
-        {/* Coupons Section */}
-        <View style={styles.couponSection}>
-          <View style={styles.couponLeft}>
-            <MaterialCommunityIcons
-              name="ticket-percent-outline"
-              size={24}
-              color="#000000"
-              style={styles.couponIcon}
-            />
-            <Text style={styles.couponText}>Apply Coupons</Text>
-          </View>
-          <TouchableOpacity>
-            <Text style={styles.selectText}>Select</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Order Details */}
-        <View style={styles.orderDetails}>
-          <Text style={styles.sectionTitle}>Order Payment Details</Text>
-
-          <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Order Amount</Text>
-            <Text style={styles.priceValue}>₹ {orderAmount.toFixed(2)}</Text>
+            <View style={[styles.priceRow, styles.totalRow]}>
+              <Text style={styles.totalLabel}>Order Total</Text>
+              <Text style={styles.totalValue}>₹ {orderAmount.toFixed(2)}</Text>
+            </View>
           </View>
 
-          <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Convenience</Text>
+          {/* EMI Info */}
+          <View style={styles.emiInfo}>
+            <Text style={styles.emiText}>EMI Available</Text>
             <TouchableOpacity>
-              <Text style={styles.knowMore}>Know More</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={styles.applyCoupon}>Apply Coupon</Text>
+              <Text style={styles.detailsText}>Details</Text>
             </TouchableOpacity>
           </View>
+        </ScrollView>
 
-          <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Delivery Fee</Text>
-            <Text style={styles.freeDelivery}>Free</Text>
+        {/* Bottom Payment Button */}
+        <View style={styles.bottomContainer}>
+          <View style={styles.priceContainer}>
+            <Text style={styles.price}>₹ {orderAmount.toFixed(2)}</Text>
+            <TouchableOpacity>
+              <Text style={styles.viewDetails}>View Details</Text>
+            </TouchableOpacity>
           </View>
-
-          <View style={[styles.priceRow, styles.totalRow]}>
-            <Text style={styles.totalLabel}>Order Total</Text>
-            <Text style={styles.totalValue}>₹ {orderAmount.toFixed(2)}</Text>
-          </View>
-        </View>
-
-        {/* EMI Info */}
-        <View style={styles.emiInfo}>
-          <Text style={styles.emiText}>EMI Available</Text>
-          <TouchableOpacity>
-            <Text style={styles.detailsText}>Details</Text>
+          <TouchableOpacity
+            style={styles.paymentButton}
+            onPress={() => router.push({
+              pathname: "/(screens)/payment",
+              params: {
+                amount: orderAmount.toFixed(2)
+              }
+            })}
+          >
+            <Text style={styles.paymentButtonText}>Proceed to Payment</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-
-      {/* Bottom Payment Button */}
-      <View style={styles.bottomContainer}>
-        <View style={styles.priceContainer}>
-          <Text style={styles.price}>₹ {orderAmount.toFixed(2)}</Text>
-          <TouchableOpacity>
-            <Text style={styles.viewDetails}>View Details</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.paymentButton}
-          onPress={() => router.push({
-            pathname: "/(screens)/payment",
-            params: {
-              amount: orderAmount.toFixed(2)
-            }
-          })}
-        >
-          <Text style={styles.paymentButtonText}>Proceed to Payment</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }
 

@@ -6,6 +6,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,72 +17,77 @@ export default function OrderConfirmation() {
   const params = useLocalSearchParams();
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.push("/(screens)/home")}>
-          <AntDesign name="close" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+    <>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+      <SafeAreaView style={[styles.container, {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }]}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.push("/(screens)/home")}>
+            <AntDesign name="close" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
 
-      {/* Success Animation */}
-      <View style={styles.successContainer}>
-        <View style={styles.checkmarkCircle}>
-          <AntDesign name="check" size={40} color="#FFFFFF" />
+        {/* Success Animation */}
+        <View style={styles.successContainer}>
+          <View style={styles.checkmarkCircle}>
+            <AntDesign name="check" size={40} color="#FFFFFF" />
+          </View>
+          <Text style={styles.successTitle}>Order Placed!</Text>
+          <Text style={styles.successMessage}>
+            Your order has been placed successfully.
+          </Text>
         </View>
-        <Text style={styles.successTitle}>Order Placed!</Text>
-        <Text style={styles.successMessage}>
-          Your order has been placed successfully.
-        </Text>
-      </View>
 
-      {/* Order Details */}
-      <View style={styles.orderDetails}>
-        <Text style={styles.sectionTitle}>Order Details</Text>
-        <View style={styles.detailRow}>
-          <Text style={styles.detailLabel}>Order Number</Text>
-          <Text style={styles.detailValue}>#ORD123456789</Text>
-        </View>
-        <View style={styles.detailRow}>
-          <Text style={styles.detailLabel}>Amount Paid</Text>
-          <Text style={styles.detailValue}>₹ {params.amount || "0.00"}</Text>
-        </View>
-        <View style={styles.detailRow}>
-          <Text style={styles.detailLabel}>Payment Method</Text>
-          <Text style={styles.detailValue}>{params.paymentMethod || "Card"}</Text>
-        </View>
-      </View>
-
-      {/* Delivery Info */}
-      <View style={styles.deliveryInfo}>
-        <Text style={styles.sectionTitle}>Delivery Information</Text>
-        <View style={styles.deliveryTimeContainer}>
-          <AntDesign name="clockcircleo" size={24} color="#666" />
-          <View style={styles.deliveryTimeInfo}>
-            <Text style={styles.deliveryTimeTitle}>Estimated Delivery</Text>
-            <Text style={styles.deliveryTime}>May 10, 2024 by 6:00 PM</Text>
+        {/* Order Details */}
+        <View style={styles.orderDetails}>
+          <Text style={styles.sectionTitle}>Order Details</Text>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Order Number</Text>
+            <Text style={styles.detailValue}>#ORD123456789</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Amount Paid</Text>
+            <Text style={styles.detailValue}>₹ {params.amount || "0.00"}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Payment Method</Text>
+            <Text style={styles.detailValue}>{params.paymentMethod || "Card"}</Text>
           </View>
         </View>
-      </View>
 
-      {/* Bottom Buttons */}
-      <View style={styles.bottomButtons}>
-        <TouchableOpacity 
-          style={styles.trackButton}
-          onPress={() => {
-            // Add tracking functionality
-          }}
-        >
-          <Text style={styles.trackButtonText}>Track Order</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.continueButton}
-          onPress={() => router.push("/(screens)/home")}
-        >
-          <Text style={styles.continueButtonText}>Continue Shopping</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+        {/* Delivery Info */}
+        <View style={styles.deliveryInfo}>
+          <Text style={styles.sectionTitle}>Delivery Information</Text>
+          <View style={styles.deliveryTimeContainer}>
+            <AntDesign name="clockcircleo" size={24} color="#666" />
+            <View style={styles.deliveryTimeInfo}>
+              <Text style={styles.deliveryTimeTitle}>Estimated Delivery</Text>
+              <Text style={styles.deliveryTime}>May 10, 2024 by 6:00 PM</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Bottom Buttons */}
+        <View style={styles.bottomButtons}>
+          <TouchableOpacity 
+            style={styles.trackButton}
+            onPress={() => {
+              // Add tracking functionality
+            }}
+          >
+            <Text style={styles.trackButtonText}>Track Order</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.continueButton}
+            onPress={() => router.push("/(screens)/home")}
+          >
+            <Text style={styles.continueButtonText}>Continue Shopping</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
 
