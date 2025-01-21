@@ -270,10 +270,19 @@ export default function Home() {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-      <SafeAreaView style={[styles.safeArea, {
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
-      }]}>
+      <StatusBar
+        barStyle="dark-content"
+        translucent
+        backgroundColor="transparent"
+      />
+      <SafeAreaView
+        style={[
+          styles.safeArea,
+          {
+            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+          },
+        ]}
+      >
         <View style={styles.container}>
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -318,7 +327,10 @@ export default function Home() {
             <View style={styles.categoriesContainer}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {categories.map((category) => (
-                  <TouchableOpacity key={category.id} style={styles.categoryItem}>
+                  <TouchableOpacity
+                    key={category.id}
+                    style={styles.categoryItem}
+                  >
                     <Image source={category.icon} style={styles.categoryIcon} />
                     <Text style={styles.categoryText}>{category.name}</Text>
                   </TouchableOpacity>
@@ -438,7 +450,9 @@ export default function Home() {
                               key={index}
                               name={index < product.rating ? "star" : "staro"}
                               size={16}
-                              color={index < product.rating ? "#FFD700" : "#666"}
+                              color={
+                                index < product.rating ? "#FFD700" : "#666"
+                              }
                             />
                           ))}
                         </View>
@@ -550,14 +564,19 @@ export default function Home() {
                       style={styles.trendingProductImage}
                     />
                     <View style={styles.trendingProductInfo}>
-                      <Text style={styles.trendingProductTitle} numberOfLines={2}>
+                      <Text
+                        style={styles.trendingProductTitle}
+                        numberOfLines={2}
+                      >
                         {product.title}
                       </Text>
                       <Text style={styles.trendingProductSubtitle}>
                         {product.subtitle}
                       </Text>
                       <View style={styles.trendingPriceContainer}>
-                        <Text style={styles.trendingPrice}>₹{product.price}</Text>
+                        <Text style={styles.trendingPrice}>
+                          ₹{product.price}
+                        </Text>
                         <Text style={styles.trendingOriginalPrice}>
                           ₹{product.originalPrice}
                         </Text>
@@ -573,10 +592,15 @@ export default function Home() {
 
             {/* New Arrivals Section */}
             <View style={styles.newArrivalsContainer}>
-              <Image source={newArrivals.image} style={styles.newArrivalsImage} />
+              <Image
+                source={newArrivals.image}
+                style={styles.newArrivalsImage}
+              />
               <View style={styles.newArrivalsContent}>
                 <View style={styles.newArrivalsTextContainer}>
-                  <Text style={styles.newArrivalsTitle}>{newArrivals.title}</Text>
+                  <Text style={styles.newArrivalsTitle}>
+                    {newArrivals.title}
+                  </Text>
                   <Text style={styles.newArrivalsSubtitle}>
                     {newArrivals.subtitle}
                   </Text>

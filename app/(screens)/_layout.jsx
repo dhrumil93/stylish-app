@@ -14,8 +14,8 @@ export default function ScreensLayout() {
   // Simpler path check
   const shouldShowNavigation =
     pathname === "/home" ||
-    pathname === "/trending" ||
-    pathname.includes("/product");
+    pathname === "/trending" ;
+    // || pathname.includes("/product");
 
   return (
     <>
@@ -42,7 +42,7 @@ export default function ScreensLayout() {
             screenOptions={{
               headerShown: false,
               contentStyle: { backgroundColor: "transparent" },
-              animation: "slide_from_right",
+              // animation: "slide_from_right",
             }}
           >
             <Stack.Screen

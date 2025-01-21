@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cartButton: {
-    marginTop: -20,
+    // marginTop: -20,
   },
   cartIconContainer: {
     width: 56,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 8,
+    // elevation: 8,
   },
   navText: {
     fontSize: 12,
