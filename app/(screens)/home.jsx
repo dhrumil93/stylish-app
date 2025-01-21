@@ -21,6 +21,8 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import Header from "../components/Header";
+import BottomNavigation from "../components/BottomNavigation";
 
 const { width } = Dimensions.get("window");
 
@@ -273,38 +275,9 @@ export default function Home() {
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
       }]}>
         <View style={styles.container}>
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity>
-              <Image
-                source={{
-                  uri: "https://cdn-icons-png.flaticon.com/128/7216/7216128.png",
-                }}
-                style={[styles.menuIcon, { tintColor: "#000" }]}
-              />
-            </TouchableOpacity>
-            <View style={styles.logoContainer}>
-              <Image
-                source={require("../../assets/images/group34010.png")}
-                style={styles.logoIcon}
-              />
-              <Text style={styles.logoText}>Stylo</Text>
-            </View>
-            <TouchableOpacity onPress={() => router.push("/(screens)/checkout/")}>
-              <Image
-                source={{
-                  uri: "https://images.unsplash.com/photo-1502323777036-f29e3972d82f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                }}
-                style={styles.profileIcon}
-              />
-            </TouchableOpacity>
-          </View>
-
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom: 100,
-            }}
+            contentContainerStyle={styles.scrollContent}
           >
             {/* Search Bar */}
             <View style={styles.searchContainer}>
@@ -630,40 +603,8 @@ export default function Home() {
               </TouchableOpacity>
             </View>
           </ScrollView>
-          {/* Bottom Navigation */}
-          <View style={styles.bottomNav}>
-            <TouchableOpacity
-              style={styles.navItem}
-              onPress={() => router.push("/(screens)/home")}
-            >
-              <AntDesign name="home" size={24} color="#FF4B6E" />
-              <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
-              <AntDesign name="hearto" size={24} color="#000000" />
-              <Text style={[styles.navText]}>Wishlist</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.navItem, styles.cartButton]}
-              onPress={() => router.push("/(screens)/cart")}
-            >
-              <View style={styles.cartIconContainer}>
-                <Feather name="shopping-cart" size={24} color="#FFF" />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.navItem}>
-              <Feather name="search" size={24} color="#000000" />
-              <Text style={styles.navText}>Search</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.navItem}>
-              <Ionicons name="settings-outline" size={24} color="#000000" />
-              <Text style={styles.navText}>Setting</Text>
-            </TouchableOpacity>
-          </View>
+          <BottomNavigation />
         </View>
       </SafeAreaView>
     </>
@@ -679,48 +620,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#F5F5F5",
-  },
-  menuIcon: {
-    width: 32,
-    height: 32,
-  },
-  logoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  logoIcon: {
-    width: 34,
-    height: 34,
-    resizeMode: "contain",
-    // tintColor: '#F83758',
-  },
-  logoText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#4392F9",
-    letterSpacing: 0.5,
-  },
-  profileIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  scrollContent: {
+    paddingBottom: 90, // Space for bottom navigation
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#F5F5F5",
     marginHorizontal: 16,
-    marginVertical: 8,
+    marginTop: 8,
+    marginBottom: 8,
     paddingHorizontal: 12,
     borderRadius: 8,
     height: 44,
@@ -733,6 +642,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 14,
+    color: "#666",
   },
   micIcon: {
     width: 20,
@@ -830,77 +740,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#C4C4C4",
     width: 24,
     borderRadius: 4,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    marginVertical: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
-  viewAll: {
-    fontSize: 14,
-    color: "#FF4B6E",
-  },
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    paddingVertical: 8,
-    paddingBottom: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#EEE",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  navItem: {
-    alignItems: "center",
-    justifyContent: "center",
-    // paddingVertical: 0,
-  },
-  cartButton: {
-    marginTop: 1,
-  },
-  cartIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#FF4B6E",
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#FFFFFF",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 8,
-  },
-  navText: {
-    fontSize: 12,
-    color: "#666",
-    marginTop: 4,
-  },
-  activeNavText: {
-    color: "#FF4B6E",
   },
   dealContainer: {
     backgroundColor: "#4392F9",
@@ -1393,9 +1232,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-  },
-  navIcon: {
-    width: 24,
-    height: 24,
   },
 });

@@ -7,13 +7,11 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
-  SafeAreaView,
-  StatusBar,
-  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Feather, AntDesign, Ionicons } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 import MasonryList from "@react-native-seoul/masonry-list";
+import TrendingProductCard from "../../components/TrendingProductCard";
 
 const { width } = Dimensions.get("window");
 
@@ -132,212 +130,93 @@ export default function Trending() {
   const router = useRouter();
 
   return (
-    <>
-      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-      <SafeAreaView style={[styles.safeArea, { 
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
-      }]}>
-        <View style={styles.container}>
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity>
-              <Image
-                source={{
-                  uri: "https://cdn-icons-png.flaticon.com/128/7216/7216128.png",
-                }}
-                style={[styles.menuIcon, { tintColor: "#000" }]}
-              />
-            </TouchableOpacity>
-            <View style={styles.logoContainer}>
-              <Image
-                source={require("../../../assets/images/group34010.png")}
-                style={styles.logoIcon}
-              />
-              <Text style={styles.logoText}>Stylo</Text>
-            </View>
-            <TouchableOpacity onPress={() => router.push("/(screens)/checkout/")}>
-              <Image
-                source={{
-                  uri: "https://images.unsplash.com/photo-1502323777036-f29e3972d82f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                }}
-                style={styles.profileIcon}
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Search Bar */}
-          <View style={styles.searchContainer}>
-            <Image
-              source={{
-                uri: "https://cdn-icons-png.flaticon.com/128/149/149852.png",
-              }}
-              style={[styles.searchIcon, { tintColor: "#666" }]}
-            />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search any Product..."
-              placeholderTextColor="#666"
-            />
-            <TouchableOpacity>
-              <Image
-                source={{
-                  uri: "https://cdn-icons-png.flaticon.com/128/709/709682.png",
-                }}
-                style={[styles.micIcon, { tintColor: "#666" }]}
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Sub Header */}
-          <View style={styles.subHeader}>
-            <Text style={styles.headerTitle}>52,082+ Items</Text>
-            <View style={styles.headerRight}>
-              <TouchableOpacity style={styles.sortButton}>
-                <Text style={styles.sortText}>Sort</Text>
-                <AntDesign name="down" size={14} color="#000" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.filterButton}>
-                <Text style={styles.filterText}>Filter</Text>
-                <Image
-                  source={require("../../../assets/images/filter.png")}
-                  style={styles.filterIcon}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Products Grid */}
-          <MasonryList
-            data={products}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
-            contentContainerStyle={styles.productsContainer}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item: product }) => (
-              <TouchableOpacity
-                style={styles.productCard}
-                onPress={() => router.push("/product")}
-              >
-                <Image
-                  source={{ uri: product.image }}
-                  style={[
-                    styles.productImage,
-                    { height: product.id % 2 === 0 ? 180 : 220 }, // Alternate heights
-                  ]}
-                />
-                <View style={styles.productInfo}>
-                  <Text style={styles.productTitle} numberOfLines={1}>
-                    {product.title}
-                  </Text>
-                  <Text style={styles.productSubtitle} numberOfLines={2}>
-                    {product.subtitle}
-                  </Text>
-                  <Text style={styles.productPrice}>
-                    ₹{product.price.toLocaleString()}
-                  </Text>
-                  <View style={styles.ratingContainer}>
-                    <View style={styles.stars}>
-                      {[...Array(5)].map((_, index) => (
-                        <AntDesign
-                          key={index}
-                          name={
-                            index < Math.floor(product.rating) ? "star" : "staro"
-                          }
-                          size={12}
-                          color="#FFD700"
-                        />
-                      ))}
-                    </View>
-                    <Text style={styles.reviews}>
-                      {product.reviews.toLocaleString()}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
+    <View style={styles.container}>
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <Image
+          source={{
+            uri: "https://cdn-icons-png.flaticon.com/128/149/149852.png",
+          }}
+          style={[styles.searchIcon, { tintColor: "#666" }]}
+        />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search any Product..."
+          placeholderTextColor="#666"
+        />
+        <TouchableOpacity>
+          <Image
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/128/709/709682.png",
+            }}
+            style={[styles.micIcon, { tintColor: "#666" }]}
           />
+        </TouchableOpacity>
+      </View>
 
-          {/* Bottom Navigation */}
-          <View style={styles.bottomNav}>
-            <TouchableOpacity
-              style={styles.navItem}
-              onPress={() => router.push("/(screens)/home")}
-            >
-              <AntDesign name="home" size={24} color="#FF4B6E" />
-              <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
-              <AntDesign name="hearto" size={24} color="#000000" />
-              <Text style={styles.navText}>Wishlist</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.navItem, styles.cartButton]}
-              onPress={() => router.push("/(screens)/cart")}
-            >
-              <View style={styles.cartIconContainer}>
-                <Feather name="shopping-cart" size={24} color="#FFFFFF" />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.navItem}>
-              <Feather name="search" size={24} color="#000000" />
-              <Text style={styles.navText}>Search</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.navItem}>
-              <Ionicons name="settings-outline" size={24} color="#000000" />
-              <Text style={styles.navText}>Setting</Text>
-            </TouchableOpacity>
-          </View>
+      {/* Sub Header */}
+      <View style={styles.subHeader}>
+        <Text style={styles.headerTitle}>52,082+ Items</Text>
+        <View style={styles.headerRight}>
+          <TouchableOpacity style={styles.sortButton}>
+            <Text style={styles.sortText}>Sort</Text>
+            <AntDesign name="down" size={14} color="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text style={styles.filterText}>Filter</Text>
+            <Image
+              source={require("../../../assets/images/filter.png")}
+              style={styles.filterIcon}
+            />
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
-    </>
+      </View>
+
+      {/* Products Grid */}
+      <MasonryList
+        data={products}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+        contentContainerStyle={styles.productsContainer}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item: product }) => (
+          <TrendingProductCard
+            product={product}
+            imageStyle={{ height: product.id % 2 === 0 ? 180 : 220 }}
+          />
+        )}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-  header: {
+  searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEE",
+    backgroundColor: "#F5F5F5",
+    marginHorizontal: 16,
+    marginVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    height: 44,
   },
-  menuIcon: {
-    width: 24,
-    height: 24,
+  searchIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
   },
-  logoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
   },
-  logoIcon: {
-    width: 34,
-    height: 34,
-    resizeMode: "contain",
-  },
-  logoText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#4392F9",
-  },
-  profileIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  micIcon: {
+    width: 20,
+    height: 20,
   },
   subHeader: {
     flexDirection: "row",
@@ -347,8 +226,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "600",
     color: "#000",
   },
   headerRight: {
@@ -359,19 +238,7 @@ const styles = StyleSheet.create({
   sortButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    borderRadius: 6,
     gap: 4,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
   },
   sortText: {
     fontSize: 12,
@@ -381,19 +248,7 @@ const styles = StyleSheet.create({
   filterButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    borderRadius: 6,
     gap: 4,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
   },
   filterText: {
     fontSize: 12,
@@ -404,141 +259,8 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F5F5F5",
-    marginHorizontal: 16,
-    marginVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    height: 48,
-  },
-  searchIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    color: "#666",
-    marginLeft: 8,
-  },
-  micIcon: {
-    width: 20,
-    height: 20,
-  },
-  productCard: {
-    flex: 1,
-    margin: 6,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    overflow: "hidden",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  productImage: {
-    width: "100%",
-    resizeMode: "cover",
-  },
-  productInfo: {
-    padding: 8,
-  },
-  productTitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#000",
-    marginBottom: 2,
-  },
-  productSubtitle: {
-    fontSize: 12,
-    color: "#666",
-    marginBottom: 4,
-    lineHeight: 16,
-  },
-  productPrice: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-    marginBottom: 4,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 2,
-  },
-  stars: {
-    flexDirection: "row",
-    marginRight: 6,
-  },
-  reviews: {
-    fontSize: 12,
-    color: "#666",
-  },
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    paddingVertical: 8,
-    paddingBottom: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#EEE",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  navItem: {
-    alignItems: "center",
-    justifyContent: "center",
-    // paddingVertical: 0,
-  },
-  cartButton: {
-    marginTop: 1,
-  },
-  cartIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#FF4B6E",
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#FFFFFF",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 8,
-  },
-  navText: {
-    fontSize: 12,
-    color: "#666",
-    marginTop: 4,
-  },
-  activeNavText: {
-    color: "#FF4B6E",
-  },
   productsContainer: {
     paddingHorizontal: 8,
-    paddingBottom: 100,
+    paddingBottom: 16,
   },
 });
