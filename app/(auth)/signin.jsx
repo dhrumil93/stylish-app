@@ -6,17 +6,89 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { StatusBar } from 'expo-status-bar';
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const handleLogin = async () => {
+    // Validate required fields
+    if (!identifier || !password) {
+      Alert.alert("Error", "Please fill in all required fields");
+      return;
+    }
+
+    // Check if input is email or mobile number
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const mobileRegex = /^[0-9]{10}$/;
+    const isEmail = emailRegex.test(identifier);
+    const isMobile = mobileRegex.test(identifier);
+
+    if (!isEmail && !isMobile) {
+      Alert.alert("Error", "Please enter a valid email address or 10-digit mobile number");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const loginData = {
+        password: password,
+      };
+
+      // Set either email or mobile based on input type
+      if (isEmail) {
+        loginData.email = identifier.toLowerCase().trim();
+      } else {
+        loginData.mobile = identifier.trim();
+      }
+
+      const response = await fetch(
+        "https://ecommerce-shop-qg3y.onrender.com/api/user/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        }
+      );
+
+      const result = await response.json();
+      console.log('API Response:', result);
+
+      if (response.ok && result.success) {
+        Alert.alert(
+          "Success",
+          "Login successful!",
+          [{ text: "OK", onPress: () => router.push("/(screens)/welcome") }]
+        );
+      } else {
+        const errorMessage = result.message || "Login failed. Please try again.";
+        Alert.alert("Error", errorMessage);
+      }
+    } catch (error) {
+      console.error('API Error:', error);
+      Alert.alert(
+        "Error", 
+        "Network error or server not responding. Please try again later."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
+      <StatusBar style="dark" />
       <View style={styles.header}>
         <Text style={styles.title}>Welcome{"\n"}Back!</Text>
       </View>
@@ -24,14 +96,16 @@ export default function SignIn() {
       <View style={styles.form}>
         <View style={styles.inputContainer}>
           <Image
-            source={require("../../assets/images/user.png")}
-            style={styles.userIcon}
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png"
+            }}
+            style={styles.inputIcon}
           />
           <TextInput
             style={styles.input}
             placeholder="Username or Email"
-            value={email}
-            onChangeText={setEmail}
+            value={identifier}
+            onChangeText={setIdentifier}
             autoCapitalize="none"
             placeholderTextColor="#666"
           />
@@ -39,8 +113,10 @@ export default function SignIn() {
 
         <View style={styles.inputContainer}>
           <Image
-            source={require("../../assets/images/group2.png")}
-            style={styles.lockIcon}
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/128/3064/3064155.png"
+            }}
+            style={styles.inputIcon}
           />
           <TextInput
             style={styles.input}
@@ -52,7 +128,11 @@ export default function SignIn() {
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Image
-              source={require("../../assets/images/eye.png")}
+              source={{
+                uri: showPassword 
+                  ? "https://cdn-icons-png.flaticon.com/128/2767/2767146.png"
+                  : "https://cdn-icons-png.flaticon.com/128/2767/2767194.png"
+              }}
               style={styles.eyeIcon}
             />
           </TouchableOpacity>
@@ -64,9 +144,14 @@ export default function SignIn() {
 
         <TouchableOpacity 
           style={styles.loginButton}
-          onPress={() => router.push('/(screens)/welcome')}
+          onPress={handleLogin}
+          disabled={loading}
         >
-          <Text style={styles.loginButtonText}>Login</Text>
+          {loading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.loginButtonText}>Login</Text>
+          )}
         </TouchableOpacity>
 
         <Text style={styles.orText}>- OR Continue with -</Text>
@@ -74,19 +159,25 @@ export default function SignIn() {
         <View style={styles.socialButtons}>
           <TouchableOpacity style={styles.socialButton}>
             <Image
-              source={require("../../assets/images/google.png")}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/128/300/300221.png"
+              }}
               style={styles.socialIcon}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.socialButton}>
             <Image
-              source={require("../../assets/images/apple.png")}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/128/0/747.png"
+              }}
               style={styles.socialIcon}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.socialButton}>
             <Image
-              source={require("../../assets/images/facebook.png")}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/128/5968/5968764.png"
+              }}
               style={styles.socialIcon}
             />
           </TouchableOpacity>
@@ -110,7 +201,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    marginTop:56 ,
+    marginTop:56,
     marginBottom: 40,
     marginLeft:"32px"
   },
@@ -133,22 +224,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     height: 55,
   },
-  input: {
-    flex: 1,
-    height: "15px",
-    color: "#000",
-    fontSize: 14,
-    alignItems:'center'
-  },
-  userIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 5,
-  },
-  lockIcon: {
-    width: 16,
+  inputIcon: {
+    width: 20,
     height: 20,
     marginRight: 10,
+    tintColor: "#666",
+  },
+  input: {
+    flex: 1,
+    height: 55,
+    color: "#000",
+    fontSize: 14,
   },
   eyeIcon: {
     width: 24,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,31 +10,77 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
 
 export default function Checkout() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   // Add state for all form fields
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    email: "aashifa@gmail.com",
+    email: "",
     mobile: "",
     gender: "",
     dateOfBirth: "",
     password: "••••••••••",
-    pincode: "450116",
-    address: "216 St Paul's Rd",
-    city: "London",
-    state: "N1 2LL",
-    country: "United Kingdom",
-    bankAccount: "204356XXXXXXX",
-    accountHolder: "Abhiraj Sisodiya",
-    ifscCode: "SBIN00428",
+    pincode: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+    bankAccount: "",
+    accountHolder: "",
+    ifscCode: "",
   });
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetch(
+        "https://ecommerce-shop-qg3y.onrender.com/api/user/profileDisplay",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // Add any required authorization headers
+          },
+        }
+      );
+
+      const result = await response.json();
+      console.log('API Response:', result);
+
+      if (response.ok && result.success) {
+        // Update form data with API response
+        setFormData(prevData => ({
+          ...prevData,
+          name: result.data.firstName || "",
+          email: result.data.email || "",
+          mobile: result.data.mobile || "",
+          gender: result.data.gender || "",
+        }));
+      } else {
+        Alert.alert("Error", "Failed to fetch profile data");
+      }
+    } catch (error) {
+      console.error('API Error:', error);
+      Alert.alert(
+        "Error", 
+        "Network error or server not responding. Please try again later."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({
@@ -42,6 +88,14 @@ export default function Checkout() {
       [field]: value,
     }));
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#F83758" />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -78,11 +132,42 @@ export default function Checkout() {
               <Text style={styles.sectionTitle}>Personal Details</Text>
 
               <View style={styles.inputGroup}>
+                <Text style={styles.label}>Name:</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.name}
+                  onChangeText={(value) => handleChange("name", value)}
+                  placeholder="Enter name"
+                />
+              </View>
+              <View style={styles.inputGroup}>
                 <Text style={styles.label}>Email Address</Text>
                 <TextInput
                   style={[styles.input, styles.disabledInput]}
                   value={formData.email}
                   editable={false}
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Mobile Number</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.mobile}
+                  onChangeText={(value) => handleChange("mobile", value)}
+                  keyboardType="numeric"
+                  maxLength={10}
+                  placeholder="Enter mobile number"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Gender</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.gender}
+                  onChangeText={(value) => handleChange("gender", value)}
+                  placeholder="Enter gender"
                 />
               </View>
 
@@ -102,7 +187,7 @@ export default function Checkout() {
               </View>
             </View>
 
-            {/* Address Details */}
+            {/* Address Details
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Address Details</Text>
               <View style={styles.inputGroup}>
@@ -150,7 +235,7 @@ export default function Checkout() {
             </View>
 
             {/* Bank Account Details */}
-            <View style={styles.section}>
+            {/* <View style={styles.section}>
               <Text style={styles.sectionTitle}>Bank Account Details</Text>
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Bank Account Number</Text>
@@ -177,7 +262,7 @@ export default function Checkout() {
                   onChangeText={(value) => handleChange("ifscCode", value)}
                 />
               </View>
-            </View>
+            </View> */}
 
             {/* Save Button */}
             <TouchableOpacity style={styles.saveButton}>
@@ -306,5 +391,11 @@ const styles = StyleSheet.create({
   disabledInput: {
     backgroundColor: "#F5F5F5",
     color: "#666",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
   },
 });
