@@ -305,6 +305,32 @@ export default function ProductDetail() {
                     </View>
                   </View>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.similarCard}>
+                  <Image
+                    source={{
+                      uri: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80",
+                    }}
+                    style={styles.similarImage}
+                  />
+                  <View style={styles.similarInfo}>
+                    <Text style={styles.similarProductTitle}>Nike Sneakers</Text>
+                    <Text style={styles.similarProductSubtitle}>
+                      Mid Peach Mocha Shoes For Man White Black Pink S...
+                    </Text>
+                    <Text style={styles.similarPrice}>₹1,900</Text>
+                    <View style={styles.similarRating}>
+                      {[...Array(5)].map((_, i) => (
+                        <AntDesign
+                          key={i}
+                          name={i < 4 ? "star" : "staro"}
+                          size={12}
+                          color="#FFD700"
+                        />
+                      ))}
+                      <Text style={styles.similarReviews}>2,56,890</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
               </ScrollView>
             </View>
           </ScrollView>
@@ -719,7 +745,7 @@ const styles = StyleSheet.create({
     width: 200,
     backgroundColor: "#FFF",
     borderRadius: 8,
-    marginRight: 12,
+    marginRight: 2,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "#EEE",
