@@ -38,7 +38,7 @@ export default function Checkout() {
     try {
       // Get the token
       const token = await AsyncStorage.getItem('userToken');
-      console.log('Retrieved Token:', token);
+      // console.log('Retrieved Token:', token);
       
       if (!token) {
         Alert.alert("Error", "Please login to view profile");
@@ -60,7 +60,7 @@ export default function Checkout() {
       const result = await response.json();
       console.log('API Response:', result);
       console.log('User Data:', result.data);
-      console.log('Mobile Field:', result.data?.mobile);
+      // console.log('Mobile Field:', result.data?.mobile);
 
       if (response.ok && result.success && result.data) {
         // Update form data with API response
@@ -71,7 +71,7 @@ export default function Checkout() {
           mobile: result.data.mobile?.toString() || "",
           gender: result.data.gender || "",
         };
-        console.log('Updated Form Data:', updatedData);
+        // console.log('Updated Form Data:', updatedData);
         setFormData(updatedData);
       } else {
         if (response.status === 401) {
