@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignIn() {
   const [identifier, setIdentifier] = useState("");
@@ -65,11 +66,15 @@ export default function SignIn() {
       const result = await response.json();
       console.log('API Response:', result);
 
-      if (response.ok && result.success) {
+      if (response.ok && result.success && result.data) {
+        // Store token from the response
+        await AsyncStorage.setItem('userToken', result.data);
+        console.log('Token stored:', result.data);
+        
         Alert.alert(
           "Success",
           "Login successful!",
-          [{ text: "OK", onPress: () => router.push("/(screens)/welcome") }]
+          [{ text: "OK", onPress: () => router.push("/(screens)/home") }]
         );
       } else {
         const errorMessage = result.message || "Login failed. Please try again.";
@@ -103,7 +108,7 @@ export default function SignIn() {
           />
           <TextInput
             style={styles.input}
-            placeholder="Username or Email"
+            placeholder="Mobile Number or Email"
             value={identifier}
             onChangeText={setIdentifier}
             autoCapitalize="none"

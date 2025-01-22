@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Checkout() {
   const router = useRouter();
@@ -22,21 +23,11 @@ export default function Checkout() {
 
   // Add state for all form fields
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     mobile: "",
     gender: "",
-    dateOfBirth: "",
     password: "••••••••••",
-    pincode: "",
-    address: "",
-    city: "",
-    state: "",
-    country: "",
-    bankAccount: "",
-    accountHolder: "",
-    ifscCode: "",
   });
 
   useEffect(() => {
@@ -45,13 +36,22 @@ export default function Checkout() {
 
   const fetchUserProfile = async () => {
     try {
+      // Get the token
+      const token = await AsyncStorage.getItem('userToken');
+      
+      if (!token) {
+        Alert.alert("Error", "Please login to view profile");
+        router.push("/(auth)/signin");
+        return;
+      }
+
       const response = await fetch(
-        "https://ecommerce-shop-qg3y.onrender.com/api/user/profileDisplay",
+        `https://ecommerce-shop-qg3y.onrender.com/api/user/profileDisplay`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            // Add any required authorization headers
+            "Authorization": `${token}`
           },
         }
       );
@@ -63,13 +63,74 @@ export default function Checkout() {
         // Update form data with API response
         setFormData(prevData => ({
           ...prevData,
-          name: result.data.firstName || "",
+          name: result.data.name || "",
           email: result.data.email || "",
           mobile: result.data.mobile || "",
           gender: result.data.gender || "",
         }));
       } else {
-        Alert.alert("Error", "Failed to fetch profile data");
+        if (response.status === 401) {
+          // Token expired or invalid
+          await AsyncStorage.multiRemove(['userToken', 'userId']);
+          Alert.alert("Session Expired", "Please login again");
+          router.push("/(auth)/signin");
+        } else {
+          Alert.alert("Error", "Failed to fetch profile data");
+        }
+      }
+    } catch (error) {
+      console.error('API Error:', error);
+      Alert.alert(
+        "Error", 
+        "Network error or server not responding. Please try again later."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      setLoading(true);
+      const [token, userId] = await Promise.all([
+        AsyncStorage.getItem('userToken'),
+        AsyncStorage.getItem('userId')
+      ]);
+      
+      if (!token || !userId) {
+        Alert.alert("Error", "Please login to update profile");
+        router.push("/(auth)/signin");
+        return;
+      }
+
+      const response = await fetch(
+        `https://ecommerce-shop-qg3y.onrender.com/api/user/updateProfile`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `${token}`
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            mobile: formData.mobile,
+            gender: formData.gender,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        Alert.alert("Success", "Profile updated successfully");
+      } else {
+        if (response.status === 401) {
+          await AsyncStorage.multiRemove(['userToken', 'userId']);
+          Alert.alert("Session Expired", "Please login again");
+          router.push("/(auth)/signin");
+        } else {
+          Alert.alert("Error", result.message || "Failed to update profile");
+        }
       }
     } catch (error) {
       console.error('API Error:', error);
@@ -155,9 +216,8 @@ export default function Checkout() {
                   style={styles.input}
                   value={formData.mobile}
                   onChangeText={(value) => handleChange("mobile", value)}
-                  keyboardType="numeric"
-                  maxLength={10}
                   placeholder="Enter mobile number"
+                  editable={false}
                 />
               </View>
 
@@ -265,7 +325,7 @@ export default function Checkout() {
             </View> */}
 
             {/* Save Button */}
-            <TouchableOpacity style={styles.saveButton}>
+            <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
               <Text style={styles.saveButtonText}>Save Changes</Text>
             </TouchableOpacity>
           </ScrollView>
