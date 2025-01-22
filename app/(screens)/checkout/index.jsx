@@ -38,6 +38,7 @@ export default function Checkout() {
     try {
       // Get the token
       const token = await AsyncStorage.getItem('userToken');
+      console.log('Retrieved Token:', token);
       
       if (!token) {
         Alert.alert("Error", "Please login to view profile");
@@ -58,16 +59,20 @@ export default function Checkout() {
 
       const result = await response.json();
       console.log('API Response:', result);
+      console.log('User Data:', result.data);
+      console.log('Mobile Field:', result.data?.mobile);
 
-      if (response.ok && result.success) {
+      if (response.ok && result.success && result.data) {
         // Update form data with API response
-        setFormData(prevData => ({
-          ...prevData,
+        const updatedData = {
+          ...formData,
           name: result.data.name || "",
           email: result.data.email || "",
-          mobile: result.data.mobile || "",
+          mobile: result.data.mobile?.toString() || "",
           gender: result.data.gender || "",
-        }));
+        };
+        console.log('Updated Form Data:', updatedData);
+        setFormData(updatedData);
       } else {
         if (response.status === 401) {
           // Token expired or invalid
@@ -213,9 +218,8 @@ export default function Checkout() {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Mobile Number</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, styles.disabledInput]}
                   value={formData.mobile}
-                  onChangeText={(value) => handleChange("mobile", value)}
                   placeholder="Enter mobile number"
                   editable={false}
                 />

@@ -67,6 +67,7 @@ export default function ScreensLayout() {
               name="home"
               options={{
                 headerShown: false,
+                animation: "fade",
               }}
             />
             <Stack.Screen

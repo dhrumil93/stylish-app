@@ -74,7 +74,7 @@ export default function SignIn() {
         Alert.alert(
           "Success",
           "Login successful!",
-          [{ text: "OK", onPress: () => router.push("/(screens)/home") }]
+          [{ text: "OK", onPress: () => router.push("/(screens)/welcome") }]
         );
       } else {
         const errorMessage = result.message || "Login failed. Please try again.";
