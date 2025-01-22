@@ -40,11 +40,7 @@ export default function ResetPassword() {
   const handleResetPassword = async () => {
     try {
       // Validate inputs
-      if (
-        
-        !formData.newPassword ||
-        !formData.confirmPassword
-      ) {
+      if (!formData.newPassword || !formData.confirmPassword) {
         Alert.alert("Error", "Please fill in all fields");
         return;
       }
@@ -59,29 +55,36 @@ export default function ResetPassword() {
         return;
       }
 
-
       setLoading(true);
 
+      // Prepare the request data
+      const requestData = {
+        email: email.toLowerCase().trim(),
+        newPassword: formData.newPassword
+      };
+
+      console.log("Request Data:", requestData); // Debug log
+
       const response = await fetch(
-        "https://ecommerce-shop-qg3y.onrender.com/api/user/resetPassword",
+        "https://ecommerce-shop-qg3y.onrender.com/api/user/forgotPassword",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            email: email,
-            newPassword: formData.newPassword,
-          }),
+          body: JSON.stringify(requestData),
         }
       );
 
       const result = await response.json();
+      console.log("API Response:", result);
 
-      if (response.ok && result.success) {
-        Alert.alert("Success", "Password has been reset successfully", [
-          { text: "OK", onPress: () => router.push("/(auth)/signin") },
-        ]);
+      if (result.success) {
+        Alert.alert(
+          "Success",
+          "Password has been reset successfully",
+          [{ text: "OK", onPress: () => router.push("/(auth)/signin") }]
+        );
       } else {
         Alert.alert("Error", result.message || "Failed to reset password");
       }

@@ -29,7 +29,7 @@ export default function ForgotPassword() {
 
     router.push({
       pathname: "/(auth)/reset-password",
-      params: { email: email.toLowerCase().trim() }
+      params: { email: email.toLowerCase().trim() },
     });
   };
 
@@ -58,14 +58,14 @@ export default function ForgotPassword() {
 
         <Text style={styles.infoText}>
           <Text style={styles.asterisk}>* </Text>
-          We will send you a message to set or reset{"\n"}your new password
+          Enter your email to reset your password
         </Text>
 
         <TouchableOpacity 
           style={styles.submitButton}
           onPress={handleSubmit}
         >
-          <Text style={styles.submitButtonText}>Submit</Text>
+          <Text style={styles.submitButtonText}>Continue</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   header: {
     marginTop: 56,
     marginBottom: 40,
-    marginLeft: "32px",
+    marginLeft: 32,
   },
   title: {
     fontSize: 36,
@@ -104,10 +104,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: "15px",
+    height: 55,
     color: "#000",
     fontSize: 14,
-    alignItems: "center",
   },
   emailIcon: {
     width: 24,
