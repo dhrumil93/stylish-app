@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
   changePassword: {
     position: "absolute",
     right: 2,
-    top: -42,
+    top: -44,
     color: "#F83758",
     fontSize: 14,
     fontWeight: "500",
