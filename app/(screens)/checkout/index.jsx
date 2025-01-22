@@ -197,7 +197,10 @@ export default function Checkout() {
             <View style={{ width: 24 }} />
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
             {/* Profile Section */}
             <View style={styles.profileSection}>
               <Image
@@ -289,7 +292,7 @@ export default function Checkout() {
                     editable={false}
                     secureTextEntry
                   />
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => router.push("/(screens)/change-password")}>
                     <Text style={styles.changePassword}>Change Password</Text>
                   </TouchableOpacity>
                 </View>
@@ -372,12 +375,14 @@ export default function Checkout() {
                 />
               </View>
             </View> */}
+          </ScrollView>
 
-            {/* Save Button */}
+          {/* Save Button Container - Outside ScrollView */}
+          <View style={styles.saveButtonContainer}>
             <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
               <Text style={styles.saveButtonText}>Save Changes</Text>
             </TouchableOpacity>
-          </ScrollView>
+          </View>
         </View>
       </SafeAreaView>
     </>
@@ -397,7 +402,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 2,
     borderBottomWidth: 1,
     borderBottomColor: "#F5F5F5",
   },
@@ -439,7 +444,7 @@ const styles = StyleSheet.create({
   },
   section: {
     paddingHorizontal: 16,
-    marginBottom: 18,
+    marginBottom: 8,
   },
   sectionTitle: {
     fontSize: 18,
@@ -470,17 +475,24 @@ const styles = StyleSheet.create({
   },
   changePassword: {
     position: "absolute",
-    right: 12,
-    top: -35,
+    right: 2,
+    top: -42,
     color: "#F83758",
     fontSize: 14,
     fontWeight: "500",
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  saveButtonContainer: {
+    backgroundColor: '#FFF',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F5F5F5',
   },
   saveButton: {
     backgroundColor: "#F83758",
-    marginHorizontal: 16,
-    marginVertical: 18,
-    paddingVertical: 12,
+    paddingVertical: 16,
     borderRadius: 8,
     alignItems: "center",
     shadowColor: "#F83758",
@@ -536,5 +548,9 @@ const styles = StyleSheet.create({
   radioLabel: {
     fontSize: 14,
     color: '#000',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
 });

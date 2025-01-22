@@ -83,6 +83,12 @@ export default function ScreensLayout() {
               }}
             />
             <Stack.Screen
+              name="change-password"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
               name="product/index"
               options={{
                 headerShown: false,
