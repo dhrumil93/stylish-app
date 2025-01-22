@@ -116,16 +116,16 @@ export default function SignIn() {
           />
         </View>
 
-        <View style={styles.inputContainer}>
+        <View style={styles.passwordContainer}>
           <Image
             source={{
-              uri: "https://cdn-icons-png.flaticon.com/128/3064/3064155.png"
+              uri: "https://cdn-icons-png.flaticon.com/128/3064/3064155.png",
             }}
-            style={styles.inputIcon}
+            style={[styles.inputIcon, { tintColor: "#666" }]}
           />
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder="Enter your password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
@@ -134,28 +134,34 @@ export default function SignIn() {
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Image
               source={{
-                uri: showPassword 
+                uri: showPassword
                   ? "https://cdn-icons-png.flaticon.com/128/2767/2767146.png"
-                  : "https://cdn-icons-png.flaticon.com/128/2767/2767194.png"
+                  : "https://cdn-icons-png.flaticon.com/128/2767/2767194.png",
               }}
-              style={styles.eyeIcon}
+              style={[styles.eyeIcon, { tintColor: "#666" }]}
             />
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => router.push("/(auth)/forgot-password")}>
-          <Text style={styles.forgotPassword}>Forgot Password?</Text>
+        <TouchableOpacity 
+          style={styles.forgotPasswordButton}
+          onPress={() => router.push("/(auth)/forgot-password")}
+        >
+          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={styles.loginButton}
+        <TouchableOpacity
+          style={[
+            styles.signInButton,
+            (!identifier || !password) && styles.signInButtonDisabled,
+          ]}
           onPress={handleLogin}
-          disabled={loading}
+          disabled={!identifier || !password || loading}
         >
           {loading ? (
             <ActivityIndicator color="#FFFFFF" />
           ) : (
-            <Text style={styles.loginButtonText}>Login</Text>
+            <Text style={styles.signInButtonText}>Sign In</Text>
           )}
         </TouchableOpacity>
 
@@ -246,13 +252,26 @@ const styles = StyleSheet.create({
     height: 24,
     opacity: 0.5,
   },
-  forgotPassword: {
-    color: "#FF4B6E",
-    textAlign: "right",
-    marginBottom: 30,
-    fontSize: 14,
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F5F5F5",
+    borderRadius: 10,
+    marginBottom: 16,
+    paddingHorizontal: 15,
+    height: 55,
   },
-  loginButton: {
+  forgotPasswordButton: {
+    alignSelf: 'flex-end',
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  forgotPasswordText: {
+    color: '#F83758',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  signInButton: {
     backgroundColor: "#FF4B6E",
     borderRadius: 4,
     height: 55,
@@ -260,7 +279,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 30,
   },
-  loginButtonText: {
+  signInButtonDisabled: {
+    backgroundColor: "#CCCCCC",
+  },
+  signInButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",

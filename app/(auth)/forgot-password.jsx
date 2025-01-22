@@ -6,12 +6,32 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const router = useRouter();
+
+  const handleSubmit = () => {
+    if (!email.trim()) {
+      Alert.alert("Error", "Please enter your email address");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert("Error", "Please enter a valid email address");
+      return;
+    }
+
+    router.push({
+      pathname: "/(auth)/reset-password",
+      params: { email: email.toLowerCase().trim() }
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -43,10 +63,7 @@ export default function ForgotPassword() {
 
         <TouchableOpacity 
           style={styles.submitButton}
-          onPress={() => {
-            // Add your password reset logic here
-            router.back(); // Go back to signin page after submission
-          }}
+          onPress={handleSubmit}
         >
           <Text style={styles.submitButtonText}>Submit</Text>
         </TouchableOpacity>
