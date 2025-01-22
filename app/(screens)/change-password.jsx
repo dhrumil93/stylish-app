@@ -68,7 +68,7 @@ export default function ChangePassword() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `${token}`
           },
           body: JSON.stringify({
             oldPassword: formData.oldPassword,
