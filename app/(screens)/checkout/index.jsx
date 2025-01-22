@@ -225,15 +225,23 @@ export default function Checkout() {
                 />
               </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Gender</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.gender}
-                  onChangeText={(value) => handleChange("gender", value)}
-                  placeholder="Enter gender"
-                />
-              </View>
+              <View style={styles.genderContainer}>
+            <Text style={styles.genderLabel}>Gender:</Text>
+            <View style={styles.radioGroup}>
+              {genderOptions.map((option) => (
+                <Pressable
+                  key={option}
+                  style={styles.radioButton}
+                  onPress={() => handleChange("gender", option)}
+                >
+                  <View style={styles.radio}>
+                    {formData.gender === option && <View style={styles.radioDot} />}
+                  </View>
+                  <Text style={styles.radioLabel}>{option}</Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
 
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
@@ -461,5 +469,41 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
+  },
+  genderContainer: {
+    marginBottom: 16,
+  },
+  genderLabel: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 8,
+  },
+  radioGroup: {
+    flexDirection: "row",
+    gap: 20,
+  },
+  radioButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  radio: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#FF4B6E",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  radioDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#FF4B6E",
+  },
+  radioLabel: {
+    fontSize: 14,
+    color: "#666",
   },
 });

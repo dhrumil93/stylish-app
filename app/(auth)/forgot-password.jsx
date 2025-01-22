@@ -22,7 +22,7 @@ export default function ForgotPassword() {
       <View style={styles.form}>
         <View style={styles.inputContainer}>
           <Image
-            source={require("../../assets/images/email.png")}
+            source={{uri: "https://cdn-icons-png.flaticon.com/128/542/542638.png"}}
             style={styles.emailIcon}
           />
           <TextInput
