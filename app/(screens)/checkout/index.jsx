@@ -36,9 +36,7 @@ export default function Checkout() {
 
   const fetchUserProfile = async () => {
     try {
-      // Get the token
       const token = await AsyncStorage.getItem('userToken');
-      // console.log('Retrieved Token:', token);
       
       if (!token) {
         Alert.alert("Error", "Please login to view profile");
@@ -58,9 +56,6 @@ export default function Checkout() {
       );
 
       const result = await response.json();
-      console.log('API Response:', result);
-      console.log('User Data:', result.data);
-      console.log('Gender Value:', result.data?.gender);
 
       if (response.ok && result.success && result.data) {
         // Update form data with API response
@@ -70,13 +65,12 @@ export default function Checkout() {
           email: result.data.email || "",
           mobile: result.data.mobile?.toString() || "",
           gender: result.data.gender ? result.data.gender.toString() : "",
+          password: "••••••••••"
         };
-        console.log('Updated Form Data:', updatedData);
         setFormData(updatedData);
       } else {
         if (response.status === 401) {
-          // Token expired or invalid
-          await AsyncStorage.multiRemove(['userToken', 'userId']);
+          await AsyncStorage.removeItem('userToken');
           Alert.alert("Session Expired", "Please login again");
           router.push("/(auth)/signin");
         } else {
@@ -97,40 +91,57 @@ export default function Checkout() {
   const handleSaveChanges = async () => {
     try {
       setLoading(true);
-      const [token, userId] = await Promise.all([
-        AsyncStorage.getItem('userToken'),
-        AsyncStorage.getItem('userId')
-      ]);
+      const token = await AsyncStorage.getItem('userToken');
       
-      if (!token || !userId) {
+      if (!token) {
         Alert.alert("Error", "Please login to update profile");
         router.push("/(auth)/signin");
         return;
       }
 
+      // Only send fields that have been changed
+      const updateData = {};
+      if (formData.name && formData.name.trim() !== "") {
+        updateData.name = formData.name.trim();
+      }
+      if (formData.gender) {
+        updateData.gender = formData.gender;
+      }
+
+      // Only include mobile if it's changed and valid
+      if (formData.mobile && formData.mobile.trim() !== "") {
+        const mobileRegex = /^[0-9]{10}$/;
+        if (!mobileRegex.test(formData.mobile)) {
+          Alert.alert("Error", "Please enter a valid 10-digit mobile number");
+          setLoading(false);
+          return;
+        }
+      }
+
       const response = await fetch(
-        `https://ecommerce-shop-qg3y.onrender.com/api/user/updateProfile`,
+        `https://ecommerce-shop-qg3y.onrender.com/api/user/update`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `${token}`
           },
-          body: JSON.stringify({
-            name: formData.name,
-            mobile: formData.mobile,
-            gender: formData.gender,
-          }),
+          body: JSON.stringify(updateData),
         }
       );
 
       const result = await response.json();
+      console.log('Update Response:', result);
 
       if (response.ok && result.success) {
-        Alert.alert("Success", "Profile updated successfully");
+        Alert.alert(
+          "Success", 
+          "Profile updated successfully",
+          [{ text: "OK", onPress: () => fetchUserProfile() }] // Refresh the profile data
+        );
       } else {
         if (response.status === 401) {
-          await AsyncStorage.multiRemove(['userToken', 'userId']);
+          await AsyncStorage.removeItem('userToken');
           Alert.alert("Session Expired", "Please login again");
           router.push("/(auth)/signin");
         } else {
@@ -225,10 +236,12 @@ export default function Checkout() {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Mobile Number</Text>
                 <TextInput
-                  style={[styles.input, styles.disabledInput]}
+                  style={styles.input}
                   value={formData.mobile}
+                  onChangeText={(value) => handleChange("mobile", value)}
                   placeholder="Enter mobile number"
-                  editable={false}
+                  keyboardType="numeric"
+                  maxLength={10}
                 />
               </View>
 
