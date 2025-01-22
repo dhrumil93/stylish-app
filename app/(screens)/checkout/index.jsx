@@ -60,7 +60,7 @@ export default function Checkout() {
       const result = await response.json();
       console.log('API Response:', result);
       console.log('User Data:', result.data);
-      // console.log('Mobile Field:', result.data?.mobile);
+      console.log('Gender Value:', result.data?.gender);
 
       if (response.ok && result.success && result.data) {
         // Update form data with API response
@@ -69,9 +69,9 @@ export default function Checkout() {
           name: result.data.name || "",
           email: result.data.email || "",
           mobile: result.data.mobile?.toString() || "",
-          gender: result.data.gender || "",
+          gender: result.data.gender ? result.data.gender.toString() : "",
         };
-        // console.log('Updated Form Data:', updatedData);
+        console.log('Updated Form Data:', updatedData);
         setFormData(updatedData);
       } else {
         if (response.status === 401) {
@@ -155,6 +155,13 @@ export default function Checkout() {
     }));
   };
 
+  const handleGenderSelect = (selectedGender) => {
+    setFormData(prev => ({
+      ...prev,
+      gender: selectedGender
+    }));
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -225,23 +232,40 @@ export default function Checkout() {
                 />
               </View>
 
-              <View style={styles.genderContainer}>
-            <Text style={styles.genderLabel}>Gender:</Text>
-            <View style={styles.radioGroup}>
-              {genderOptions.map((option) => (
-                <Pressable
-                  key={option}
-                  style={styles.radioButton}
-                  onPress={() => handleChange("gender", option)}
-                >
-                  <View style={styles.radio}>
-                    {formData.gender === option && <View style={styles.radioDot} />}
-                  </View>
-                  <Text style={styles.radioLabel}>{option}</Text>
-                </Pressable>
-              ))}
-            </View>
-          </View>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Gender</Text>
+                <View style={styles.radioGroup}>
+                  <TouchableOpacity 
+                    style={styles.radioOption} 
+                    onPress={() => handleGenderSelect("Male")}
+                  >
+                    <View style={styles.radioButton}>
+                      {formData.gender?.toLowerCase() === "male" && <View style={styles.radioButtonSelected} />}
+                    </View>
+                    <Text style={styles.radioLabel}>Male</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity 
+                    style={styles.radioOption} 
+                    onPress={() => handleGenderSelect("Female")}
+                  >
+                    <View style={styles.radioButton}>
+                      {formData.gender?.toLowerCase() === "female" && <View style={styles.radioButtonSelected} />}
+                    </View>
+                    <Text style={styles.radioLabel}>Female</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity 
+                    style={styles.radioOption} 
+                    onPress={() => handleGenderSelect("Other")}
+                  >
+                    <View style={styles.radioButton}>
+                      {formData.gender?.toLowerCase() === "other" && <View style={styles.radioButtonSelected} />}
+                    </View>
+                    <Text style={styles.radioLabel}>Other</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
@@ -470,40 +494,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FFFFFF",
   },
-  genderContainer: {
-    marginBottom: 16,
-  },
-  genderLabel: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-  },
   radioGroup: {
-    flexDirection: "row",
-    gap: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    gap: 24,
+  },
+  radioOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   radioButton: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  radio: {
     width: 20,
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#FF4B6E",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 8,
+    borderColor: '#FF4B6E',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  radioDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "#FF4B6E",
+  radioButtonSelected: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#FF4B6E',
   },
   radioLabel: {
     fontSize: 14,
-    color: "#666",
+    color: '#000',
   },
 });

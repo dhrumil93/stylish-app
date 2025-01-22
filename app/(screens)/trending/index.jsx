@@ -158,15 +158,15 @@ export default function Trending() {
       <View style={styles.subHeader}>
         <Text style={styles.headerTitle}>52,082+ Items</Text>
         <View style={styles.headerRight}>
-                <TouchableOpacity style={styles.sortButton}>
-                  <Text style={styles.sortText}>Sort</Text>
-                  <Feather name="chevron-down" size={16} color="#000" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.filterButton}>
-                  <Text style={styles.filterText}>Filter</Text>
-                  <Feather name="filter" size={16} color="#000" />
-                </TouchableOpacity>
-              </View>
+          <TouchableOpacity style={styles.sortButton}>
+            <Text style={styles.sortText}>Sort</Text>
+            <Feather name="chevron-down" size={16} color="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text style={styles.filterText}>Filter</Text>
+            <Feather name="filter" size={16} color="#000" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Products Grid */}
