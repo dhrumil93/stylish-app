@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function Categories() {
+  const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,6 +41,16 @@ export default function Categories() {
     }
   };
 
+  const handleCategoryPress = (categoryId, categoryName) => {
+    router.push({
+      pathname: "/(screens)/category-products",
+      params: { 
+        id: categoryId,
+        name: categoryName
+      }
+    });
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -62,6 +74,7 @@ export default function Categories() {
           <TouchableOpacity
             key={category._id}
             style={styles.categoryItem}
+            onPress={() => handleCategoryPress(category._id, category.category_name)}
           >
             <Image 
               source={{ 
