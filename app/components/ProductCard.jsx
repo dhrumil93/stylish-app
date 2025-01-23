@@ -60,29 +60,32 @@ export default function ProductCard({ product, style }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    overflow: "hidden",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
+    container: {
+        flex: 1,
+        margin: 6,
+        backgroundColor: "#FFFFFF",
+        borderRadius: 8,
+        overflow: "hidden",
+        elevation: 2,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
   imageContainer: {
     width: "100%",
     height: 150,
-    backgroundColor: "#F5F5F5",
+    // backgroundColor: "#F5F5F5",
     justifyContent: "center",
     alignItems: "center",
   },
   image: {
-    width: "80%",
-    height: "80%",
+    width: "100%",
+    height: CARD_WIDTH * 1.2,
+    resizeMode: "contain",
   },
   content: {
     padding: 12,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,47 +9,125 @@ import {
   Image,
   StatusBar,
   Platform,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Cart() {
   const router = useRouter();
-  const [quantity, setQuantity] = useState(1);
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const increaseQuantity = () => {
-    setQuantity((prev) => prev + 1);
-  };
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
+  const fetchCartItems = async () => {
+    try {
+      setLoading(true);
+      const token = await AsyncStorage.getItem("userToken");
+      
+      if (!token) {
+        Alert.alert(
+          "Login Required", 
+          "Please login to view your cart",
+          [
+            { text: "Cancel", style: "cancel" },
+            { text: "Login", onPress: () => router.push("/(auth)/signin") }
+          ]
+        );
+        return;
+      }
+
+      const response = await fetch(
+        "https://ecommerce-shop-qg3y.onrender.com/api/cart/displayCart",
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      const result = await response.json();
+      console.log("Cart items response:", result);
+
+      if (result.success) {
+        setCartItems(result.data);
+      } else {
+        setError(result.message || "Failed to fetch cart items");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      setError("Failed to fetch cart items. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const cartItem = {
-    id: 1,
-    title: "Nike Sneakers",
-    subtitle: "Vision Alta Men's Shoes Size (All Colours)",
-    price: 1500,
-    originalPrice: 2999,
-    size: "7 UK",
-    image:
-      "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80",
+  const updateQuantity = async (itemId, newQuantity) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      
+      const response = await fetch(
+        "https://ecommerce-shop-qg3y.onrender.com/api/cart/updateQuantity",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify({
+            cartItemId: itemId,
+            quantity: newQuantity,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Update quantity response:", result);
+
+      if (result.success) {
+        fetchCartItems(); // Refresh cart items
+      } else {
+        Alert.alert("Error", result.message || "Failed to update quantity");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      Alert.alert("Error", "Failed to update quantity. Please try again.");
+    }
   };
 
-  const address = {
-    name: "John Doe",
-    street: "216 St Paul's Rd",
-    city: "London",
-    state: "N1 2LL",
-    country: "United Kingdom",
-    pincode: "450116",
+  const calculateTotals = () => {
+    let totalPrice = 0;
+    let totalOriginalPrice = 0;
+
+    cartItems.forEach(item => {
+      totalPrice += item.product.price * item.quantity;
+      totalOriginalPrice += (item.product.originalPrice || item.product.price) * item.quantity;
+    });
+
+    return {
+      totalPrice,
+      totalOriginalPrice,
+      totalDiscount: totalOriginalPrice - totalPrice
+    };
   };
 
-  const totalPrice = cartItem.price * quantity;
-  const totalOriginalPrice = cartItem.originalPrice * quantity;
-  const totalDiscount = totalOriginalPrice - totalPrice;
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#F83758" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const { totalPrice, totalOriginalPrice, totalDiscount } = calculateTotals();
 
   return (
     <>
@@ -66,110 +144,106 @@ export default function Cart() {
             <Text style={styles.headerTitle}>Shopping Cart</Text>
             <View style={{ width: 24 }} />
           </View>
-          {/* Delivery Address */}
-          <View style={styles.addressSection}>
-            <Text style={styles.sectionTitle}>Delivery Address</Text>
-            <View style={styles.addressCard}>
-              <View style={styles.addressHeader}>
-                <Feather name="map-pin" size={20} color="#666" />
-                <Text style={styles.addressType}>Home</Text>
-                <TouchableOpacity style={styles.changeButton}>
-                  <Text style={styles.changeText}>Change</Text>
+
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {cartItems.length === 0 ? (
+              <View style={styles.emptyCart}>
+                <Text style={styles.emptyCartText}>Your cart is empty</Text>
+                <TouchableOpacity
+                  style={styles.shopNowButton}
+                  onPress={() => router.push("/(screens)/home")}
+                >
+                  <Text style={styles.shopNowText}>Shop Now</Text>
                 </TouchableOpacity>
               </View>
-              <Text style={styles.name}>{address.name}</Text>
-              <Text style={styles.address}>
-                {address.street}, {address.city},{"\n"}
-                {address.state}, {address.country} - {address.pincode}
-              </Text>
-            </View>
-          </View>
-          <ScrollView showsVerticalScrollIndicator={true}>
-            {/* Cart Item */}
-            <View style={styles.cartItem}>
-              <Image
-                source={{ uri: cartItem.image }}
-                style={styles.productImage}
-              />
-              <View style={styles.productInfo}>
-                <Text style={styles.productTitle}>{cartItem.title}</Text>
-                <Text style={styles.productSubtitle}>{cartItem.subtitle}</Text>
-                <Text style={styles.size}>Size: {cartItem.size}</Text>
-                <View style={styles.priceContainer}>
-                  <Text style={styles.price}>₹{cartItem.price}</Text>
-                  <Text style={styles.originalPrice}>
-                    ₹{cartItem.originalPrice}
-                  </Text>
-                  <Text style={styles.discount}>50% Off</Text>
-                </View>
-                <View style={styles.quantityContainer}>
-                  <TouchableOpacity
-                    style={[
-                      styles.quantityButton,
-                      quantity === 1 && styles.quantityButtonDisabled,
-                    ]}
-                    onPress={decreaseQuantity}
-                  >
-                    <AntDesign
-                      name="minus"
-                      size={20}
-                      color={quantity === 1 ? "#CCC" : "#666"}
+            ) : (
+              <>
+                {cartItems.map((item) => (
+                  <View key={item._id} style={styles.cartItem}>
+                    <Image
+                      source={{ uri: item.product.product_images[0] }}
+                      style={styles.productImage}
                     />
-                  </TouchableOpacity>
-                  <Text style={styles.quantity}>{quantity}</Text>
-                  <TouchableOpacity
-                    style={styles.quantityButton}
-                    onPress={increaseQuantity}
-                  >
-                    <AntDesign name="plus" size={20} color="#666" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+                    <View style={styles.productInfo}>
+                      <Text style={styles.productTitle}>{item.product.name}</Text>
+                      <Text style={styles.productSubtitle}>{item.product.description}</Text>
+                      <Text style={styles.size}>Size: {item.size}</Text>
+                      <View style={styles.priceContainer}>
+                        <Text style={styles.price}>₹{item.product.price}</Text>
+                        {item.product.originalPrice && (
+                          <>
+                            <Text style={styles.originalPrice}>
+                              ₹{item.product.originalPrice}
+                            </Text>
+                            <Text style={styles.discount}>
+                              {Math.round((1 - item.product.price / item.product.originalPrice) * 100)}% Off
+                            </Text>
+                          </>
+                        )}
+                      </View>
+                      <View style={styles.quantityContainer}>
+                        <TouchableOpacity
+                          style={[
+                            styles.quantityButton,
+                            item.quantity === 1 && styles.quantityButtonDisabled,
+                          ]}
+                          onPress={() => updateQuantity(item._id, item.quantity - 1)}
+                          disabled={item.quantity === 1}
+                        >
+                          <AntDesign
+                            name="minus"
+                            size={20}
+                            color={item.quantity === 1 ? "#CCC" : "#666"}
+                          />
+                        </TouchableOpacity>
+                        <Text style={styles.quantity}>{item.quantity}</Text>
+                        <TouchableOpacity
+                          style={styles.quantityButton}
+                          onPress={() => updateQuantity(item._id, item.quantity + 1)}
+                        >
+                          <AntDesign name="plus" size={20} color="#666" />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                ))}
 
-            {/* Price Details */}
-            <View style={styles.priceDetails}>
-              <Text style={styles.sectionTitle}>Price Details</Text>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>
-                  Price ({quantity} item{quantity > 1 ? "s" : ""})
-                </Text>
-                <Text style={styles.priceValue}>₹{totalOriginalPrice}</Text>
-              </View>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>Discount</Text>
-                <Text style={styles.discountValue}>-₹{totalDiscount}</Text>
-              </View>
-              <View style={styles.priceRow}>
-                <Text style={styles.priceLabel}>Delivery Charges</Text>
-                <Text style={styles.freeDelivery}>Free</Text>
-              </View>
-              <View style={styles.totalRow}>
-                <Text style={styles.totalLabel}>Total Amount</Text>
-                <Text style={styles.totalValue}>₹{totalPrice}</Text>
-              </View>
-            </View>
+                {/* Price Details */}
+                <View style={styles.priceDetails}>
+                  <Text style={styles.sectionTitle}>Price Details</Text>
+                  <View style={styles.priceRow}>
+                    <Text style={styles.priceLabel}>
+                      Price ({cartItems.length} item{cartItems.length > 1 ? "s" : ""})
+                    </Text>
+                    <Text style={styles.priceValue}>₹{totalOriginalPrice}</Text>
+                  </View>
+                  <View style={styles.priceRow}>
+                    <Text style={styles.priceLabel}>Discount</Text>
+                    <Text style={styles.discountValue}>-₹{totalDiscount}</Text>
+                  </View>
+                  <View style={styles.priceRow}>
+                    <Text style={styles.priceLabel}>Delivery Charges</Text>
+                    <Text style={styles.freeDelivery}>Free</Text>
+                  </View>
+                  <View style={styles.totalRow}>
+                    <Text style={styles.totalLabel}>Total Amount</Text>
+                    <Text style={styles.totalValue}>₹{totalPrice}</Text>
+                  </View>
+                </View>
+              </>
+            )}
           </ScrollView>
 
-          {/* Bottom Button */}
-          <View style={styles.bottomButton}>
-            <TouchableOpacity 
-              style={styles.checkoutButton}
-              onPress={() => router.push({
-                pathname: "/(screens)/shopping-bag",
-                params: {
-                  id: cartItem.id,
-                  title: cartItem.title,
-                  subtitle: cartItem.subtitle,
-                  price: cartItem.price,
-                  image: cartItem.image,
-                  size: cartItem.size,
-                }
-              })}
-            >
-              <Text style={styles.checkoutText}>Place Order</Text>
-            </TouchableOpacity>
-          </View>
+          {cartItems.length > 0 && (
+            <View style={styles.bottomButton}>
+              <TouchableOpacity 
+                style={styles.checkoutButton}
+                onPress={() => router.push("/(screens)/checkout")}
+              >
+                <Text style={styles.checkoutText}>Place Order</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </SafeAreaView>
     </>
@@ -372,6 +446,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   checkoutText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyCart: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 32,
+  },
+  emptyCartText: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 16,
+  },
+  shopNowButton: {
+    backgroundColor: "#F83758",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  shopNowText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
