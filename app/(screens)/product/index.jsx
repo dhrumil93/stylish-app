@@ -11,7 +11,6 @@ import {
   Platform,
   StatusBar,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import {
@@ -20,11 +19,9 @@ import {
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
-const STATUSBAR_HEIGHT =
-  Platform.OS === "android" ? StatusBar.currentHeight : 0;
+const STATUSBAR_HEIGHT = Platform.OS === "android" ? StatusBar.currentHeight : 0;
 
 export default function ProductDetail() {
   const router = useRouter();
@@ -35,7 +32,6 @@ export default function ProductDetail() {
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [addingToCart, setAddingToCart] = useState(false);
 
   useEffect(() => {
     console.log("Product ID:", id);
@@ -76,32 +72,6 @@ export default function ProductDetail() {
     console.log("Current product state:", product);
   }, [product]);
 
-  const handleAddToCart = async () => {
-    if (!selectedSize) {
-      Alert.alert("Select Size", "Please select a size before adding to cart");
-      return;
-    }
-
-    try {
-      setAddingToCart(true);
-
-      Alert.alert("Success", "Item added to cart successfully", [
-        {
-          text: "Continue Shopping",
-          style: "cancel",
-        },
-        {
-          text: "Go to Cart",
-          onPress: () => router.push("/(screens)/cart"),
-        },
-      ]);
-    } catch (error) {
-      Alert.alert("Error", "Failed to add item to cart. Please try again.");
-    } finally {
-      setAddingToCart(false);
-    }
-  };
-
   if (loading) {
     console.log("Loading state...");
     return (
@@ -116,10 +86,7 @@ export default function ProductDetail() {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>{error || "Product not found"}</Text>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Text style={styles.backButtonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
@@ -127,310 +94,264 @@ export default function ProductDetail() {
   }
 
   // Ensure product.images is an array
-  const productImages = Array.isArray(product.product_images)
-    ? product.product_images
-    : [];
+  const productImages = Array.isArray(product.product_images) ? product.product_images : [];
   console.log("Product Images:", productImages);
 
   // Define placeholder image URL
-  const placeholderImage =
-    "https://cdn-icons-png.flaticon.com/512/3081/3081559.png";
+  const placeholderImage = "https://cdn-icons-png.flaticon.com/512/3081/3081559.png";
 
   return (
-    <>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
-      <SafeAreaView
-        style={[
-          styles.container,
-          {
-            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-          },
-        ]}
-      >
-        {/* Header - Fixed */}
-        <View style={styles.headerContainer}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}>
-              <AntDesign name="left" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cartButton}>
-              <AntDesign name="shoppingcart" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
+    <View style={styles.container}>
+      {/* Header - Fixed */}
+      <View style={styles.headerContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <AntDesign name="left" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cartButton}>
+            <AntDesign name="shoppingcart" size={24} color="black" />
+          </TouchableOpacity>
         </View>
+      </View>
 
-        {/* Scrollable Content */}
+      {/* Scrollable Content */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Image Slider */}
         <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={({ nativeEvent }) => {
+            const slide = Math.ceil(
+              nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
+            );
+            if (slide >= 0 && slide < productImages.length && currentImageIndex !== slide) {
+              setCurrentImageIndex(slide);
+            }
+          }}
+          scrollEventThrottle={16}
         >
-          {/* Image Slider */}
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={({ nativeEvent }) => {
-              const slide = Math.ceil(
-                nativeEvent.contentOffset.x /
-                  nativeEvent.layoutMeasurement.width
-              );
-              if (
-                slide >= 0 &&
-                slide < productImages.length &&
-                currentImageIndex !== slide
-              ) {
-                setCurrentImageIndex(slide);
-              }
-            }}
-            scrollEventThrottle={16}
-          >
-            {productImages.length > 0 ? (
-              productImages.map((image, index) => (
-                <Image
-                  key={index}
-                  source={{ uri: image || placeholderImage }}
-                  style={styles.productImage}
-                  defaultSource={{ uri: placeholderImage }}
-                />
-              ))
-            ) : (
+          {productImages.length > 0 ? (
+            productImages.map((image, index) => (
               <Image
-                source={{ uri: placeholderImage }}
+                key={index}
+                source={{ uri: image || placeholderImage }}
                 style={styles.productImage}
+                defaultSource={{ uri: placeholderImage }}
               />
-            )}
-          </ScrollView>
+            ))
+          ) : (
+            <Image
+              source={{ uri: placeholderImage }}
+              style={styles.productImage}
+            />
+          )}
+        </ScrollView>
 
-          {/* Pagination Dots */}
-          {productImages.length > 1 && (
-            <View style={styles.pagination}>
-              {productImages.map((_, index) => (
-                <View
+        {/* Pagination Dots */}
+        {productImages.length > 1 && (
+          <View style={styles.pagination}>
+            {productImages.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.paginationDot,
+                  index === currentImageIndex && styles.paginationDotActive,
+                ]}
+              />
+            ))}
+          </View>
+        )}
+
+        {/* Product Info */}
+        <View style={styles.productInfo}>
+          <Text style={styles.productTitle}>{product.name || "Product Name"}</Text>
+          <Text style={styles.productSubtitle}>
+            {product.description || "No description available"}
+          </Text>
+
+          {/* Rating */}
+          <View style={styles.ratingContainer}>
+            <View style={styles.stars}>
+              {[...Array(5)].map((_, index) => (
+                <AntDesign
                   key={index}
-                  style={[
-                    styles.paginationDot,
-                    index === currentImageIndex && styles.paginationDotActive,
-                  ]}
+                  name={index < Math.floor(product.rating || 0) ? "star" : "staro"}
+                  size={16}
+                  color="#FFD700"
                 />
               ))}
             </View>
-          )}
-
-          {/* Product Info */}
-          <View style={styles.productInfo}>
-            <Text style={styles.productTitle}>
-              {product.name || "Product Name"}
-            </Text>
-            <Text style={styles.productSubtitle}>
-              {product.description || "No description available"}
-            </Text>
-
-            {/* Rating */}
-            <View style={styles.ratingContainer}>
-              <View style={styles.stars}>
-                {[...Array(5)].map((_, index) => (
-                  <AntDesign
-                    key={index}
-                    name={
-                      index < Math.floor(product.rating || 0) ? "star" : "staro"
-                    }
-                    size={16}
-                    color="#FFD700"
-                  />
-                ))}
-              </View>
-              <Text style={styles.reviews}>0 Reviews</Text>
-            </View>
-
-            {/* Price */}
-            <View style={styles.priceContainer}>
-              <Text style={styles.price}>₹{product.price || 0}</Text>
-            </View>
-
-            {/* Size Selection */}
-            <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
-            <View style={styles.sizeContainer}>
-              {(product.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"]).map(
-                (size) => (
-                  <TouchableOpacity
-                    key={size}
-                    style={[
-                      styles.sizeButton,
-                      selectedSize === size && styles.selectedSizeButton,
-                    ]}
-                    onPress={() => setSelectedSize(size)}
-                  >
-                    <Text
-                      style={[
-                        styles.sizeText,
-                        selectedSize === size && styles.selectedSizeText,
-                      ]}
-                    >
-                      {size}
-                    </Text>
-                  </TouchableOpacity>
-                )
-              )}
-            </View>
-
-            {/* Product Details */}
-            <Text style={styles.detailsTitle}>Product Details</Text>
-            <Text style={styles.detailsText}>
-              Brand: {product.brand}
-              {"\n"}Color: {product.colour?.join(", ")}
-              {"\n"}Description: {product.description}
-              {"\n"}Stock: {product.stock}
-            </Text>
-
-            {/* Store Info */}
-            <View style={styles.storeInfo}>
-              <View style={styles.storeInfoItem}>
-                <Feather name="map-pin" size={18} color="#666" />
-                <Text style={styles.storeText}>Nearest Store</Text>
-              </View>
-              <View style={styles.storeInfoItem}>
-                <MaterialCommunityIcons
-                  name="crown-outline"
-                  size={18}
-                  color="#F83758"
-                />
-                <Text style={styles.vipText}>VIP</Text>
-              </View>
-              <View style={styles.storeInfoItem}>
-                <MaterialCommunityIcons
-                  name="refresh"
-                  size={18}
-                  color="#F83758"
-                />
-                <Text style={styles.returnText}>Return policy</Text>
-              </View>
-            </View>
+            <Text style={styles.reviews}>0 Reviews</Text>
           </View>
 
-          {/* Bottom Buttons */}
-          <View style={styles.bottomButtons}>
-            <TouchableOpacity
-              style={[styles.button, styles.addToCartButton]}
-              onPress={handleAddToCart}
-              disabled={addingToCart}
-            >
-              {addingToCart ? (
-                <ActivityIndicator color="#FFFFFF" size="small" />
-              ) : (
-                <Text style={styles.buttonText}>Add to Cart</Text>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.buyNowButton]}
-              onPress={() => router.push("/(screens)/cart")}
-            >
-              <Text style={[styles.buttonText, styles.buyNowText]}>
-                Buy Now
-              </Text>
-            </TouchableOpacity>
+          {/* Price */}
+          <View style={styles.priceContainer}>
+            <Text style={styles.price}>₹{product.price || 0}</Text>
           </View>
 
-          {/* Delivery Info */}
-          <View style={styles.deliveryInfo}>
-            <MaterialCommunityIcons
-              name="truck-delivery-outline"
-              size={32}
-              color="#F83758"
-              style={styles.deliveryIcon}
-            />
-            <View style={styles.deliveryContent}>
-              <Text style={styles.deliveryLabel}>Delivery in</Text>
-              <Text style={styles.deliveryTime}>1 within Hour</Text>
-            </View>
-          </View>
-
-          {/* Compare Actions */}
-          <View style={styles.compareActions}>
-            <TouchableOpacity style={styles.compareButton}>
-              <Feather name="eye" size={20} color="#666" />
-              <Text style={styles.compareButtonText}>View Similar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.compareButton}>
-              <MaterialCommunityIcons name="compare" size={20} color="#666" />
-              <Text style={styles.compareButtonText}>Add to Compare</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Similar Products Section */}
-          {similarProducts.length > 0 && (
-            <View style={styles.similarSection}>
-              <View style={styles.similarHeader}>
-                <Text style={styles.similarTitle}>Similar Products</Text>
-                <Text style={styles.itemCount}>{similarProducts.length}</Text>
-              </View>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.similarProducts}
+          {/* Size Selection */}
+          <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
+          <View style={styles.sizeContainer}>
+            {(product.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"]).map((size) => (
+              <TouchableOpacity
+                key={size}
+                style={[
+                  styles.sizeButton,
+                  selectedSize === size && styles.selectedSizeButton,
+                ]}
+                onPress={() => setSelectedSize(size)}
               >
-                {similarProducts.map((item) => (
-                  <TouchableOpacity
-                    key={item._id}
-                    style={styles.similarCard}
-                    onPress={() =>
-                      router.push({
-                        pathname: "/(screens)/product",
-                        params: { id: item._id },
-                      })
-                    }
-                  >
-                    <Image
-                      source={{
-                        uri: item.product_images?.[0] || placeholderImage,
-                      }}
-                      style={styles.similarImage}
-                    />
-                    <View style={styles.similarInfo}>
-                      <Text
-                        style={styles.similarProductTitle}
-                        numberOfLines={1}
-                      >
-                        {item.name}
-                      </Text>
-                      <Text
-                        style={styles.similarProductSubtitle}
-                        numberOfLines={2}
-                      >
-                        {item.description}
-                      </Text>
-                      <Text style={styles.similarPrice}>₹{item.price}</Text>
-                      <View style={styles.similarRating}>
-                        <View style={{ flexDirection: "row" }}>
-                          {[...Array(5)].map((_, index) => (
-                            <AntDesign
-                              key={index}
-                              name={
-                                index < Math.floor(item.rating || 0)
-                                  ? "star"
-                                  : "staro"
-                              }
-                              size={12}
-                              color="#FFD700"
-                            />
-                          ))}
-                        </View>
-                        <Text style={styles.similarReviews}>
-                          {item.reviews?.length || 0}
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+                <Text
+                  style={[
+                    styles.sizeText,
+                    selectedSize === size && styles.selectedSizeText,
+                  ]}
+                >
+                  {size}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Product Details */}
+          <Text style={styles.detailsTitle}>Product Details</Text>
+          <Text style={styles.detailsText}>
+            Brand: {product.brand}
+            {"\n"}Color: {product.colour?.join(", ")}
+            {"\n"}Description: {product.description}
+            {"\n"}Stock: {product.stock}
+          </Text>
+
+          {/* Store Info */}
+          <View style={styles.storeInfo}>
+            <View style={styles.storeInfoItem}>
+              <Feather name="map-pin" size={18} color="#666" />
+              <Text style={styles.storeText}>Nearest Store</Text>
             </View>
-          )}
-        </ScrollView>
-      </SafeAreaView>
-    </>
+            <View style={styles.storeInfoItem}>
+              <MaterialCommunityIcons
+                name="crown-outline"
+                size={18}
+                color="#F83758"
+              />
+              <Text style={styles.vipText}>VIP</Text>
+            </View>
+            <View style={styles.storeInfoItem}>
+              <MaterialCommunityIcons
+                name="refresh"
+                size={18}
+                color="#F83758"
+              />
+              <Text style={styles.returnText}>Return policy</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Bottom Buttons */}
+        <View style={styles.bottomButtons}>
+          <TouchableOpacity style={styles.viewSimilarButton}>
+            <Feather
+              name="shopping-cart"
+              size={20}
+              color="#F83758"
+              style={styles.buttonIcon}
+            />
+            <Text style={styles.viewSimilarText}>View Cart</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.addToCartButton}
+            onPress={() => router.push("/(screens)/cart")}
+          >
+            <Text style={styles.addToCartText}>Add to Cart</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Delivery Info */}
+        <View style={styles.deliveryInfo}>
+          <MaterialCommunityIcons
+            name="truck-delivery-outline"
+            size={32}
+            color="#F83758"
+            style={styles.deliveryIcon}
+          />
+          <View style={styles.deliveryContent}>
+            <Text style={styles.deliveryLabel}>Delivery in</Text>
+            <Text style={styles.deliveryTime}>1 within Hour</Text>
+          </View>
+        </View>
+
+        {/* Compare Actions */}
+        <View style={styles.compareActions}>
+          <TouchableOpacity style={styles.compareButton}>
+            <Feather name="eye" size={20} color="#666" />
+            <Text style={styles.compareButtonText}>View Similar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.compareButton}>
+            <MaterialCommunityIcons name="compare" size={20} color="#666" />
+            <Text style={styles.compareButtonText}>Add to Compare</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Similar Products Section */}
+        {similarProducts.length > 0 && (
+          <View style={styles.similarSection}>
+            <View style={styles.similarHeader}>
+              <Text style={styles.similarTitle}>Similar Products</Text>
+              <Text style={styles.itemCount}>{similarProducts.length}</Text>
+            </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.similarProducts}
+            >
+              {similarProducts.map((item) => (
+                <TouchableOpacity
+                  key={item._id}
+                  style={styles.similarCard}
+                  onPress={() => router.push({
+                    pathname: "/(screens)/product",
+                    params: { id: item._id }
+                  })}
+                >
+                  <Image
+                    source={{ uri: item.product_images?.[0] || placeholderImage }}
+                    style={styles.similarImage}
+                  />
+                  <View style={styles.similarInfo}>
+                    <Text style={styles.similarProductTitle} numberOfLines={1}>
+                      {item.name}
+                    </Text>
+                    <Text style={styles.similarProductSubtitle} numberOfLines={2}>
+                      {item.description}
+                    </Text>
+                    <Text style={styles.similarPrice}>₹{item.price}</Text>
+                    <View style={styles.similarRating}>
+                      <View style={{ flexDirection: "row" }}>
+                        {[...Array(5)].map((_, index) => (
+                          <AntDesign
+                            key={index}
+                            name={index < Math.floor(item.rating || 0) ? "star" : "staro"}
+                            size={12}
+                            color="#FFD700"
+                          />
+                        ))}
+                      </View>
+                      <Text style={styles.similarReviews}>
+                        {item.reviews?.length || 0}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -592,35 +513,54 @@ const styles = StyleSheet.create({
   },
   bottomButtons: {
     flexDirection: "row",
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#F5F5F5",
+    padding: 10,
+    gap: 16,
     backgroundColor: "#FFFFFF",
+    // borderTopWidth: 1,
+    // borderTopColor: "#F5F5F5",
   },
-  button: {
+  viewSimilarButton: {
     flex: 1,
     height: 48,
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  },
-  addToCartButton: {
-    backgroundColor: "#F83758",
-    marginRight: 8,
-  },
-  buyNowButton: {
-    backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#F83758",
-    marginLeft: 8,
+    gap: 8,
   },
-  buttonText: {
+  viewSimilarText: {
+    color: "#F83758",
     fontSize: 16,
     fontWeight: "600",
-    color: "#FFFFFF",
   },
-  buyNowText: {
-    color: "#F83758",
+  addToCartButton: {
+    flex: 1,
+    height: 48,
+    backgroundColor: "#F83758",
+    borderRadius: 8,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
+    shadowColor: "#F83758",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  addToCartText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  buttonIcon: {
+    marginRight: 4,
   },
   deliveryInfo: {
     backgroundColor: "#FFCCD5",
