@@ -30,7 +30,7 @@ export default function Trending() {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://ecommerce-shop-qg3y.onrender.com/api/product/displayAll?category=6790aacd127f6fbf029d26c4"
+        "https://ecommerce-shop-qg3y.onrender.com/api/product/displayAll?category="
       );
       const result = await response.json();
 
@@ -105,19 +105,21 @@ export default function Trending() {
           numColumns={2}
           contentContainerStyle={styles.productsContainer}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item: product, i }) => (
+          renderItem={({ item: product }) => (
             <TrendingProductCard
               product={{
                 id: product._id,
                 title: product.name,
                 subtitle: product.description,
                 price: product.price,
-                originalPrice: product.originalPrice,
                 rating: product.rating || 0,
                 reviews: product.reviews?.length || 0,
-                image: product.images?.[0],
+                image: product.product_images?.[0],
               }}
-              imageStyle={{ height: i % 2 === 0 ? 180 : 220 }}
+              onPress={() => router.push({
+                pathname: "/(screens)/product",
+                params: { id: product._id }
+              })}
             />
           )}
         />
@@ -196,23 +198,27 @@ const styles = StyleSheet.create({
     height: 16,
   },
   productsContainer: {
-    paddingHorizontal: 8,
-    paddingBottom: 16,
+    paddingHorizontal: 4,
+    paddingTop: 8,
+    paddingBottom: 90,
   },
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 40,
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+    marginTop: 40,
   },
   errorText: {
     color: "#F83758",
     textAlign: "center",
     fontSize: 14,
+    lineHeight: 20,
   },
 });

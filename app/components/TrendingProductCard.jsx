@@ -1,42 +1,49 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function TrendingProductCard({ product, style, imageStyle }) {
-  const router = useRouter();
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width / 2 - 20; // Account for margins and padding
 
+export default function TrendingProductCard({ product, imageStyle, onPress }) {
   return (
     <TouchableOpacity
-      style={[styles.productCard, style]}
-      onPress={() => router.push("/product")}
+      style={styles.container}
+      onPress={onPress}
+      activeOpacity={0.9}
     >
       <Image
-        source={{ uri: product.image }}
-        style={[styles.productImage, imageStyle]}
+        source={{ uri: product.image || "https://via.placeholder.com/200" }}
+        style={[styles.image, imageStyle]}
       />
-      <View style={styles.productInfo}>
-        <Text style={styles.productTitle} numberOfLines={1}>
+      <View style={styles.content}>
+        <Text style={styles.title} numberOfLines={2}>
           {product.title}
         </Text>
-        <Text style={styles.productSubtitle} numberOfLines={2}>
+        <Text style={styles.subtitle} numberOfLines={1}>
           {product.subtitle}
         </Text>
-        <Text style={styles.productPrice}>₹{product.price.toLocaleString()}</Text>
+        <Text style={styles.price}>₹{product.price}</Text>
         <View style={styles.ratingContainer}>
           <View style={styles.stars}>
             {[...Array(5)].map((_, index) => (
               <AntDesign
                 key={index}
                 name={index < Math.floor(product.rating) ? "star" : "staro"}
-                size={12}
+                size={14}
                 color="#FFD700"
+                style={styles.star}
               />
             ))}
           </View>
-          <Text style={styles.reviews}>
-            {product.reviews.toLocaleString()}
-          </Text>
+          <Text style={styles.reviews}>{product.reviews}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -44,7 +51,7 @@ export default function TrendingProductCard({ product, style, imageStyle }) {
 }
 
 const styles = StyleSheet.create({
-  productCard: {
+  container: {
     flex: 1,
     margin: 6,
     backgroundColor: "#FFFFFF",
@@ -59,26 +66,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
-  productImage: {
+  image: {
     width: "100%",
-    resizeMode: "cover",
+    height: CARD_WIDTH * 1.2,
+    resizeMode: "contain",
+    // backgroundColor: "#F8F8F8",
   },
-  productInfo: {
-    padding: 8,
+  content: {
+    padding: 12,
   },
-  productTitle: {
+  title: {
     fontSize: 14,
     fontWeight: "500",
     color: "#000",
     marginBottom: 2,
   },
-  productSubtitle: {
+  subtitle: {
     fontSize: 12,
     color: "#666",
     marginBottom: 4,
     lineHeight: 16,
   },
-  productPrice: {
+  price: {
     fontSize: 16,
     fontWeight: "600",
     color: "#000",
@@ -97,4 +106,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
   },
-}); 
+  star: {
+    marginRight: 2,
+  },
+});

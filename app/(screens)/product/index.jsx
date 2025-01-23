@@ -27,8 +27,9 @@ export default function ProductDetail() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState("7 UK");
+  const [selectedSize, setSelectedSize] = useState("");
   const [product, setProduct] = useState(null);
+  const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -52,6 +53,7 @@ export default function ProductDetail() {
       if (result.success) {
         console.log("Setting product data:", result.data.product);
         setProduct(result.data.product);
+        setSimilarProducts(result.data.similarProducts || []);
         console.log("Product state after update:", result.data.product);
       } else {
         console.log("API Error:", result.message);
@@ -209,7 +211,7 @@ export default function ProductDetail() {
                     selectedSize === size && styles.selectedSizeText,
                   ]}
                 >
-                  {size} UK
+                  {size}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -295,115 +297,59 @@ export default function ProductDetail() {
         </View>
 
         {/* Similar Products Section */}
-        <View style={styles.similarSection}>
-          <View style={styles.similarHeader}>
-            <Text style={styles.similarTitle}>Similar To</Text>
-            <Text style={styles.itemCount}>282+ Items</Text>
-            <View style={styles.filterContainer}>
-              <TouchableOpacity style={styles.filterButton}>
-                <Text style={styles.filterText}>Sort</Text>
-                <AntDesign name="down" size={16} color="#000" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.filterButton}>
-                <Text style={styles.filterText}>Filter</Text>
-                <Feather name="filter" size={16} color="#000" />
-              </TouchableOpacity>
+        {similarProducts.length > 0 && (
+          <View style={styles.similarSection}>
+            <View style={styles.similarHeader}>
+              <Text style={styles.similarTitle}>Similar Products</Text>
+              <Text style={styles.itemCount}>{similarProducts.length}</Text>
             </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.similarProducts}
+            >
+              {similarProducts.map((item) => (
+                <TouchableOpacity
+                  key={item._id}
+                  style={styles.similarCard}
+                  onPress={() => router.push({
+                    pathname: "/(screens)/product",
+                    params: { id: item._id }
+                  })}
+                >
+                  <Image
+                    source={{ uri: item.product_images?.[0] || placeholderImage }}
+                    style={styles.similarImage}
+                  />
+                  <View style={styles.similarInfo}>
+                    <Text style={styles.similarProductTitle} numberOfLines={1}>
+                      {item.name}
+                    </Text>
+                    <Text style={styles.similarProductSubtitle} numberOfLines={2}>
+                      {item.description}
+                    </Text>
+                    <Text style={styles.similarPrice}>₹{item.price}</Text>
+                    <View style={styles.similarRating}>
+                      <View style={{ flexDirection: "row" }}>
+                        {[...Array(5)].map((_, index) => (
+                          <AntDesign
+                            key={index}
+                            name={index < Math.floor(item.rating || 0) ? "star" : "staro"}
+                            size={12}
+                            color="#FFD700"
+                          />
+                        ))}
+                      </View>
+                      <Text style={styles.similarReviews}>
+                        {item.reviews?.length || 0}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
-
-          {/* Similar Products */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.similarProducts}
-          >
-            <TouchableOpacity style={styles.similarCard}>
-              <Image
-                source={{
-                  uri: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80",
-                }}
-                style={styles.similarImage}
-              />
-              <View style={styles.similarInfo}>
-                <Text style={styles.similarProductTitle}>
-                  Nike Sneakers
-                </Text>
-                <Text style={styles.similarProductSubtitle}>
-                  Nike Air Jordan Retro 1 Low Mystic Black
-                </Text>
-                <Text style={styles.similarPrice}>₹1,900</Text>
-                <View style={styles.similarRating}>
-                  {[...Array(5)].map((_, i) => (
-                    <AntDesign
-                      key={i}
-                      name={i < 4 ? "star" : "staro"}
-                      size={12}
-                      color="#FFD700"
-                    />
-                  ))}
-                  <Text style={styles.similarReviews}>46,890</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.similarCard}>
-              <Image
-                source={{
-                  uri: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80",
-                }}
-                style={styles.similarImage}
-              />
-              <View style={styles.similarInfo}>
-                <Text style={styles.similarProductTitle}>
-                  Nike Sneakers
-                </Text>
-                <Text style={styles.similarProductSubtitle}>
-                  Mid Peach Mocha Shoes For Man White Black Pink S...
-                </Text>
-                <Text style={styles.similarPrice}>₹1,900</Text>
-                <View style={styles.similarRating}>
-                  {[...Array(5)].map((_, i) => (
-                    <AntDesign
-                      key={i}
-                      name={i < 4 ? "star" : "staro"}
-                      size={12}
-                      color="#FFD700"
-                    />
-                  ))}
-                  <Text style={styles.similarReviews}>2,56,890</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.similarCard}>
-              <Image
-                source={{
-                  uri: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80",
-                }}
-                style={styles.similarImage}
-              />
-              <View style={styles.similarInfo}>
-                <Text style={styles.similarProductTitle}>
-                  Nike Sneakers
-                </Text>
-                <Text style={styles.similarProductSubtitle}>
-                  Mid Peach Mocha Shoes For Man White Black Pink S...
-                </Text>
-                <Text style={styles.similarPrice}>₹1,900</Text>
-                <View style={styles.similarRating}>
-                  {[...Array(5)].map((_, i) => (
-                    <AntDesign
-                      key={i}
-                      name={i < 4 ? "star" : "staro"}
-                      size={12}
-                      color="#FFD700"
-                    />
-                  ))}
-                  <Text style={styles.similarReviews}>2,56,890</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -673,8 +619,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   similarSection: {
-    marginTop: 20,
-    // paddingBottom: 0,
+    marginTop: 24,
+    paddingBottom: 16,
   },
   similarHeader: {
     flexDirection: "row",
@@ -683,69 +629,61 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   similarTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "600",
     color: "#000",
   },
   itemCount: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#666",
     marginLeft: 8,
   },
-  filterContainer: {
-    flexDirection: "row",
-    marginLeft: "auto",
-    gap: 12,
-  },
-  filterButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: "#FFF",
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#EEE",
-  },
-  filterText: {
-    fontSize: 14,
-    color: "#000",
-  },
   similarProducts: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     gap: 12,
   },
   similarCard: {
-    width: 200,
+    width: 180,
     backgroundColor: "#FFF",
-    borderRadius: 8,
-    marginRight: 2,
+    borderRadius: 12,
+    marginRight: 12,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#EEE",
+    borderColor: "#F0F0F0",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   similarImage: {
     width: "100%",
-    height: 150,
+    height: 180,
     resizeMode: "cover",
+    backgroundColor: "#F8F8F8",
   },
   similarInfo: {
     padding: 12,
   },
   similarProductTitle: {
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: "600",
+    color: "#000",
     marginBottom: 4,
   },
   similarProductSubtitle: {
     fontSize: 12,
     color: "#666",
     marginBottom: 8,
+    lineHeight: 16,
   },
   similarPrice: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
+    color: "#000",
     marginBottom: 8,
   },
   similarRating: {

@@ -24,6 +24,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../components/Header";
 import BottomNavigation from "../components/BottomNavigation";
+import Categories from "../components/Categories";
 
 const { width } = Dimensions.get("window");
 
@@ -186,7 +187,7 @@ export default function Home() {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://ecommerce-shop-qg3y.onrender.com/api/product/displayAll?category=6790aacd127f6fbf029d26c4"
+        "https://ecommerce-shop-qg3y.onrender.com/api/product/displayAll?category="
       );
       const result = await response.json();
 
@@ -245,33 +246,9 @@ export default function Home() {
                 />
               </TouchableOpacity>
             </View>
-            <View style={styles.subHeader}>
-              <Text style={styles.headerTitle}>All Featured</Text>
-              <View style={styles.headerRight}>
-                <TouchableOpacity style={styles.sortButton}>
-                  <Text style={styles.sortText}>Sort</Text>
-                  <Feather name="chevron-down" size={16} color="#000" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.filterButton}>
-                  <Text style={styles.filterText}>Filter</Text>
-                  <Feather name="filter" size={16} color="#000" />
-                </TouchableOpacity>
-              </View>
-            </View>
+
             {/* Categories */}
-            <View style={styles.categoriesContainer}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {categories.map((category) => (
-                  <TouchableOpacity
-                    key={category.id}
-                    style={styles.categoryItem}
-                  >
-                    <Image source={category.icon} style={styles.categoryIcon} />
-                    <Text style={styles.categoryText}>{category.name}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+            <Categories />
 
             {/* Banner Slider */}
             <View style={styles.bannerContainer}>
@@ -376,7 +353,7 @@ export default function Home() {
                       })}
                     >
                       <Image 
-                        source={{ uri: product?.images?.[0] || 'https://via.placeholder.com/200' }} 
+                        source={{ uri: product?.product_images?.[0] || 'https://via.placeholder.com/200' }} 
                         style={styles.productImage} 
                       />
                       <View style={styles.productInfo}>
@@ -629,23 +606,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  categoriesContainer: {
-    paddingVertical: 16,
-  },
-  categoryItem: {
-    alignItems: "center",
-    marginHorizontal: 12,
-  },
-  categoryIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    marginBottom: 4,
-  },
-  categoryText: {
-    fontSize: 12,
-    color: "#333",
-  },
   bannerContainer: {
     marginHorizontal: 16,
     marginTop: 6,
@@ -793,7 +753,7 @@ const styles = StyleSheet.create({
   productImage: {
     width: "100%",
     height: 200,
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   productInfo: {
     padding: 12,
@@ -1185,14 +1145,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#000",
   },
-  subHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  headerTitle: {
+   headerTitle: {
     fontSize: 16,
     fontWeight: "600",
     color: "#000",
@@ -1201,16 +1154,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-  },
-  sortButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  filterButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
   },
   loader: {
     marginVertical: 20,
