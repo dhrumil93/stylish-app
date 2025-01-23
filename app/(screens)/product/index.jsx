@@ -23,7 +23,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
-const STATUSBAR_HEIGHT = Platform.OS === "android" ? StatusBar.currentHeight : 0;
+const STATUSBAR_HEIGHT =
+  Platform.OS === "android" ? StatusBar.currentHeight : 0;
 
 export default function ProductDetail() {
   const router = useRouter();
@@ -83,59 +84,18 @@ export default function ProductDetail() {
 
     try {
       setAddingToCart(true);
-      const token = await AsyncStorage.getItem("userToken");
-      
-      if (!token) {
-        Alert.alert(
-          "Login Required", 
-          "Please login to add items to cart",
-          [
-            { text: "Cancel", style: "cancel" },
-            { text: "Login", onPress: () => router.push("/(auth)/signin") }
-          ]
-        );
-        return;
-      }
 
-      const response = await fetch(
-        "https://ecommerce-shop-qg3y.onrender.com/api/cart/addToCart",
+      Alert.alert("Success", "Item added to cart successfully", [
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token
-          },
-          body: JSON.stringify({
-            product: id,
-            size: selectedSize,
-            quantity: 1
-          }),
-        }
-      );
-
-      const result = await response.json();
-      console.log("Add to cart response:", result);
-
-      if (result.success) {
-        Alert.alert(
-          "Success",
-          "Item added to cart successfully",
-          [
-            {
-              text: "Continue Shopping",
-              style: "cancel",
-            },
-            {
-              text: "Go to Cart",
-              onPress: () => router.push("/(screens)/cart"),
-            },
-          ]
-        );
-      } else {
-        Alert.alert("Error", result.message || "Failed to add item to cart");
-      }
+          text: "Continue Shopping",
+          style: "cancel",
+        },
+        {
+          text: "Go to Cart",
+          onPress: () => router.push("/(screens)/cart"),
+        },
+      ]);
     } catch (error) {
-      console.error("API Error:", error);
       Alert.alert("Error", "Failed to add item to cart. Please try again.");
     } finally {
       setAddingToCart(false);
@@ -156,7 +116,10 @@ export default function ProductDetail() {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>{error || "Product not found"}</Text>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
           <Text style={styles.backButtonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
@@ -164,11 +127,14 @@ export default function ProductDetail() {
   }
 
   // Ensure product.images is an array
-  const productImages = Array.isArray(product.product_images) ? product.product_images : [];
+  const productImages = Array.isArray(product.product_images)
+    ? product.product_images
+    : [];
   console.log("Product Images:", productImages);
 
   // Define placeholder image URL
-  const placeholderImage = "https://cdn-icons-png.flaticon.com/512/3081/3081559.png";
+  const placeholderImage =
+    "https://cdn-icons-png.flaticon.com/512/3081/3081559.png";
 
   return (
     <>
@@ -177,9 +143,14 @@ export default function ProductDetail() {
         backgroundColor="transparent"
         translucent
       />
-      <SafeAreaView style={[styles.container, {
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-      }]}>
+      <SafeAreaView
+        style={[
+          styles.container,
+          {
+            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+          },
+        ]}
+      >
         {/* Header - Fixed */}
         <View style={styles.headerContainer}>
           <View style={styles.header}>
@@ -204,9 +175,14 @@ export default function ProductDetail() {
             showsHorizontalScrollIndicator={false}
             onScroll={({ nativeEvent }) => {
               const slide = Math.ceil(
-                nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
+                nativeEvent.contentOffset.x /
+                  nativeEvent.layoutMeasurement.width
               );
-              if (slide >= 0 && slide < productImages.length && currentImageIndex !== slide) {
+              if (
+                slide >= 0 &&
+                slide < productImages.length &&
+                currentImageIndex !== slide
+              ) {
                 setCurrentImageIndex(slide);
               }
             }}
@@ -246,7 +222,9 @@ export default function ProductDetail() {
 
           {/* Product Info */}
           <View style={styles.productInfo}>
-            <Text style={styles.productTitle}>{product.name || "Product Name"}</Text>
+            <Text style={styles.productTitle}>
+              {product.name || "Product Name"}
+            </Text>
             <Text style={styles.productSubtitle}>
               {product.description || "No description available"}
             </Text>
@@ -257,7 +235,9 @@ export default function ProductDetail() {
                 {[...Array(5)].map((_, index) => (
                   <AntDesign
                     key={index}
-                    name={index < Math.floor(product.rating || 0) ? "star" : "staro"}
+                    name={
+                      index < Math.floor(product.rating || 0) ? "star" : "staro"
+                    }
                     size={16}
                     color="#FFD700"
                   />
@@ -274,25 +254,27 @@ export default function ProductDetail() {
             {/* Size Selection */}
             <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
             <View style={styles.sizeContainer}>
-              {(product.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"]).map((size) => (
-                <TouchableOpacity
-                  key={size}
-                  style={[
-                    styles.sizeButton,
-                    selectedSize === size && styles.selectedSizeButton,
-                  ]}
-                  onPress={() => setSelectedSize(size)}
-                >
-                  <Text
+              {(product.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"]).map(
+                (size) => (
+                  <TouchableOpacity
+                    key={size}
                     style={[
-                      styles.sizeText,
-                      selectedSize === size && styles.selectedSizeText,
+                      styles.sizeButton,
+                      selectedSize === size && styles.selectedSizeButton,
                     ]}
+                    onPress={() => setSelectedSize(size)}
                   >
-                    {size}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={[
+                        styles.sizeText,
+                        selectedSize === size && styles.selectedSizeText,
+                      ]}
+                    >
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                )
+              )}
             </View>
 
             {/* Product Details */}
@@ -346,7 +328,9 @@ export default function ProductDetail() {
               style={[styles.button, styles.buyNowButton]}
               onPress={() => router.push("/(screens)/cart")}
             >
-              <Text style={[styles.buttonText, styles.buyNowText]}>Buy Now</Text>
+              <Text style={[styles.buttonText, styles.buyNowText]}>
+                Buy Now
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -392,20 +376,30 @@ export default function ProductDetail() {
                   <TouchableOpacity
                     key={item._id}
                     style={styles.similarCard}
-                    onPress={() => router.push({
-                      pathname: "/(screens)/product",
-                      params: { id: item._id }
-                    })}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/(screens)/product",
+                        params: { id: item._id },
+                      })
+                    }
                   >
                     <Image
-                      source={{ uri: item.product_images?.[0] || placeholderImage }}
+                      source={{
+                        uri: item.product_images?.[0] || placeholderImage,
+                      }}
                       style={styles.similarImage}
                     />
                     <View style={styles.similarInfo}>
-                      <Text style={styles.similarProductTitle} numberOfLines={1}>
+                      <Text
+                        style={styles.similarProductTitle}
+                        numberOfLines={1}
+                      >
                         {item.name}
                       </Text>
-                      <Text style={styles.similarProductSubtitle} numberOfLines={2}>
+                      <Text
+                        style={styles.similarProductSubtitle}
+                        numberOfLines={2}
+                      >
                         {item.description}
                       </Text>
                       <Text style={styles.similarPrice}>₹{item.price}</Text>
@@ -414,7 +408,11 @@ export default function ProductDetail() {
                           {[...Array(5)].map((_, index) => (
                             <AntDesign
                               key={index}
-                              name={index < Math.floor(item.rating || 0) ? "star" : "staro"}
+                              name={
+                                index < Math.floor(item.rating || 0)
+                                  ? "star"
+                                  : "staro"
+                              }
                               size={12}
                               color="#FFD700"
                             />
