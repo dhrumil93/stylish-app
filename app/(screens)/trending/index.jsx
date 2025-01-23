@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Feather, AntDesign } from "@expo/vector-icons";
@@ -15,119 +16,36 @@ import TrendingProductCard from "../../components/TrendingProductCard";
 
 const { width } = Dimensions.get("window");
 
-const products = [
-  {
-    id: 1,
-    title: "Black Winter Jacket",
-    subtitle: "Autumn And Winter Casual cotton padded jacket",
-    price: 499,
-    rating: 4.5,
-    reviews: 6789,
-    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500",
-  },
-  {
-    id: 2,
-    title: "Mens Starry Shirt",
-    subtitle: "Mens Starry Sky Printed Shirt 100% Cotton Fabric",
-    price: 399,
-    rating: 4.5,
-    reviews: 120345,
-    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500",
-  },
-  {
-    id: 3,
-    title: "Black Dress",
-    subtitle: "Solid Black Dress for Women, Sexy Chain Shorts Ladies",
-    price: 2000,
-    rating: 4.0,
-    reviews: 123456,
-    image: "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=500",
-  },
-  {
-    id: 4,
-    title: "Pink Embroidered Dress",
-    subtitle: "EARTHEN Store Pink Embroidered Tiered Maxi Dress",
-    price: 1900,
-    rating: 4.8,
-    reviews: 54678,
-    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500",
-  },
-  {
-    id: 5,
-    title: "Flare Dress",
-    subtitle: "Anthesia Black & Rust Orange Floral Print Tiered Midi",
-    price: 1990,
-    rating: 4.3,
-    reviews: 35684,
-    image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500",
-  },
-  {
-    id: 6,
-    title: "Denim Dress",
-    subtitle: "Blue cotton denim dress Look.2 Printed cotton dress",
-    price: 999,
-    rating: 4.4,
-    reviews: 77156,
-    image: "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=500",
-  },
-  {
-    id: 7,
-    title: "Nike Air Jordan",
-    subtitle: "The classic Air Jordan 12 to create a shoe thats fresh",
-    price: 4999,
-    rating: 4.6,
-    reviews: 523456,
-    image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500",
-  },
-  {
-    id: 8,
-    title: "Realme 7 Pro",
-    subtitle: "6 GB RAM | 64 GB ROM | Expandable Upto 256 GB",
-    price: 3499,
-    rating: 4.4,
-    reviews: 234567,
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500",
-  },
-  {
-    id: 9,
-    title: "Sony PS4 Slim",
-    subtitle: "Sony PS4 Console 1TB Slim with 3 Games: Gran Turismo",
-    price: 1299,
-    rating: 4.7,
-    reviews: 35099,
-    image: "https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=500",
-  },
-  {
-    id: 10,
-    title: "Black Jacket",
-    subtitle: "This warm and comfortable jacket is great for winter",
-    price: 2999,
-    rating: 4.2,
-    reviews: 223456,
-    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
-  },
-  {
-    id: 11,
-    title: "Canon DSLR",
-    subtitle: "D7200 Digital Camera (Black) in New Awesome Look",
-    price: 26999,
-    rating: 4.5,
-    reviews: 123456,
-    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500",
-  },
-  {
-    id: 12,
-    title: "Formal Shoes",
-    subtitle: "George Walker Derby Brown Formal Shoes",
-    price: 999,
-    rating: 4.1,
-    reviews: 124578,
-    image: "https://images.unsplash.com/photo-1614252369475-531eba835eb1?w=500",
-  },
-];
-
 export default function Trending() {
   const router = useRouter();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "https://ecommerce-shop-qg3y.onrender.com/api/product/displayAll?category=6790aacd127f6fbf029d26c4"
+      );
+      const result = await response.json();
+
+      if (result.success) {
+        setProducts(result.data);
+      } else {
+        setError(result.message || "Failed to fetch products");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      setError("Network error or server not responding");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -156,7 +74,9 @@ export default function Trending() {
 
       {/* Sub Header */}
       <View style={styles.subHeader}>
-        <Text style={styles.headerTitle}>52,082+ Items</Text>
+        <Text style={styles.headerTitle}>
+          {Array.isArray(products) ? `${products.length}+ Items` : "Loading..."}
+        </Text>
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.sortButton}>
             <Text style={styles.sortText}>Sort</Text>
@@ -170,19 +90,38 @@ export default function Trending() {
       </View>
 
       {/* Products Grid */}
-      <MasonryList
-        data={products}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        contentContainerStyle={styles.productsContainer}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item: product }) => (
-          <TrendingProductCard
-            product={product}
-            imageStyle={{ height: product.id % 2 === 0 ? 180 : 220 }}
-          />
-        )}
-      />
+      {loading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#F83758" />
+        </View>
+      ) : error ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      ) : (
+        <MasonryList
+          data={products}
+          keyExtractor={(item) => item._id}
+          numColumns={2}
+          contentContainerStyle={styles.productsContainer}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item: product, i }) => (
+            <TrendingProductCard
+              product={{
+                id: product._id,
+                title: product.name,
+                subtitle: product.description,
+                price: product.price,
+                originalPrice: product.originalPrice,
+                rating: product.rating || 0,
+                reviews: product.reviews?.length || 0,
+                image: product.images?.[0],
+              }}
+              imageStyle={{ height: i % 2 === 0 ? 180 : 220 }}
+            />
+          )}
+        />
+      )}
     </View>
   );
 }
@@ -259,5 +198,21 @@ const styles = StyleSheet.create({
   productsContainer: {
     paddingHorizontal: 8,
     paddingBottom: 16,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  errorText: {
+    color: "#F83758",
+    textAlign: "center",
+    fontSize: 14,
   },
 });

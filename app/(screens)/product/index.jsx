@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,9 @@ import {
   Dimensions,
   Platform,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import {
   AntDesign,
   Feather,
@@ -24,18 +25,78 @@ const STATUSBAR_HEIGHT = Platform.OS === "android" ? StatusBar.currentHeight : 0
 
 export default function ProductDetail() {
   const router = useRouter();
+  const { id } = useLocalSearchParams();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState("7 UK");
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const images = [
-    "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80",
-    "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&q=80",
-    "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=800&q=80",
-    "https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=800&q=80",
-    "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=800&q=80",
-  ];
+  useEffect(() => {
+    console.log("Product ID:", id);
+    if (id) {
+      fetchProductDetails();
+    }
+  }, [id]);
 
-  const sizes = ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"];
+  const fetchProductDetails = async () => {
+    try {
+      setLoading(true);
+      console.log("Fetching product details for ID:", id);
+      const response = await fetch(
+        `https://ecommerce-shop-qg3y.onrender.com/api/product/display?id=${id}`
+      );
+      const result = await response.json();
+      console.log("API Response:", result);
+
+      if (result.success) {
+        console.log("Setting product data:", result.data.product);
+        setProduct(result.data.product);
+        console.log("Product state after update:", result.data.product);
+      } else {
+        console.log("API Error:", result.message);
+        setError(result.message || "Failed to fetch product details");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      setError("Network error or server not responding");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Add console log to check product state
+  useEffect(() => {
+    console.log("Current product state:", product);
+  }, [product]);
+
+  if (loading) {
+    console.log("Loading state...");
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#F83758" />
+      </View>
+    );
+  }
+
+  if (error || !product) {
+    console.log("Error state:", error);
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{error || "Product not found"}</Text>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Text style={styles.backButtonText}>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // Ensure product.images is an array
+  const productImages = Array.isArray(product.product_images) ? product.product_images : [];
+  console.log("Product Images:", productImages);
+
+  // Define placeholder image URL
+  const placeholderImage = "https://cdn-icons-png.flaticon.com/512/3081/3081559.png";
 
   return (
     <View style={styles.container}>
@@ -63,42 +124,51 @@ export default function ProductDetail() {
           showsHorizontalScrollIndicator={false}
           onScroll={({ nativeEvent }) => {
             const slide = Math.ceil(
-              nativeEvent.contentOffset.x /
-                nativeEvent.layoutMeasurement.width
+              nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
             );
-            if (currentImageIndex !== slide) {
+            if (slide >= 0 && slide < productImages.length && currentImageIndex !== slide) {
               setCurrentImageIndex(slide);
             }
           }}
           scrollEventThrottle={16}
         >
-          {images.map((image, index) => (
+          {productImages.length > 0 ? (
+            productImages.map((image, index) => (
+              <Image
+                key={index}
+                source={{ uri: image || placeholderImage }}
+                style={styles.productImage}
+                defaultSource={{ uri: placeholderImage }}
+              />
+            ))
+          ) : (
             <Image
-              key={index}
-              source={{ uri: image }}
+              source={{ uri: placeholderImage }}
               style={styles.productImage}
             />
-          ))}
+          )}
         </ScrollView>
 
         {/* Pagination Dots */}
-        <View style={styles.pagination}>
-          {images.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.paginationDot,
-                index === currentImageIndex && styles.paginationDotActive,
-              ]}
-            />
-          ))}
-        </View>
+        {productImages.length > 1 && (
+          <View style={styles.pagination}>
+            {productImages.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.paginationDot,
+                  index === currentImageIndex && styles.paginationDotActive,
+                ]}
+              />
+            ))}
+          </View>
+        )}
 
         {/* Product Info */}
         <View style={styles.productInfo}>
-          <Text style={styles.productTitle}>Nike Sneakers</Text>
+          <Text style={styles.productTitle}>{product.name || "Product Name"}</Text>
           <Text style={styles.productSubtitle}>
-            Vision Alta Men's Shoes Size (All Colours)
+            {product.description || "No description available"}
           </Text>
 
           {/* Rating */}
@@ -107,26 +177,24 @@ export default function ProductDetail() {
               {[...Array(5)].map((_, index) => (
                 <AntDesign
                   key={index}
-                  name={index < 4 ? "star" : "staro"}
+                  name={index < Math.floor(product.rating || 0) ? "star" : "staro"}
                   size={16}
                   color="#FFD700"
                 />
               ))}
             </View>
-            <Text style={styles.reviews}>56,890</Text>
+            <Text style={styles.reviews}>0 Reviews</Text>
           </View>
 
           {/* Price */}
           <View style={styles.priceContainer}>
-            <Text style={styles.price}>₹1,500</Text>
-            <Text style={styles.originalPrice}>₹2,999</Text>
-            <Text style={styles.discount}>50% Off</Text>
+            <Text style={styles.price}>₹{product.price || 0}</Text>
           </View>
 
           {/* Size Selection */}
           <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
           <View style={styles.sizeContainer}>
-            {sizes.map((size) => (
+            {(product.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"]).map((size) => (
               <TouchableOpacity
                 key={size}
                 style={[
@@ -141,7 +209,7 @@ export default function ProductDetail() {
                     selectedSize === size && styles.selectedSizeText,
                   ]}
                 >
-                  {size}
+                  {size} UK
                 </Text>
               </TouchableOpacity>
             ))}
@@ -150,11 +218,10 @@ export default function ProductDetail() {
           {/* Product Details */}
           <Text style={styles.detailsTitle}>Product Details</Text>
           <Text style={styles.detailsText}>
-            Perhaps the most iconic sneaker of all-time, this original
-            "Chicago" 7 colorway is the cornerstone to any sneaker
-            collection. Made famous in 1985 by Michael Jordan, the shoe has
-            stood the test of time, becoming the most famous colorway of the
-            Air Jordan 1. This 2015 release saw the ...
+            Brand: {product.brand}
+            {"\n"}Color: {product.colour?.join(", ")}
+            {"\n"}Description: {product.description}
+            {"\n"}Stock: {product.stock}
           </Text>
 
           {/* Store Info */}
@@ -423,16 +490,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginRight: 8,
   },
-  originalPrice: {
-    fontSize: 16,
-    color: "#666",
-    textDecorationLine: "line-through",
-    marginRight: 8,
-  },
-  discount: {
-    fontSize: 16,
-    color: "#F83758",
-  },
   sizeTitle: {
     fontSize: 16,
     fontWeight: "600",
@@ -700,5 +757,35 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     marginLeft: 4,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 20,
+  },
+  errorText: {
+    color: "#F83758",
+    textAlign: "center",
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  backButton: {
+    backgroundColor: "#F83758",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  backButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
