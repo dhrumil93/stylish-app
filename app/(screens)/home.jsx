@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import {
@@ -106,100 +107,6 @@ const dealOfTheDay = {
   timeRemaining: "22h 55m 20s",
 };
 
-const products = [
-  {
-    id: 1,
-    title: "Women Printed Kurta",
-    description: "Neque porro quisquam est qui dolorem ipsum quia",
-    price: 1500,
-    originalPrice: 2499,
-    discount: "40% Off",
-    rating: 4,
-    reviews: 56890,
-    image: {
-      uri: "https://images.unsplash.com/photo-1612336307429-8a898d10e223?w=800&q=80",
-    },
-  },
-  {
-    id: 2,
-    title: "HRX by Hrithik Roshan",
-    description: "Neque porro quisquam est qui dolorem ipsum quia",
-    price: 2499,
-    originalPrice: 4999,
-    discount: "50% Off",
-    rating: 4,
-    reviews: 344567,
-    image: {
-      uri: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
-    },
-  },
-  {
-    id: 3,
-    title: "Black Dress",
-    description: "Neque porro quisquam est qui dolorem ipsum quia",
-    price: 2499,
-    originalPrice: 4999,
-    discount: "50% Off",
-    rating: 4,
-    reviews: 344567,
-    image: {
-      uri: "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=800&q=80",
-    },
-  },
-  {
-    id: 4,
-    title: "Pink Embroidered Dress",
-    description: "Neque porro quisquam est qui dolorem ipsum quia",
-    price: 1900,
-    originalPrice: 3800,
-    discount: "50% Off",
-    rating: 4.8,
-    reviews: 54678,
-    image: {
-      uri: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80",
-    },
-  },
-  {
-    id: 5,
-    title: "Flare Dress",
-    description: "Neque porro quisquam est qui dolorem ipsum quia",
-    price: 1990,
-    originalPrice: 3980,
-    discount: "50% Off",
-    rating: 4.3,
-    reviews: 35684,
-    image: {
-      uri: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&q=80",
-    },
-  },
-  {
-    id: 6,
-    title: "Denim Dress",
-    description: "Neque porro quisquam est qui dolorem ipsum quia",
-    price: 999,
-    originalPrice: 1999,
-    discount: "50% Off",
-    rating: 4.4,
-    reviews: 77156,
-    image: {
-      uri: "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=800&q=80",
-    },
-  },
-  {
-    id: 7,
-    title: "Nike Air Jordan",
-    description: "Neque porro quisquam est qui dolorem ipsum quia",
-    price: 4999,
-    originalPrice: 9999,
-    discount: "50% Off",
-    rating: 4.6,
-    reviews: 523456,
-    image: {
-      uri: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80",
-    },
-  },
-];
-
 const specialOffer = {
   title: "Special Offers",
   emoji: "😱",
@@ -267,6 +174,34 @@ const sponsored = {
 export default function Home() {
   const router = useRouter();
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "https://ecommerce-shop-qg3y.onrender.com/api/product/displayAll?category=6790aacd127f6fbf029d26c4"
+      );
+      const result = await response.json();
+
+      if (result.success) {
+        setProducts(result.data);
+      } else {
+        setError(result.message || "Failed to fetch products");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      setError("Network error or server not responding");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -421,47 +356,69 @@ export default function Home() {
 
             {/* Products Section */}
             <View style={styles.productsSection}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.productsScrollContainer}
-              >
-                {products.map((product) => (
-                  <TouchableOpacity key={product.id} style={styles.productCard}>
-                    <Image source={product.image} style={styles.productImage} />
-                    <View style={styles.productInfo}>
-                      <Text style={styles.productTitle} numberOfLines={1}>
-                        {product.title}
-                      </Text>
-                      <Text style={styles.productDescription} numberOfLines={2}>
-                        {product.description}
-                      </Text>
-                      <View style={styles.priceContainer}>
-                        <Text style={styles.price}>₹{product.price}</Text>
-                        <Text style={styles.originalPrice}>
-                          ₹{product.originalPrice}
+              {loading ? (
+                <ActivityIndicator size="large" color="#F83758" style={styles.loader} />
+              ) : error ? (
+                <Text style={styles.errorText}>{error}</Text>
+              ) : (
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.productsScrollContainer}
+                >
+                  {Array.isArray(products) && products.map((product) => (
+                    <TouchableOpacity 
+                      key={product?._id} 
+                      style={styles.productCard}
+                      onPress={() => router.push({
+                        pathname: "/(screens)/product",
+                        params: { id: product?._id }
+                      })}
+                    >
+                      <Image 
+                        source={{ uri: product?.images?.[0] || 'https://via.placeholder.com/200' }} 
+                        style={styles.productImage} 
+                      />
+                      <View style={styles.productInfo}>
+                        <Text style={styles.productTitle} numberOfLines={1}>
+                          {product?.name || 'Product Name'}
                         </Text>
-                        <Text style={styles.discount}>{product.discount}</Text>
-                      </View>
-                      <View style={styles.ratingContainer}>
-                        <View style={styles.stars}>
-                          {[...Array(5)].map((_, index) => (
-                            <AntDesign
-                              key={index}
-                              name={index < product.rating ? "star" : "staro"}
-                              size={16}
-                              color={
-                                index < product.rating ? "#FFD700" : "#666"
-                              }
-                            />
-                          ))}
+                        <Text style={styles.productDescription} numberOfLines={2}>
+                          {product?.description || 'No description available'}
+                        </Text>
+                        <View style={styles.priceContainer}>
+                          <Text style={styles.price}>₹{product?.price || 0}</Text>
+                          {product?.originalPrice && (
+                            <>
+                              <Text style={styles.originalPrice}>
+                                ₹{product.originalPrice}
+                              </Text>
+                              <Text style={styles.discount}>
+                                {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% Off
+                              </Text>
+                            </>
+                          )}
                         </View>
-                        <Text style={styles.reviews}>{product.reviews}</Text>
+                        <View style={styles.ratingContainer}>
+                          <View style={styles.stars}>
+                            {[...Array(5)].map((_, index) => (
+                              <AntDesign
+                                key={index}
+                                name={index < Math.floor(product?.rating || 0) ? "star" : "staro"}
+                                size={16}
+                                color="#FFD700"
+                              />
+                            ))}
+                          </View>
+                          <Text style={styles.reviews}>
+                            {product?.reviews?.length || 0}
+                          </Text>
+                        </View>
                       </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
             </View>
 
             {/* Special Offers Section */}
@@ -819,7 +776,6 @@ const styles = StyleSheet.create({
   },
   productCard: {
     width: width * 0.6,
-    height: "241px",
     marginRight: 16,
     marginBottom: 16,
     backgroundColor: "#FFFFFF",
@@ -838,7 +794,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 200,
     resizeMode: "cover",
-    borderRadius: 8,
   },
   productInfo: {
     padding: 12,
@@ -1256,5 +1211,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
+  },
+  loader: {
+    marginVertical: 20,
+  },
+  errorText: {
+    color: "#F83758",
+    textAlign: "center",
+    marginVertical: 20,
+    fontSize: 14,
   },
 });
