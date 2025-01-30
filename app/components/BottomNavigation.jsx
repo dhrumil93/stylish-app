@@ -31,10 +31,10 @@ const MENU_ITEMS = [
     isSpecial: true,
   },
   {
-    id: 'search',
-    label: 'Search',
-    icon: (color) => <Feather name="search" size={24} color={color} />,
-    route: "/(screens)/search",
+    id: 'orders',
+    label: 'Orders',
+    icon: (color) => <AntDesign name="profile" size={24} color={color} />,
+    route: "/(screens)/orders",
   },
   {
     id: 'settings',
