@@ -19,7 +19,8 @@ export default function ScreensLayout() {
   const shouldShowNavigation =
     pathname === "/home" ||
     pathname === "/trending" ||
-    pathname === "/orders";
+    pathname === "/orders" ||
+    pathname === "/settings";
     // || pathname.includes("/product");
 
   return (
