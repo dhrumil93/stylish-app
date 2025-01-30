@@ -11,16 +11,20 @@ import {
   Platform,
   Alert,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddressManager from "../../components/AddressManager";
 
 export default function Cart() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [showAddressModal, setShowAddressModal] = useState(false);
 
   useEffect(() => {
     fetchCartItems();
@@ -30,16 +34,12 @@ export default function Cart() {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("userToken");
-      
+
       if (!token) {
-        Alert.alert(
-          "Login Required", 
-          "Please login to view your cart",
-          [
-            { text: "Cancel", style: "cancel" },
-            { text: "Login", onPress: () => router.push("/(auth)/signin") }
-          ]
-        );
+        Alert.alert("Login Required", "Please login to view your cart", [
+          { text: "Cancel", style: "cancel" },
+          { text: "Login", onPress: () => router.push("/(auth)/signin") },
+        ]);
         return;
       }
 
@@ -48,7 +48,7 @@ export default function Cart() {
         {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": token
+            Authorization: token,
           },
         }
       );
@@ -75,7 +75,7 @@ export default function Cart() {
   const updateQuantity = async (itemId, newQuantity) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      
+
       if (!token) {
         Alert.alert("Error", "Please login to update cart");
         return;
@@ -83,7 +83,7 @@ export default function Cart() {
 
       const requestData = {
         productId: itemId,
-        quantity: newQuantity
+        quantity: newQuantity,
       };
 
       console.log("Update cart request:", requestData);
@@ -94,7 +94,7 @@ export default function Cart() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": token
+            Authorization: token,
           },
           body: JSON.stringify(requestData),
         }
@@ -115,24 +115,84 @@ export default function Cart() {
     }
   };
 
+  const removeFromCart = async (productId) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+
+      if (!token) {
+        Alert.alert("Error", "Please login to remove items");
+        return;
+      }
+
+      const response = await fetch(
+        "https://ecommerce-shop-qg3y.onrender.com/api/cart/removeCart",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({ productId }),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Remove from cart response:", result);
+
+      if (result.success) {
+        // Refresh cart items after successful removal
+        fetchCartItems();
+      } else {
+        Alert.alert("Error", result.message || "Failed to remove item");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      Alert.alert("Error", "Failed to remove item. Please try again.");
+    }
+  };
+
   const calculateTotals = () => {
     if (!cartItems || cartItems.length === 0) {
       return {
-        totalPrice: 0
+        totalPrice: 0,
       };
     }
 
     let totalPrice = 0;
 
-    cartItems.forEach(item => {
+    cartItems.forEach((item) => {
       if (item) {
         totalPrice += (item.price || 0) * (item.quantity || 1);
       }
     });
 
     return {
-      totalPrice
+      totalPrice,
     };
+  };
+
+  const handleSelectAddress = (address) => {
+    if (address && address._id) {
+      setSelectedAddress(address);
+      setShowAddressModal(false);
+    }
+  };
+
+  const handleCheckout = () => {
+    if (!selectedAddress) {
+      Alert.alert('Select Address', 'Please select a delivery address to proceed');
+      return;
+    }
+
+    // Navigate to order summary with cart items and address
+    router.push({
+      pathname: '/(screens)/order-summary',
+      params: {
+        cartItems: JSON.stringify(cartItems),
+        selectedAddress: JSON.stringify(selectedAddress),
+        totalAmount: totalPrice
+      }
+    });
   };
 
   if (loading) {
@@ -149,18 +209,77 @@ export default function Cart() {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-      <SafeAreaView style={[styles.safeArea, {
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
-      }]}>
+      <StatusBar
+        barStyle="dark-content"
+        translucent
+        backgroundColor="transparent"
+      />
+      <SafeAreaView
+        style={[
+          styles.safeArea,
+          {
+            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+          },
+        ]}
+      >
         <View style={styles.container}>
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity
+              onPress={() => {
+                if (showAddressModal) {
+                  setShowAddressModal(false);
+                } else {
+                  router.back();
+                }
+              }}
+            >
               <AntDesign name="left" size={24} color="black" />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Shopping Cart</Text>
+            <Text style={styles.headerTitle}>
+              {showAddressModal ? "Select Address" : "Shopping Cart"}
+            </Text>
             <View style={{ width: 24 }} />
+          </View>
+
+          {/* Delivery Address Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Delivery Address</Text>
+            {selectedAddress && selectedAddress._id ? (
+              <View style={styles.selectedAddress}>
+                <View style={styles.addressHeader}>
+                  <Text style={styles.addressType}>{selectedAddress.type || selectedAddress.address_type}</Text>
+                  {selectedAddress.isDefault && (
+                    <View style={styles.defaultBadge}>
+                      <Text style={styles.defaultText}>Default</Text>
+                    </View>
+                  )}
+                </View>
+                <Text style={styles.addressName}>{selectedAddress.name || selectedAddress.fullName}</Text>
+                <Text style={styles.addressPhone}>{selectedAddress.phone || selectedAddress.phoneNumber}</Text>
+                <Text style={styles.addressText}>
+                  {selectedAddress.address1 || selectedAddress.addressLine1}
+                  {(selectedAddress.address2 || selectedAddress.addressLine2) ? 
+                    `, ${selectedAddress.address2 || selectedAddress.addressLine2}` : ''}
+                  {selectedAddress.landmark ? `, ${selectedAddress.landmark}` : ''}
+                  {`\n${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}`}
+                </Text>
+                <TouchableOpacity 
+                  style={styles.changeAddressButton}
+                  onPress={() => setShowAddressModal(true)}
+                >
+                  <Text style={styles.changeAddressText}>Change Address</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity 
+                style={styles.addAddressButton}
+                onPress={() => setShowAddressModal(true)}
+              >
+                <AntDesign name="plus" size={20} color="#F83758" />
+                <Text style={styles.addAddressText}>Select Delivery Address</Text>
+              </TouchableOpacity>
+            )}
           </View>
 
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -177,51 +296,94 @@ export default function Cart() {
             ) : (
               <>
                 {cartItems.map((item, index) => (
-                  <View key={`${item.productId}-${index}`} style={styles.cartItem}>
-                    <Image
-                      source={{ 
-                        uri: `https://ecommerce-shop-qg3y.onrender.com/api/product/displayImage/${item.productId}` || 'https://via.placeholder.com/100'
-                      }}
-                      style={styles.productImage}
-                    />
-                    <View style={styles.productInfo}>
-                      <Text style={styles.productTitle}>{item.productName || 'Product Name'}</Text>
-                      <Text style={styles.productSubtitle}>{item.productDescription || 'Description'}</Text>
-                      <View style={styles.detailsContainer}>
-                        <View style={styles.sizeContainer}>
-                          <Text style={styles.detailLabel}>Size:</Text>
-                          <Text style={styles.detailValue}>{item.productSize}</Text>
+                  <View
+                    key={`${item.productId}-${index}`}
+                    style={styles.cartItem}
+                  >
+                    <View style={styles.cartItemHeader}>
+                      <Text style={styles.productTitle}>
+                        {item.productName || "Product Name"}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          Alert.alert(
+                            "Remove Item",
+                            "Are you sure you want to remove this item?",
+                            [
+                              { text: "Cancel", style: "cancel" },
+                              {
+                                text: "Remove",
+                                onPress: () => removeFromCart(item.productId),
+                              },
+                            ]
+                          );
+                        }}
+                        style={styles.deleteButton}
+                      >
+                        <AntDesign name="delete" size={14} color="#F83758" />
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.cartItemContent}>
+                      <Image
+                        source={{
+                          uri:
+                            `https://ecommerce-shop-qg3y.onrender.com/api/product/displayImage/${item.productId}` ||
+                            "https://via.placeholder.com/100",
+                        }}
+                        style={styles.productImage}
+                      />
+                      <View style={styles.productInfo}>
+                        <Text style={styles.productSubtitle}>
+                          {item.productDescription || "Description"}
+                        </Text>
+                        <View style={styles.detailsContainer}>
+                          <View style={styles.sizeContainer}>
+                            <Text style={styles.detailLabel}>Size:</Text>
+                            <Text style={styles.detailValue}>
+                              {item.productSize || "N/A"}
+                            </Text>
+                          </View>
+                          <View style={styles.colorContainer}>
+                            <Text style={styles.detailLabel}>Color:</Text>
+                            <Text style={styles.detailValue}>
+                              {item.productColour || "N/A"}
+                            </Text>
+                          </View>
                         </View>
-                        <View style={styles.colorContainer}>
-                          <Text style={styles.detailLabel}>Color:</Text>
-                          <Text style={styles.detailValue}>{item.productColour}</Text>
+                        <View style={styles.priceContainer}>
+                          <Text style={styles.price}>₹{item.price || 0}</Text>
                         </View>
-                      </View>
-                      <View style={styles.priceContainer}>
-                        <Text style={styles.price}>₹{item.price || 0}</Text>
-                      </View>
-                      <View style={styles.quantityContainer}>
-                        <TouchableOpacity
-                          style={[
-                            styles.quantityButton,
-                            item.quantity === 1 && styles.quantityButtonDisabled,
-                          ]}
-                          onPress={() => updateQuantity(item.productId, item.quantity - 1)}
-                          disabled={item.quantity === 1}
-                        >
-                          <AntDesign
-                            name="minus"
-                            size={20}
-                            color={item.quantity === 1 ? "#CCC" : "#666"}
-                          />
-                        </TouchableOpacity>
-                        <Text style={styles.quantity}>{item.quantity || 1}</Text>
-                        <TouchableOpacity
-                          style={styles.quantityButton}
-                          onPress={() => updateQuantity(item.productId, item.quantity + 1)}
-                        >
-                          <AntDesign name="plus" size={20} color="#666" />
-                        </TouchableOpacity>
+                        <View style={styles.quantityContainer}>
+                          <TouchableOpacity
+                            style={[
+                              styles.quantityButton,
+                              item.quantity === 1 &&
+                                styles.quantityButtonDisabled,
+                            ]}
+                            onPress={() =>
+                              updateQuantity(item.productId, item.quantity - 1)
+                            }
+                            disabled={item.quantity === 1}
+                          >
+                            <AntDesign
+                              name="minus"
+                              size={20}
+                              color={item.quantity === 1 ? "#CCC" : "#666"}
+                            />
+                          </TouchableOpacity>
+                          <Text style={styles.quantity}>
+                            {item.quantity || 1}
+                          </Text>
+                          <TouchableOpacity
+                            style={styles.quantityButton}
+                            onPress={() =>
+                              updateQuantity(item.productId, item.quantity + 1)
+                            }
+                          >
+                            <AntDesign name="plus" size={20} color="#666" />
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
                   </View>
@@ -231,12 +393,16 @@ export default function Cart() {
                 <View style={styles.priceDetails}>
                   <Text style={styles.priceDetailsTitle}>Price Details</Text>
                   <View style={styles.priceRow}>
-                    <Text style={styles.priceLabel}>Price ({cartItems.length} items)</Text>
+                    <Text style={styles.priceLabel}>
+                      Price ({cartItems.length} items)
+                    </Text>
                     <Text style={styles.priceValue}>₹{totalPrice}</Text>
                   </View>
                   <View style={styles.priceRow}>
                     <Text style={styles.priceLabel}>Delivery Charges</Text>
-                    <Text style={[styles.priceValue, styles.freeDelivery]}>Free</Text>
+                    <Text style={[styles.priceValue, styles.freeDelivery]}>
+                      Free
+                    </Text>
                   </View>
                   <View style={[styles.priceRow, styles.totalRow]}>
                     <Text style={styles.totalLabel}>Total Amount</Text>
@@ -249,16 +415,31 @@ export default function Cart() {
 
           {cartItems.length > 0 && (
             <View style={styles.bottomButton}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.checkoutButton}
-                onPress={() => router.push("/(screens)/checkout")}
+                onPress={handleCheckout}
+                disabled={!cartItems.length || !selectedAddress}
               >
-                <Text style={styles.checkoutText}>Place Order</Text>
+                <Text style={styles.checkoutText}>
+                  {!selectedAddress ? 'Select Delivery Address' : 'Place Order'}
+                </Text>
               </TouchableOpacity>
             </View>
           )}
         </View>
       </SafeAreaView>
+
+      {/* Address Modal */}
+      <Modal
+        visible={showAddressModal}
+        animationType="slide"
+        onRequestClose={() => setShowAddressModal(false)}
+      >
+        <AddressManager
+          onSelectAddress={handleSelectAddress}
+          selectedAddressId={selectedAddress?._id}
+        />
+      </Modal>
     </>
   );
 }
@@ -286,10 +467,18 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   cartItem: {
-    flexDirection: "row",
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#F5F5F5",
+  },
+  cartItemHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  cartItemContent: {
+    flexDirection: "row",
   },
   productImage: {
     width: 100,
@@ -304,7 +493,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "#000",
-    marginBottom: 4,
   },
   productSubtitle: {
     fontSize: 14,
@@ -315,13 +503,13 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   sizeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 4,
   },
   colorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   detailLabel: {
     fontSize: 14,
@@ -379,47 +567,49 @@ const styles = StyleSheet.create({
   },
   addressSection: {
     padding: 16,
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: "#F5F5F5",
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#000",
-    marginBottom: 16,
-  },
-  addressCard: {
-    backgroundColor: "#F8F8F8",
-    borderRadius: 8,
-    padding: 16,
-  },
   addressHeader: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 12,
   },
-  addressType: {
-    fontSize: 16,
-    fontWeight: "500",
-    marginLeft: 8,
+  addressHeaderLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
-  changeButton: {
-    marginLeft: "auto",
+  addressTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
   },
   changeText: {
-    color: "#F83758",
     fontSize: 14,
+    color: "#F83758",
     fontWeight: "500",
   },
-  name: {
-    fontSize: 16,
-    fontWeight: "500",
-    marginBottom: 4,
+  selectedAddress: {
+    backgroundColor: "#F5F5F5",
+    padding: 12,
+    borderRadius: 8,
   },
-  address: {
+  addressText: {
     fontSize: 14,
     color: "#666",
-    lineHeight: 20,
+  },
+  noAddress: {
+    backgroundColor: "#FFF0F3",
+    padding: 12,
+    borderRadius: 8,
+  },
+  noAddressText: {
+    fontSize: 14,
+    color: "#F83758",
+    textAlign: "center",
   },
   priceDetails: {
     padding: 16,
@@ -512,5 +702,92 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#000",
     marginBottom: 16,
+  },
+  deleteButton: {
+    padding: 4,
+    backgroundColor: "#FFF0F3",
+    borderRadius: 8,
+  },
+  section: {
+    backgroundColor: "#FFFFFF",
+    padding: 16,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 16,
+  },
+  selectedAddress: {
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 8,
+    padding: 16,
+  },
+  addressHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 8,
+  },
+  addressType: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#666",
+  },
+  addressName: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 4,
+  },
+  addressPhone: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 4,
+  },
+  changeAddressButton: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 4,
+    backgroundColor: "#FFF0F3",
+    marginTop:8,
+
+  },
+  changeAddressText: {
+    fontSize: 14,
+    color: "#F83758",
+    fontWeight: "500",
+  },
+  addAddressButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#F83758",
+    borderStyle: "dashed",
+    borderRadius: 8,
+    justifyContent: "center",
+  },
+  addAddressText: {
+    fontSize: 16,
+    color: "#F83758",
+    fontWeight: "500",
+  },
+  disabledButton: {
+    backgroundColor: "#CCCCCC",
+  },
+  defaultBadge: {
+    backgroundColor: "#00A36C",
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginLeft: 8,
+  },
+  defaultText: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: "#FFFFFF",
   },
 });
