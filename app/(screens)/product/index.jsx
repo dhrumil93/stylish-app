@@ -76,6 +76,18 @@ export default function ProductDetail() {
     console.log("Current product state:", product);
   }, [product]);
 
+  useEffect(() => {
+    if (product) {
+      // Set default size and color from first index
+      const sizes = product.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"];
+      const colors = product.colour || ["Black", "White", "Red", "Blue"];
+      
+      // Set initial values without splitting
+      setSelectedSize(sizes[0]);
+      setSelectedColor(colors[0]);
+    }
+  }, [product]);
+
   const handleAddToCart = async () => {
     try {
       console.log("Current selected size:", selectedSize);
@@ -107,6 +119,9 @@ export default function ProductDetail() {
 
       setAddingToCart(true);
 
+      // Store the complete size with "UK" suffix
+      const fullSize = selectedSize.includes("UK") ? selectedSize : `${selectedSize} UK`;
+
       const requestData = {
         productId: id,
         quantity: 1,
@@ -114,9 +129,10 @@ export default function ProductDetail() {
         totalPrice: product.price,
         productName: product.name,
         productDescription: product.description,
-        productSize: selectedSize,
+        productSize: fullSize,
         productColour: selectedColor,
-        productImage: product.product_images?.[0] || ""
+        productImage: product.product_images?.[0] || "",
+        brand: product.brand || ""
       };
 
       console.log("Add to cart request data:", requestData);
@@ -286,7 +302,7 @@ export default function ProductDetail() {
           {/* Size Selection */}
           <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
           <View style={styles.sizeContainer}>
-            {(product.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"]).map((size) => (
+            {(product?.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"]).map((size) => (
               <TouchableOpacity
                 key={size}
                 style={[
@@ -295,7 +311,7 @@ export default function ProductDetail() {
                 ]}
                 onPress={() => {
                   console.log("Selected size:", size);
-                  setSelectedSize(size.split(" ")[0]);
+                  setSelectedSize(size);
                 }}
               >
                 <Text
@@ -312,7 +328,7 @@ export default function ProductDetail() {
 
           <Text style={styles.colorTitle}>Color: {selectedColor}</Text>
           <View style={styles.colorContainer}>
-            {(product.colour || ["Black", "White", "Red", "Blue"]).map((color) => (
+            {(product?.colour || ["Black", "White", "Red", "Blue"]).map((color) => (
               <TouchableOpacity
                 key={color}
                 style={[
@@ -559,13 +575,13 @@ const styles = StyleSheet.create({
   sizeTitle: {
     fontSize: 16,
     fontWeight: "600",
-    marginBottom: 12,
+    marginBottom: 8,
   },
   sizeContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 12,
-    marginBottom: 24,
+    gap: 8,
+    marginBottom: 16,
   },
   sizeButton: {
     paddingHorizontal: 16,
@@ -588,13 +604,14 @@ const styles = StyleSheet.create({
   colorTitle: {
     fontSize: 16,
     fontWeight: "600",
-    marginTop: 16,
+    marginTop: 8,
     marginBottom: 8,
   },
   colorContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
+    marginBottom: 16,
   },
   colorButton: {
     paddingHorizontal: 16,
