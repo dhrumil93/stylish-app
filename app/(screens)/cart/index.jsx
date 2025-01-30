@@ -47,7 +47,8 @@ export default function Cart() {
         "https://ecommerce-shop-qg3y.onrender.com/api/cart/displayCart",
         {
           headers: {
-            Authorization: `${token}`,
+            "Content-Type": "application/json",
+            "Authorization": token
           },
         }
       );
@@ -55,9 +56,12 @@ export default function Cart() {
       const result = await response.json();
       console.log("Cart items response:", result);
 
-      if (result.success) {
-        setCartItems(result.data);
+      if (result.success && result.data && result.data.length > 0) {
+        // Access the items array from the first cart object
+        setCartItems(result.data[0].items || []);
+        console.log("Parsed cart items:", result.data[0].items);
       } else {
+        setCartItems([]);
         setError(result.message || "Failed to fetch cart items");
       }
     } catch (error) {
@@ -72,18 +76,27 @@ export default function Cart() {
     try {
       const token = await AsyncStorage.getItem("userToken");
       
+      if (!token) {
+        Alert.alert("Error", "Please login to update cart");
+        return;
+      }
+
+      const requestData = {
+        productId: itemId,
+        quantity: newQuantity
+      };
+
+      console.log("Update cart request:", requestData);
+
       const response = await fetch(
-        "https://ecommerce-shop-qg3y.onrender.com/api/cart/updateQuantity",
+        "https://ecommerce-shop-qg3y.onrender.com/api/cart/updateCart",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${token}`,
+            "Authorization": token
           },
-          body: JSON.stringify({
-            cartItemId: itemId,
-            quantity: newQuantity,
-          }),
+          body: JSON.stringify(requestData),
         }
       );
 
@@ -91,7 +104,8 @@ export default function Cart() {
       console.log("Update quantity response:", result);
 
       if (result.success) {
-        fetchCartItems(); // Refresh cart items
+        // Refresh cart items after successful update
+        fetchCartItems();
       } else {
         Alert.alert("Error", result.message || "Failed to update quantity");
       }
@@ -102,18 +116,22 @@ export default function Cart() {
   };
 
   const calculateTotals = () => {
+    if (!cartItems || cartItems.length === 0) {
+      return {
+        totalPrice: 0
+      };
+    }
+
     let totalPrice = 0;
-    let totalOriginalPrice = 0;
 
     cartItems.forEach(item => {
-      totalPrice += item.product.price * item.quantity;
-      totalOriginalPrice += (item.product.originalPrice || item.product.price) * item.quantity;
+      if (item) {
+        totalPrice += (item.price || 0) * (item.quantity || 1);
+      }
     });
 
     return {
-      totalPrice,
-      totalOriginalPrice,
-      totalDiscount: totalOriginalPrice - totalPrice
+      totalPrice
     };
   };
 
@@ -127,7 +145,7 @@ export default function Cart() {
     );
   }
 
-  const { totalPrice, totalOriginalPrice, totalDiscount } = calculateTotals();
+  const { totalPrice } = calculateTotals();
 
   return (
     <>
@@ -158,28 +176,29 @@ export default function Cart() {
               </View>
             ) : (
               <>
-                {cartItems.map((item) => (
-                  <View key={item._id} style={styles.cartItem}>
+                {cartItems.map((item, index) => (
+                  <View key={`${item.productId}-${index}`} style={styles.cartItem}>
                     <Image
-                      source={{ uri: item.product.product_images[0] }}
+                      source={{ 
+                        uri: `https://ecommerce-shop-qg3y.onrender.com/api/product/displayImage/${item.productId}` || 'https://via.placeholder.com/100'
+                      }}
                       style={styles.productImage}
                     />
                     <View style={styles.productInfo}>
-                      <Text style={styles.productTitle}>{item.product.name}</Text>
-                      <Text style={styles.productSubtitle}>{item.product.description}</Text>
-                      <Text style={styles.size}>Size: {item.size}</Text>
+                      <Text style={styles.productTitle}>{item.productName || 'Product Name'}</Text>
+                      <Text style={styles.productSubtitle}>{item.productDescription || 'Description'}</Text>
+                      <View style={styles.detailsContainer}>
+                        <View style={styles.sizeContainer}>
+                          <Text style={styles.detailLabel}>Size:</Text>
+                          <Text style={styles.detailValue}>{item.productSize}</Text>
+                        </View>
+                        <View style={styles.colorContainer}>
+                          <Text style={styles.detailLabel}>Color:</Text>
+                          <Text style={styles.detailValue}>{item.productColour}</Text>
+                        </View>
+                      </View>
                       <View style={styles.priceContainer}>
-                        <Text style={styles.price}>₹{item.product.price}</Text>
-                        {item.product.originalPrice && (
-                          <>
-                            <Text style={styles.originalPrice}>
-                              ₹{item.product.originalPrice}
-                            </Text>
-                            <Text style={styles.discount}>
-                              {Math.round((1 - item.product.price / item.product.originalPrice) * 100)}% Off
-                            </Text>
-                          </>
-                        )}
+                        <Text style={styles.price}>₹{item.price || 0}</Text>
                       </View>
                       <View style={styles.quantityContainer}>
                         <TouchableOpacity
@@ -187,7 +206,7 @@ export default function Cart() {
                             styles.quantityButton,
                             item.quantity === 1 && styles.quantityButtonDisabled,
                           ]}
-                          onPress={() => updateQuantity(item._id, item.quantity - 1)}
+                          onPress={() => updateQuantity(item.productId, item.quantity - 1)}
                           disabled={item.quantity === 1}
                         >
                           <AntDesign
@@ -196,10 +215,10 @@ export default function Cart() {
                             color={item.quantity === 1 ? "#CCC" : "#666"}
                           />
                         </TouchableOpacity>
-                        <Text style={styles.quantity}>{item.quantity}</Text>
+                        <Text style={styles.quantity}>{item.quantity || 1}</Text>
                         <TouchableOpacity
                           style={styles.quantityButton}
-                          onPress={() => updateQuantity(item._id, item.quantity + 1)}
+                          onPress={() => updateQuantity(item.productId, item.quantity + 1)}
                         >
                           <AntDesign name="plus" size={20} color="#666" />
                         </TouchableOpacity>
@@ -210,22 +229,16 @@ export default function Cart() {
 
                 {/* Price Details */}
                 <View style={styles.priceDetails}>
-                  <Text style={styles.sectionTitle}>Price Details</Text>
+                  <Text style={styles.priceDetailsTitle}>Price Details</Text>
                   <View style={styles.priceRow}>
-                    <Text style={styles.priceLabel}>
-                      Price ({cartItems.length} item{cartItems.length > 1 ? "s" : ""})
-                    </Text>
-                    <Text style={styles.priceValue}>₹{totalOriginalPrice}</Text>
-                  </View>
-                  <View style={styles.priceRow}>
-                    <Text style={styles.priceLabel}>Discount</Text>
-                    <Text style={styles.discountValue}>-₹{totalDiscount}</Text>
+                    <Text style={styles.priceLabel}>Price ({cartItems.length} items)</Text>
+                    <Text style={styles.priceValue}>₹{totalPrice}</Text>
                   </View>
                   <View style={styles.priceRow}>
                     <Text style={styles.priceLabel}>Delivery Charges</Text>
-                    <Text style={styles.freeDelivery}>Free</Text>
+                    <Text style={[styles.priceValue, styles.freeDelivery]}>Free</Text>
                   </View>
-                  <View style={styles.totalRow}>
+                  <View style={[styles.priceRow, styles.totalRow]}>
                     <Text style={styles.totalLabel}>Total Amount</Text>
                     <Text style={styles.totalValue}>₹{totalPrice}</Text>
                   </View>
@@ -298,10 +311,27 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 8,
   },
-  size: {
+  detailsContainer: {
+    marginVertical: 4,
+  },
+  sizeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  colorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  detailLabel: {
     fontSize: 14,
     color: "#666",
-    marginBottom: 8,
+    marginRight: 4,
+  },
+  detailValue: {
+    fontSize: 14,
+    color: "#000",
+    fontWeight: "500",
   },
   priceContainer: {
     flexDirection: "row",
@@ -476,5 +506,11 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+  },
+  priceDetailsTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#000",
+    marginBottom: 16,
   },
 });

@@ -11,6 +11,7 @@ import {
   Platform,
   StatusBar,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import {
@@ -19,6 +20,7 @@ import {
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 const STATUSBAR_HEIGHT = Platform.OS === "android" ? StatusBar.currentHeight : 0;
@@ -28,10 +30,12 @@ export default function ProductDetail() {
   const { id } = useLocalSearchParams();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [addingToCart, setAddingToCart] = useState(false);
 
   useEffect(() => {
     console.log("Product ID:", id);
@@ -71,6 +75,92 @@ export default function ProductDetail() {
   useEffect(() => {
     console.log("Current product state:", product);
   }, [product]);
+
+  const handleAddToCart = async () => {
+    try {
+      console.log("Current selected size:", selectedSize);
+      console.log("Current selected color:", selectedColor);
+
+      if (!selectedSize) {
+        Alert.alert("Error", "Please select a size");
+        return;
+      }
+
+      if (!selectedColor) {
+        Alert.alert("Error", "Please select a color");
+        return;
+      }
+
+      const token = await AsyncStorage.getItem("userToken");
+
+      if (!token) {
+        Alert.alert(
+          "Login Required",
+          "Please login to add items to cart",
+          [
+            { text: "Cancel", style: "cancel" },
+            { text: "Login", onPress: () => router.push("/(auth)/signin") }
+          ]
+        );
+        return;
+      }
+
+      setAddingToCart(true);
+
+      const requestData = {
+        productId: id,
+        quantity: 1,
+        price: product.price,
+        totalPrice: product.price,
+        productName: product.name,
+        productDescription: product.description,
+        productSize: selectedSize,
+        productColour: selectedColor,
+        productImage: product.product_images?.[0] || ""
+      };
+
+      console.log("Add to cart request data:", requestData);
+
+      const response = await fetch(
+        "https://ecommerce-shop-qg3y.onrender.com/api/cart/addToCart",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": token
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Add to cart response:", result);
+
+      if (result.success) {
+        Alert.alert(
+          "Success",
+          "Item added to cart successfully",
+          [
+            {
+              text: "Continue Shopping",
+              style: "cancel",
+            },
+            {
+              text: "Go to Cart",
+              onPress: () => router.push("/(screens)/cart"),
+            },
+          ]
+        );
+      } else {
+        Alert.alert("Error", result.message || "Failed to add item to cart");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      Alert.alert("Error", "Failed to add item to cart. Please try again.");
+    } finally {
+      setAddingToCart(false);
+    }
+  };
 
   if (loading) {
     console.log("Loading state...");
@@ -203,7 +293,10 @@ export default function ProductDetail() {
                   styles.sizeButton,
                   selectedSize === size && styles.selectedSizeButton,
                 ]}
-                onPress={() => setSelectedSize(size)}
+                onPress={() => {
+                  console.log("Selected size:", size);
+                  setSelectedSize(size.split(" ")[0]);
+                }}
               >
                 <Text
                   style={[
@@ -217,11 +310,37 @@ export default function ProductDetail() {
             ))}
           </View>
 
+          <Text style={styles.colorTitle}>Color: {selectedColor}</Text>
+          <View style={styles.colorContainer}>
+            {(product.colour || ["Black", "White", "Red", "Blue"]).map((color) => (
+              <TouchableOpacity
+                key={color}
+                style={[
+                  styles.colorButton,
+                  selectedColor === color && styles.selectedColorButton,
+                ]}
+                onPress={() => {
+                  console.log("Selected color:", color);
+                  setSelectedColor(color);
+                }}
+              >
+                <Text
+                  style={[
+                    styles.colorText,
+                    selectedColor === color && styles.selectedColorText,
+                  ]}
+                >
+                  {color}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
           {/* Product Details */}
           <Text style={styles.detailsTitle}>Product Details</Text>
           <Text style={styles.detailsText}>
             Brand: {product.brand}
-            {"\n"}Color: {product.colour?.join(", ")}
+
             {"\n"}Description: {product.description}
             {"\n"}Stock: {product.stock}
           </Text>
@@ -253,7 +372,7 @@ export default function ProductDetail() {
 
         {/* Bottom Buttons */}
         <View style={styles.bottomButtons}>
-          <TouchableOpacity style={styles.viewSimilarButton}>
+          <TouchableOpacity style={styles.viewSimilarButton} onPress={() => router.push("/(screens)/cart")}>
             <Feather
               name="shopping-cart"
               size={20}
@@ -264,7 +383,8 @@ export default function ProductDetail() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => router.push("/(screens)/cart")}
+            onPress={handleAddToCart}
+            disabled={addingToCart}
           >
             <Text style={styles.addToCartText}>Add to Cart</Text>
           </TouchableOpacity>
@@ -464,6 +584,37 @@ const styles = StyleSheet.create({
   },
   selectedSizeText: {
     color: "#FFFFFF",
+  },
+  colorTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  colorContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  colorButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    backgroundColor: "#FFFFFF",
+  },
+  selectedColorButton: {
+    borderColor: "#F83758",
+    backgroundColor: "#F83758",
+  },
+  colorText: {
+    fontSize: 14,
+    color: "#000000",
+  },
+  selectedColorText: {
+    color: "#FFFFFF",
+    fontWeight: "500",
   },
   detailsTitle: {
     fontSize: 16,
