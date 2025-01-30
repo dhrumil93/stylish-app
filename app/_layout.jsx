@@ -1,4 +1,6 @@
 import { Stack } from 'expo-router';
+import { Tabs } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function Layout() {
   return (

@@ -3,10 +3,14 @@ import { View, StyleSheet, StatusBar, Platform } from "react-native";
 import { Stack, usePathname } from "expo-router";
 import Header from "../components/Header";
 import BottomNavigation from "../components/BottomNavigation";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 const STATUSBAR_HEIGHT =
   Platform.OS === "android" ? StatusBar.currentHeight : 0;
 const HEADER_HEIGHT = 56;
+
+const Tabs = createBottomTabNavigator();
 
 export default function ScreensLayout() {
   const pathname = usePathname();
@@ -14,7 +18,8 @@ export default function ScreensLayout() {
   // Simpler path check
   const shouldShowNavigation =
     pathname === "/home" ||
-    pathname === "/trending" ;
+    pathname === "/trending" ||
+    pathname === "/orders";
     // || pathname.includes("/product");
 
   return (
@@ -114,6 +119,18 @@ export default function ScreensLayout() {
             />
             <Stack.Screen
               name="order-confirmation/index"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="order-summary/index"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="orders/index"
               options={{
                 headerShown: false,
               }}
