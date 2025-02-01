@@ -180,18 +180,26 @@ export default function Cart() {
 
   const handleCheckout = () => {
     if (!selectedAddress) {
-      Alert.alert('Select Address', 'Please select a delivery address to proceed');
+      Alert.alert(
+        "Address Required",
+        "Please select a delivery address before proceeding to checkout",
+        [
+          {
+            text: "OK",
+            onPress: () => console.log("OK Pressed")
+          }
+        ]
+      );
       return;
     }
 
-    // Navigate to order summary with cart items and address
     router.push({
-      pathname: '/(screens)/order-summary',
+      pathname: "/(screens)/order-summary",
       params: {
         cartItems: JSON.stringify(cartItems),
         selectedAddress: JSON.stringify(selectedAddress),
-        totalAmount: totalPrice
-      }
+        totalAmount: totalPrice,
+      },
     });
   };
 
@@ -341,13 +349,13 @@ export default function Cart() {
                           <View style={styles.sizeContainer}>
                             <Text style={styles.detailLabel}>Size:</Text>
                             <Text style={styles.detailValue}>
-                              {item.productSize || "N/A"}
+                              {item.size || "N/A"}
                             </Text>
                           </View>
                           <View style={styles.colorContainer}>
                             <Text style={styles.detailLabel}>Color:</Text>
                             <Text style={styles.detailValue}>
-                              {item.productColour || "N/A"}
+                              {item.colour || "N/A"}
                             </Text>
                           </View>
                         </View>
@@ -418,10 +426,10 @@ export default function Cart() {
               <TouchableOpacity
                 style={styles.checkoutButton}
                 onPress={handleCheckout}
-                disabled={!cartItems.length || !selectedAddress}
+                disabled={!cartItems.length}
               >
                 <Text style={styles.checkoutText}>
-                  {!selectedAddress ? 'Select Delivery Address' : 'Place Order'}
+                  {'Place Order'}
                 </Text>
               </TouchableOpacity>
             </View>
