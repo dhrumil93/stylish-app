@@ -17,11 +17,23 @@
     "production": {
       "android": {
         "buildType": "app-bundle",
-        "gradleCommand": ":app:bundleRelease"
+        "gradleCommand": ":app:bundleRelease",
+        "credentialsSource": "local",
+        "keystore": {
+          "keystorePath": "stylish-app-keystore.keystore",
+          "keystorePassword": "dhrumil@93",
+          "keyAlias": "stylish-app",
+          "keyPassword": "dhrumil@93"
+        }
       }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./pc-api-key.json",
+        "track": "production"
+      }
+    }
   }
 }

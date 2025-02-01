@@ -36,3 +36,9 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# Keystore files
+*.keystore
+*.jks
+*.keystore.properties
+pc-api-key.json

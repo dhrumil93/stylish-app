@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.stylo.app",
+      "package": "com.stylo",
       "versionCode": 1,
       "permissions": [
         "INTERNET"
