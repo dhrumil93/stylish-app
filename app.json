@@ -1,60 +1,49 @@
 {
   "expo": {
-    "name": "stylo-app",
-    "slug": "stylo-app",
+    "name": "Stylo",
+    "slug": "stylish-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
     "android": {
-      "package": "com.yourcompany.styloapp",
-      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/group34010.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
+      "package": "com.stylo.app",
+      "versionCode": 1,
       "permissions": [
         "INTERNET"
       ]
     },
-    "ios": {
-      "supportsTablet": true
-    },
     "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/group34010.png"
-    },
-    "splash": {
-      "image": "./assets/images/group34010.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FFFFFF"
+      "favicon": "./assets/images/icon.png"
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/group34010.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ],
-      "expo-font"
+      "expo-secure-store"
     ],
-    "experiments": {
-      "typedRoutes": true
-    },
+    "scheme": "stylish-app",
     "extra": {
       "router": {
         "origin": false
       },
       "eas": {
-        "projectId": "6d653fcb-37fe-46b8-900d-850b9854a17e"
+        "projectId": "4fcd7ad2-d878-49fe-af40-bdbdb5cba7ac"
       }
-    }
+    },
+    "owner": "dhrumil93"
   }
 }
