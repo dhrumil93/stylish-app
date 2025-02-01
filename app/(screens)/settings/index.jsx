@@ -46,17 +46,17 @@ export default function Settings() {
         {
           icon: <AntDesign name="user" size={24} color="#666" />,
           label: 'Profile Information',
-          onPress: () => router.push('/(screens)/profile'),
+          onPress: () => router.push('/(screens)/checkout'),
         },
-        {
-          icon: <MaterialIcons name="location-on" size={24} color="#666" />,
-          label: 'Saved Addresses',
-          onPress: () => router.push('/(screens)/addresses'),
-        },
+        // {
+        //   icon: <MaterialIcons name="location-on" size={24} color="#666" />,
+        //   label: 'Saved Addresses',
+        //   onPress: () => router.push('/(screens)/addresses'),
+        // },
         {
           icon: <AntDesign name="creditcard" size={24} color="#666" />,
           label: 'Payment Methods',
-          onPress: () => router.push('/(screens)/payment-methods'),
+          // onPress: () => router.push('/(screens)/payment-methods'),
         },
       ],
     },
@@ -66,7 +66,7 @@ export default function Settings() {
         {
           icon: <AntDesign name="hearto" size={24} color="#666" />,
           label: 'My Wishlist',
-          onPress: () => router.push('/(screens)/wishlist'),
+          // onPress: () => router.push('/(screens)/wishlist'),
         },
         {
           icon: <AntDesign name="profile" size={24} color="#666" />,
@@ -76,7 +76,7 @@ export default function Settings() {
         {
           icon: <MaterialIcons name="local-offer" size={24} color="#666" />,
           label: 'Offers & Coupons',
-          onPress: () => router.push('/(screens)/offers'),
+          // onPress: () => router.push('/(screens)/offers'),
         },
       ],
     },
@@ -86,7 +86,7 @@ export default function Settings() {
         {
           icon: <Ionicons name="notifications-outline" size={24} color="#666" />,
           label: 'Notifications',
-          onPress: () => router.push('/(screens)/notifications'),
+          // onPress: () => router.push('/(screens)/notifications'),
         },
         {
           icon: <Feather name="lock" size={24} color="#666" />,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF0F3',
     padding: 16,
     borderRadius: 8,
-    marginTop: 24,
+    marginTop: 8,
   },
   logoutText: {
     fontSize: 16,
