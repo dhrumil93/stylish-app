@@ -31,22 +31,22 @@ export default function OrderSummary() {
       // Ensure all required fields are present
       const validatedItems = parsedCartItems.map(item => ({
         productId: item.productId,
-        productName: item.productName || 'Product',
+        productName: item.productName,
         price: item.price,
-        quantity: item.quantity,
+        quantity: item.quantity || 1,
         productDescription: item.productDescription || '',
-        // Ensure productCategory is always set with a default value if not present
         productCategory: item.productCategory || 'Others',
-        productSize: item.productSize || '',
-        productColour: item.productColour || '',
-        product_details: item.product_details || ''
+        productSize: item.productSize || item.size || '',
+        productColour: item.productColour || item.colour || '',
+        productImage: item.productImage || '',
       }));
 
       const orderData = {
         items: validatedItems,
-        totalAmount: totalAmount,
+        totalAmount: parseFloat(totalAmount),
         paymentMethod: 'Cash on Delivery',
-        deliveryAddress: parsedAddress._id
+        deliveryAddress: parsedAddress._id,
+        orderStatus: 'Pending'
       };
 
       console.log('Sending order data:', JSON.stringify(orderData, null, 2));
@@ -67,6 +67,9 @@ export default function OrderSummary() {
       console.log('Create order response:', result);
 
       if (result.success) {
+        // Clear cart after successful order
+        await AsyncStorage.removeItem('cartItems');
+        
         // Navigate to order success page with order details
         router.push({
           pathname: '/(screens)/order-success',
@@ -122,8 +125,8 @@ export default function OrderSummary() {
                 <View key={index} style={styles.orderItem}>
                   <Text style={styles.productName}>{item.productName}</Text>
                   <View style={styles.itemDetails}>
-                    <Text style={styles.detail}>Size: {item.productSize || 'N/A'}</Text>
-                    <Text style={styles.detail}>Color: {item.productColour || 'N/A'}</Text>
+                    <Text style={styles.detail}>Size: {item.size || 'N/A'}</Text>
+                    <Text style={styles.detail}>Color: {item.colour || 'N/A'}</Text>
                     <Text style={styles.detail}>Quantity: {item.quantity}</Text>
                   </View>
                   <Text style={styles.price}>₹{item.price * item.quantity}</Text>

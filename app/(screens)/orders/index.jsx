@@ -138,7 +138,7 @@ export default function Orders() {
                       <View style={styles.itemDetails}>
                         <Text style={styles.productName}>{item.productName || 'Product'}</Text>
                         <Text style={styles.itemInfo}>
-                          Size: {item.productSize || 'N/A'} • Color: {item.productColour || 'N/A'}
+                          Size: {item.size || 'N/A'} • Color: {item.colour || 'N/A'}
                         </Text>
                         <Text style={styles.quantity}>Quantity: {item.quantity || 1}</Text>
                         <Text style={styles.itemPrice}>₹{item.price * (item.quantity || 1)}</Text>

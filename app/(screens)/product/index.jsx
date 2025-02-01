@@ -120,7 +120,7 @@ export default function ProductDetail() {
       setAddingToCart(true);
 
       // Store the complete size with "UK" suffix
-      const fullSize = selectedSize.includes("UK") ? selectedSize : `${selectedSize} UK`;
+      const fullSize = selectedSize.includes("UK") ? selectedSize : `${selectedSize}`;
 
       const requestData = {
         productId: id,
@@ -207,43 +207,43 @@ export default function ProductDetail() {
   const placeholderImage = "https://cdn-icons-png.flaticon.com/512/3081/3081559.png";
 
   return (
-    <View style={styles.container}>
-      {/* Header - Fixed */}
+        <View style={styles.container}>
+          {/* Header - Fixed */}
       <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <AntDesign name="left" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cartButton}>
-            <AntDesign name="shoppingcart" size={24} color="black" />
-          </TouchableOpacity>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <AntDesign name="left" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cartButton} onPress={() => router.push("/(screens)/cart")}>
+              <AntDesign name="shoppingcart" size={24} color="black" />
+            </TouchableOpacity>
         </View>
-      </View>
+          </View>
 
-      {/* Scrollable Content */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
+          {/* Scrollable Content */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
-      >
-        {/* Image Slider */}
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={({ nativeEvent }) => {
-            const slide = Math.ceil(
+          >
+            {/* Image Slider */}
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={({ nativeEvent }) => {
+                const slide = Math.ceil(
               nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
-            );
+                );
             if (slide >= 0 && slide < productImages.length && currentImageIndex !== slide) {
-              setCurrentImageIndex(slide);
-            }
-          }}
-          scrollEventThrottle={16}
-        >
+                  setCurrentImageIndex(slide);
+                }
+              }}
+              scrollEventThrottle={16}
+            >
           {productImages.length > 0 ? (
             productImages.map((image, index) => (
-              <Image
-                key={index}
+                <Image
+                  key={index}
                 source={{ uri: image || placeholderImage }}
                 style={styles.productImage}
                 defaultSource={{ uri: placeholderImage }}
@@ -252,79 +252,79 @@ export default function ProductDetail() {
           ) : (
             <Image
               source={{ uri: placeholderImage }}
-              style={styles.productImage}
-            />
+                  style={styles.productImage}
+                />
           )}
-        </ScrollView>
+            </ScrollView>
 
-        {/* Pagination Dots */}
+            {/* Pagination Dots */}
         {productImages.length > 1 && (
-          <View style={styles.pagination}>
+            <View style={styles.pagination}>
             {productImages.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.paginationDot,
-                  index === currentImageIndex && styles.paginationDotActive,
-                ]}
-              />
-            ))}
-          </View>
-        )}
-
-        {/* Product Info */}
-        <View style={styles.productInfo}>
-          <Text style={styles.productTitle}>{product.name || "Product Name"}</Text>
-          <Text style={styles.productSubtitle}>
-            {product.description || "No description available"}
-          </Text>
-
-          {/* Rating */}
-          <View style={styles.ratingContainer}>
-            <View style={styles.stars}>
-              {[...Array(5)].map((_, index) => (
-                <AntDesign
+                <View
                   key={index}
-                  name={index < Math.floor(product.rating || 0) ? "star" : "staro"}
-                  size={16}
-                  color="#FFD700"
+                  style={[
+                    styles.paginationDot,
+                    index === currentImageIndex && styles.paginationDotActive,
+                  ]}
                 />
               ))}
             </View>
+        )}
+
+            {/* Product Info */}
+            <View style={styles.productInfo}>
+          <Text style={styles.productTitle}>{product.name || "Product Name"}</Text>
+              <Text style={styles.productSubtitle}>
+            {product.description || "No description available"}
+              </Text>
+
+              {/* Rating */}
+              <View style={styles.ratingContainer}>
+                <View style={styles.stars}>
+                  {[...Array(5)].map((_, index) => (
+                    <AntDesign
+                      key={index}
+                  name={index < Math.floor(product.rating || 0) ? "star" : "staro"}
+                      size={16}
+                      color="#FFD700"
+                    />
+                  ))}
+                </View>
             <Text style={styles.reviews}>0 Reviews</Text>
-          </View>
+              </View>
 
-          {/* Price */}
-          <View style={styles.priceContainer}>
+              {/* Price */}
+              <View style={styles.priceContainer}>
             <Text style={styles.price}>₹{product.price || 0}</Text>
-          </View>
+              </View>
 
-          {/* Size Selection */}
-          <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
-          <View style={styles.sizeContainer}>
+              {/* Size Selection */}
+              <Text style={styles.sizeTitle}>Size: {selectedSize}</Text>
+              <View style={styles.sizeContainer}>
             {(product?.size || ["6 UK", "7 UK", "8 UK", "9 UK", "10 UK"]).map((size) => (
-              <TouchableOpacity
-                key={size}
-                style={[
-                  styles.sizeButton,
-                  selectedSize === size && styles.selectedSizeButton,
-                ]}
+                  <TouchableOpacity
+                    key={size}
+                    style={[
+                      styles.sizeButton,
+                      selectedSize === size && styles.selectedSizeButton,
+                    ]}
                 onPress={() => {
                   console.log("Selected size:", size);
                   setSelectedSize(size);
                 }}
-              >
-                <Text
-                  style={[
-                    styles.sizeText,
-                    selectedSize === size && styles.selectedSizeText,
-                  ]}
-                >
-                  {size}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+                  >
+                    <Text
+                      style={[
+                        styles.sizeText,
+                        selectedSize === size && styles.selectedSizeText,
+                      ]}
+                    >
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
 
           <Text style={styles.colorTitle}>Color: {selectedColor}</Text>
           <View style={styles.colorContainer}>
@@ -352,98 +352,98 @@ export default function ProductDetail() {
             ))}
           </View>
 
-          {/* Product Details */}
-          <Text style={styles.detailsTitle}>Product Details</Text>
-          <Text style={styles.detailsText}>
+              {/* Product Details */}
+              <Text style={styles.detailsTitle}>Product Details</Text>
+              <Text style={styles.detailsText}>
             Brand: {product.brand}
 
             {"\n"}Description: {product.description}
             {"\n"}Stock: {product.stock}
-          </Text>
+              </Text>
 
-          {/* Store Info */}
-          <View style={styles.storeInfo}>
-            <View style={styles.storeInfoItem}>
-              <Feather name="map-pin" size={18} color="#666" />
-              <Text style={styles.storeText}>Nearest Store</Text>
+              {/* Store Info */}
+              <View style={styles.storeInfo}>
+                <View style={styles.storeInfoItem}>
+                  <Feather name="map-pin" size={18} color="#666" />
+                  <Text style={styles.storeText}>Nearest Store</Text>
+                </View>
+                <View style={styles.storeInfoItem}>
+                  <MaterialCommunityIcons
+                    name="crown-outline"
+                    size={18}
+                    color="#F83758"
+                  />
+                  <Text style={styles.vipText}>VIP</Text>
+                </View>
+                <View style={styles.storeInfoItem}>
+                  <MaterialCommunityIcons
+                    name="refresh"
+                    size={18}
+                    color="#F83758"
+                  />
+                  <Text style={styles.returnText}>Return policy</Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.storeInfoItem}>
-              <MaterialCommunityIcons
-                name="crown-outline"
-                size={18}
-                color="#F83758"
-              />
-              <Text style={styles.vipText}>VIP</Text>
-            </View>
-            <View style={styles.storeInfoItem}>
-              <MaterialCommunityIcons
-                name="refresh"
-                size={18}
-                color="#F83758"
-              />
-              <Text style={styles.returnText}>Return policy</Text>
-            </View>
-          </View>
-        </View>
 
-        {/* Bottom Buttons */}
-        <View style={styles.bottomButtons}>
+            {/* Bottom Buttons */}
+            <View style={styles.bottomButtons}>
           <TouchableOpacity style={styles.viewSimilarButton} onPress={() => router.push("/(screens)/cart")}>
-            <Feather
-              name="shopping-cart"
-              size={20}
-              color="#F83758"
-              style={styles.buttonIcon}
-            />
-            <Text style={styles.viewSimilarText}>View Cart</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.addToCartButton}
+                <Feather
+                  name="shopping-cart"
+                  size={20}
+                  color="#F83758"
+                  style={styles.buttonIcon}
+                />
+                <Text style={styles.viewSimilarText}>View Cart</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.addToCartButton}
             onPress={handleAddToCart}
             disabled={addingToCart}
-          >
-            <Text style={styles.addToCartText}>Add to Cart</Text>
-          </TouchableOpacity>
-        </View>
+              >
+                <Text style={styles.addToCartText}>Add to Cart</Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Delivery Info */}
-        <View style={styles.deliveryInfo}>
-          <MaterialCommunityIcons
-            name="truck-delivery-outline"
-            size={32}
-            color="#F83758"
-            style={styles.deliveryIcon}
-          />
-          <View style={styles.deliveryContent}>
-            <Text style={styles.deliveryLabel}>Delivery in</Text>
-            <Text style={styles.deliveryTime}>1 within Hour</Text>
-          </View>
-        </View>
+            {/* Delivery Info */}
+            <View style={styles.deliveryInfo}>
+              <MaterialCommunityIcons
+                name="truck-delivery-outline"
+                size={32}
+                color="#F83758"
+                style={styles.deliveryIcon}
+              />
+              <View style={styles.deliveryContent}>
+                <Text style={styles.deliveryLabel}>Delivery in</Text>
+                <Text style={styles.deliveryTime}>1 within Hour</Text>
+              </View>
+            </View>
 
-        {/* Compare Actions */}
-        <View style={styles.compareActions}>
-          <TouchableOpacity style={styles.compareButton}>
-            <Feather name="eye" size={20} color="#666" />
-            <Text style={styles.compareButtonText}>View Similar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.compareButton}>
-            <MaterialCommunityIcons name="compare" size={20} color="#666" />
-            <Text style={styles.compareButtonText}>Add to Compare</Text>
-          </TouchableOpacity>
-        </View>
+            {/* Compare Actions */}
+            <View style={styles.compareActions}>
+              <TouchableOpacity style={styles.compareButton}>
+                <Feather name="eye" size={20} color="#666" />
+                <Text style={styles.compareButtonText}>View Similar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.compareButton}>
+                <MaterialCommunityIcons name="compare" size={20} color="#666" />
+                <Text style={styles.compareButtonText}>Add to Compare</Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Similar Products Section */}
+            {/* Similar Products Section */}
         {similarProducts.length > 0 && (
-          <View style={styles.similarSection}>
-            <View style={styles.similarHeader}>
+            <View style={styles.similarSection}>
+              <View style={styles.similarHeader}>
               <Text style={styles.similarTitle}>Similar Products</Text>
               <Text style={styles.itemCount}>{similarProducts.length}</Text>
-            </View>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.similarProducts}
-            >
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.similarProducts}
+              >
               {similarProducts.map((item) => (
                 <TouchableOpacity
                   key={item._id}
@@ -468,26 +468,26 @@ export default function ProductDetail() {
                     <View style={styles.similarRating}>
                       <View style={{ flexDirection: "row" }}>
                         {[...Array(5)].map((_, index) => (
-                          <AntDesign
+                        <AntDesign
                             key={index}
                             name={index < Math.floor(item.rating || 0) ? "star" : "staro"}
-                            size={12}
-                            color="#FFD700"
-                          />
-                        ))}
-                      </View>
+                          size={12}
+                          color="#FFD700"
+                        />
+                      ))}
+                    </View>
                       <Text style={styles.similarReviews}>
                         {item.reviews?.length || 0}
-                      </Text>
+                    </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               ))}
-            </ScrollView>
-          </View>
+              </ScrollView>
+            </View>
         )}
-      </ScrollView>
-    </View>
+          </ScrollView>
+        </View>
   );
 }
 
@@ -787,14 +787,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   similarSection: {
-    marginTop: 24,
-    paddingBottom: 16,
+    marginTop: 20,
+    paddingBottom: 4,
   },
   similarHeader: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 4,
   },
   similarTitle: {
     fontSize: 18,
@@ -808,10 +808,13 @@ const styles = StyleSheet.create({
   },
   similarProducts: {
     paddingHorizontal: 16,
+    paddingVertical: 12,
+    paddingRight: 2,
     gap: 12,
   },
   similarCard: {
-    width: 180,
+    width: width * 0.45,
+    // height: width * 0.7,
     backgroundColor: "#FFF",
     borderRadius: 12,
     marginRight: 12,
@@ -829,30 +832,32 @@ const styles = StyleSheet.create({
   },
   similarImage: {
     width: "100%",
-    height: 180,
+    height: width * 0.55,
     resizeMode: "cover",
     backgroundColor: "#F8F8F8",
   },
   similarInfo: {
     padding: 12,
+    flex: 1,
+    justifyContent: "space-between",
   },
   similarProductTitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
     color: "#000",
-    marginBottom: 4,
+    marginBottom: 2,
   },
   similarProductSubtitle: {
     fontSize: 12,
     color: "#666",
-    marginBottom: 8,
+    marginBottom: 2,
     lineHeight: 16,
   },
   similarPrice: {
     fontSize: 16,
     fontWeight: "700",
     color: "#000",
-    marginBottom: 8,
+    marginTop: 2,
   },
   similarRating: {
     flexDirection: "row",
