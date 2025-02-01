@@ -11,47 +11,23 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuthService from '../services/AuthService';
 
 export default function SignIn() {
-  const [identifier, setIdentifier] = useState("");
+  const router = useRouter();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
-  const handleLogin = async () => {
-    // Validate required fields
-    if (!identifier || !password) {
-      Alert.alert("Error", "Please fill in all required fields");
-      return;
-    }
-
-    // Check if input is email or mobile number
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const mobileRegex = /^[0-9]{10}$/;
-    const isEmail = emailRegex.test(identifier);
-    const isMobile = mobileRegex.test(identifier);
-
-    if (!isEmail && !isMobile) {
-      Alert.alert("Error", "Please enter a valid email address or 10-digit mobile number");
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
     try {
       setLoading(true);
-
-      const loginData = {
-        password: password,
-      };
-
-      // Set either email or mobile based on input type
-      if (isEmail) {
-        loginData.email = identifier.toLowerCase().trim();
-      } else {
-        loginData.mobile = identifier.trim();
-      }
-
       const response = await fetch(
         "https://ecommerce-shop-qg3y.onrender.com/api/user/login",
         {
@@ -59,7 +35,10 @@ export default function SignIn() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(loginData),
+          body: JSON.stringify({
+            email: email.toLowerCase().trim(),
+            password: password,
+          }),
         }
       );
 
@@ -67,25 +46,17 @@ export default function SignIn() {
       console.log('API Response:', result);
 
       if (response.ok && result.success && result.data) {
-        // Store token from the response
-        await AsyncStorage.setItem('userToken', result.data);
-        console.log('Token stored:', result.data);
+        // Store auth data securely
+        await AuthService.setAuthToken(result.data);
+        // await AuthService.setUserData(result.user);
         
-        Alert.alert(
-          "Success",
-          "Login successful!",
-          [{ text: "OK", onPress: () => router.push("/(screens)/welcome") }]
-        );
+        router.replace("/(screens)/home");
       } else {
-        const errorMessage = result.message || "Login failed. Please try again.";
-        Alert.alert("Error", errorMessage);
+        Alert.alert("Error", result.message || "Login failed");
       }
     } catch (error) {
-      console.error('API Error:', error);
-      Alert.alert(
-        "Error", 
-        "Network error or server not responding. Please try again later."
-      );
+      console.error("Login error:", error);
+      Alert.alert("Error", "Failed to login. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -108,9 +79,10 @@ export default function SignIn() {
           />
           <TextInput
             style={styles.input}
-            placeholder="Mobile Number or Email"
-            value={identifier}
-            onChangeText={setIdentifier}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
             autoCapitalize="none"
             placeholderTextColor="#666"
           />
@@ -125,7 +97,7 @@ export default function SignIn() {
           />
           <TextInput
             style={styles.input}
-            placeholder="Enter your password"
+            placeholder="Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
@@ -153,10 +125,10 @@ export default function SignIn() {
         <TouchableOpacity
           style={[
             styles.signInButton,
-            (!identifier || !password) && styles.signInButtonDisabled,
+            (!email || !password) && styles.signInButtonDisabled,
           ]}
-          onPress={handleLogin}
-          disabled={!identifier || !password || loading}
+          onPress={handleSignIn}
+          disabled={!email || !password || loading}
         >
           {loading ? (
             <ActivityIndicator color="#FFFFFF" />
