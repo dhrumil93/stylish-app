@@ -72,7 +72,12 @@ export default function Cart() {
     }
   };
 
-  const updateQuantity = async (itemId, newQuantity) => {
+  const updateQuantity = async (
+    itemId,
+    newQuantity,
+    productSize,
+    productColour
+  ) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
 
@@ -84,6 +89,8 @@ export default function Cart() {
       const requestData = {
         productId: itemId,
         quantity: newQuantity,
+        productSize: currentItem.productSize,
+        productColour: currentItem.productColour,
       };
 
       console.log("Update cart request:", requestData);
@@ -123,6 +130,13 @@ export default function Cart() {
         Alert.alert("Error", "Please login to remove items");
         return;
       }
+      const requestData = {
+        data: {
+          productId: productId,
+          productColour: productColour,
+          productSize: productSize,
+        },
+      };
 
       const response = await fetch(
         "https://ecommerce-shop-qg3y.onrender.com/api/cart/removeCart",
@@ -132,7 +146,7 @@ export default function Cart() {
             "Content-Type": "application/json",
             Authorization: token,
           },
-          body: JSON.stringify({ productId }),
+          body: JSON.stringify(requestData),
         }
       );
 
@@ -186,8 +200,8 @@ export default function Cart() {
         [
           {
             text: "OK",
-            onPress: () => console.log("OK Pressed")
-          }
+            onPress: () => console.log("OK Pressed"),
+          },
         ]
       );
       return;
@@ -256,23 +270,34 @@ export default function Cart() {
             {selectedAddress && selectedAddress._id ? (
               <View style={styles.selectedAddress}>
                 <View style={styles.addressHeader}>
-                  <Text style={styles.addressType}>{selectedAddress.type || selectedAddress.address_type}</Text>
+                  <Text style={styles.addressType}>
+                    {selectedAddress.type || selectedAddress.address_type}
+                  </Text>
                   {selectedAddress.isDefault && (
                     <View style={styles.defaultBadge}>
                       <Text style={styles.defaultText}>Default</Text>
                     </View>
                   )}
                 </View>
-                <Text style={styles.addressName}>{selectedAddress.name || selectedAddress.fullName}</Text>
-                <Text style={styles.addressPhone}>{selectedAddress.phone || selectedAddress.phoneNumber}</Text>
+                <Text style={styles.addressName}>
+                  {selectedAddress.name || selectedAddress.fullName}
+                </Text>
+                <Text style={styles.addressPhone}>
+                  {selectedAddress.phone || selectedAddress.phoneNumber}
+                </Text>
                 <Text style={styles.addressText}>
                   {selectedAddress.address1 || selectedAddress.addressLine1}
-                  {(selectedAddress.address2 || selectedAddress.addressLine2) ? 
-                    `, ${selectedAddress.address2 || selectedAddress.addressLine2}` : ''}
-                  {selectedAddress.landmark ? `, ${selectedAddress.landmark}` : ''}
+                  {selectedAddress.address2 || selectedAddress.addressLine2
+                    ? `, ${
+                        selectedAddress.address2 || selectedAddress.addressLine2
+                      }`
+                    : ""}
+                  {selectedAddress.landmark
+                    ? `, ${selectedAddress.landmark}`
+                    : ""}
                   {`\n${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}`}
                 </Text>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.changeAddressButton}
                   onPress={() => setShowAddressModal(true)}
                 >
@@ -280,12 +305,14 @@ export default function Cart() {
                 </TouchableOpacity>
               </View>
             ) : (
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.addAddressButton}
                 onPress={() => setShowAddressModal(true)}
               >
                 <AntDesign name="plus" size={20} color="#F83758" />
-                <Text style={styles.addAddressText}>Select Delivery Address</Text>
+                <Text style={styles.addAddressText}>
+                  Select Delivery Address
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -428,9 +455,7 @@ export default function Cart() {
                 onPress={handleCheckout}
                 disabled={!cartItems.length}
               >
-                <Text style={styles.checkoutText}>
-                  {'Place Order'}
-                </Text>
+                <Text style={styles.checkoutText}>{"Place Order"}</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -759,8 +784,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 4,
     backgroundColor: "#FFF0F3",
-    marginTop:8,
-
+    marginTop: 8,
   },
   changeAddressText: {
     fontSize: 14,
