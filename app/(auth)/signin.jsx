@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import {
 import { useRouter } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
 import AuthService from '../services/AuthService';
+import NotificationService from '../services/NotificationService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignIn() {
   const router = useRouter();
@@ -19,6 +21,11 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Initialize notifications when the screen loads
+    NotificationService.registerForPushNotifications();
+  }, []);
 
   const handleSignIn = async () => {
     if (!email || !password) {
@@ -28,6 +35,11 @@ export default function SignIn() {
 
     try {
       setLoading(true);
+
+      // Register for push notifications and get token
+      const pushToken = await NotificationService.registerForPushNotifications();
+      console.log('Push Token for this device:', pushToken);
+
       const response = await fetch(
         "https://ecommerce-shop-qg3y.onrender.com/api/user/login",
         {
@@ -38,18 +50,15 @@ export default function SignIn() {
           body: JSON.stringify({
             email: email.toLowerCase().trim(),
             password: password,
+            device_token: pushToken
           }),
         }
       );
 
       const result = await response.json();
-      console.log('API Response:', result);
 
       if (response.ok && result.success && result.data) {
-        // Store auth data securely
-        await AuthService.setAuthToken(result.data);
-        // await AuthService.setUserData(result.user);
-        
+        await AsyncStorage.setItem('userToken', result.data);
         router.replace("/(screens)/home");
       } else {
         Alert.alert("Error", result.message || "Login failed");
@@ -172,6 +181,8 @@ export default function SignIn() {
             <Text style={styles.signupLink}>Sign Up</Text>
           </TouchableOpacity>
         </View>
+        <Text style={styles.signupText}>Email : dhrumilpatel0093@gmail.com</Text>
+        <Text style={styles.signupText}>Password : 1234567 </Text>
       </View>
     </View>
   );

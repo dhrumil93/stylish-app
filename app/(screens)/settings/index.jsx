@@ -86,7 +86,7 @@ export default function Settings() {
         {
           icon: <Ionicons name="notifications-outline" size={24} color="#666" />,
           label: 'Notifications',
-          // onPress: () => router.push('/(screens)/notifications'),
+          // onPress: () => router.push('/(screens)/notification-test'),
         },
         {
           icon: <Feather name="lock" size={24} color="#666" />,

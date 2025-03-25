@@ -347,10 +347,10 @@ export default function ProductDetail() {
                   ]}
                 >
                   {color}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
 
               {/* Product Details */}
               <Text style={styles.detailsTitle}>Product Details</Text>

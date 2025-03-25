@@ -2,7 +2,7 @@
   "expo": {
     "name": "Stylo",
     "slug": "stylish-app",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,9 +26,13 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.stylo",
-      "versionCode": 1,
+      "versionCode": 2,
       "permissions": [
-        "INTERNET"
+        "INTERNET",
+        "NOTIFICATIONS",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "SCHEDULE_EXACT_ALARM"
       ]
     },
     "web": {
@@ -33,7 +40,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#ffffff"
+        }
+      ]
     ],
     "scheme": "stylish-app",
     "extra": {
@@ -44,6 +58,7 @@
         "projectId": "4fcd7ad2-d878-49fe-af40-bdbdb5cba7ac"
       }
     },
-    "owner": "dhrumil93"
+    "owner": "dhrumil93",
+    "newArchEnabled": true
   }
 }

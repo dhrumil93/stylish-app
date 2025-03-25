@@ -269,7 +269,7 @@ export default function Cart() {
             <Text style={styles.sectionTitle}>Delivery Address</Text>
             {selectedAddress && selectedAddress._id ? (
               <View style={styles.selectedAddress}>
-                <View style={styles.addressHeader}>
+              <View style={styles.addressHeader}>
                   <Text style={styles.addressType}>
                     {selectedAddress.type || selectedAddress.address_type}
                   </Text>
@@ -312,7 +312,7 @@ export default function Cart() {
                 <AntDesign name="plus" size={20} color="#F83758" />
                 <Text style={styles.addAddressText}>
                   Select Delivery Address
-                </Text>
+              </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -360,15 +360,15 @@ export default function Cart() {
                     </View>
 
                     <View style={styles.cartItemContent}>
-                      <Image
+              <Image
                         source={{
                           uri:
                             `https://ecommerce-shop-qg3y.onrender.com/api/product/displayImage/${item.productId}` ||
                             "https://via.placeholder.com/100",
                         }}
-                        style={styles.productImage}
-                      />
-                      <View style={styles.productInfo}>
+                style={styles.productImage}
+              />
+              <View style={styles.productInfo}>
                         <Text style={styles.productSubtitle}>
                           {item.productDescription || "Description"}
                         </Text>
@@ -386,78 +386,78 @@ export default function Cart() {
                             </Text>
                           </View>
                         </View>
-                        <View style={styles.priceContainer}>
+                <View style={styles.priceContainer}>
                           <Text style={styles.price}>₹{item.price || 0}</Text>
-                        </View>
-                        <View style={styles.quantityContainer}>
-                          <TouchableOpacity
-                            style={[
-                              styles.quantityButton,
+                </View>
+                <View style={styles.quantityContainer}>
+                  <TouchableOpacity
+                    style={[
+                      styles.quantityButton,
                               item.quantity === 1 &&
                                 styles.quantityButtonDisabled,
-                            ]}
+                    ]}
                             onPress={() =>
                               updateQuantity(item.productId, item.quantity - 1)
                             }
                             disabled={item.quantity === 1}
-                          >
-                            <AntDesign
-                              name="minus"
-                              size={20}
+                  >
+                    <AntDesign
+                      name="minus"
+                      size={20}
                               color={item.quantity === 1 ? "#CCC" : "#666"}
-                            />
-                          </TouchableOpacity>
+                    />
+                  </TouchableOpacity>
                           <Text style={styles.quantity}>
                             {item.quantity || 1}
                           </Text>
-                          <TouchableOpacity
-                            style={styles.quantityButton}
+                  <TouchableOpacity
+                    style={styles.quantityButton}
                             onPress={() =>
                               updateQuantity(item.productId, item.quantity + 1)
                             }
-                          >
-                            <AntDesign name="plus" size={20} color="#666" />
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </View>
+                  >
+                    <AntDesign name="plus" size={20} color="#666" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
                   </View>
                 ))}
 
-                {/* Price Details */}
-                <View style={styles.priceDetails}>
+            {/* Price Details */}
+            <View style={styles.priceDetails}>
                   <Text style={styles.priceDetailsTitle}>Price Details</Text>
-                  <View style={styles.priceRow}>
-                    <Text style={styles.priceLabel}>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>
                       Price ({cartItems.length} items)
-                    </Text>
+                </Text>
                     <Text style={styles.priceValue}>₹{totalPrice}</Text>
-                  </View>
-                  <View style={styles.priceRow}>
-                    <Text style={styles.priceLabel}>Delivery Charges</Text>
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.priceLabel}>Delivery Charges</Text>
                     <Text style={[styles.priceValue, styles.freeDelivery]}>
                       Free
                     </Text>
-                  </View>
+              </View>
                   <View style={[styles.priceRow, styles.totalRow]}>
-                    <Text style={styles.totalLabel}>Total Amount</Text>
-                    <Text style={styles.totalValue}>₹{totalPrice}</Text>
-                  </View>
-                </View>
+                <Text style={styles.totalLabel}>Total Amount</Text>
+                <Text style={styles.totalValue}>₹{totalPrice}</Text>
+              </View>
+            </View>
               </>
             )}
           </ScrollView>
 
           {cartItems.length > 0 && (
-            <View style={styles.bottomButton}>
-              <TouchableOpacity
-                style={styles.checkoutButton}
+          <View style={styles.bottomButton}>
+            <TouchableOpacity 
+              style={styles.checkoutButton}
                 onPress={handleCheckout}
                 disabled={!cartItems.length}
               >
                 <Text style={styles.checkoutText}>{"Place Order"}</Text>
-              </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
+          </View>
           )}
         </View>
       </SafeAreaView>

@@ -6,25 +6,24 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "autoIncrement": true,
+        "gradleCommand": ":app:assembleDebug"
+      }
     },
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease"
       }
     },
     "production": {
+      "distribution": "internal",
       "android": {
         "buildType": "app-bundle",
-        "gradleCommand": ":app:bundleRelease",
-        "credentialsSource": "local",
-        "keystore": {
-          "keystorePath": "stylish-app-keystore.keystore",
-          "keystorePassword": "dhrumil@93",
-          "keyAlias": "stylish-app",
-          "keyPassword": "dhrumil@93"
-        }
+        "gradleCommand": ":app:bundleRelease"
       }
     }
   },

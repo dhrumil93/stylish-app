@@ -36,6 +36,7 @@ export default function Checkout() {
   const fetchUserProfile = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
+      console.log("Retrieved token:", token); // Debug log
 
       if (!token) {
         Alert.alert("Error", "Please login to view profile");
@@ -55,8 +56,9 @@ export default function Checkout() {
       );
 
       const result = await response.json();
+      console.log('Profile Response:', result);
 
-      if (response.ok && result.success && result.data) {
+      if (result.success && result.data) {
         // Update form data with API response
         const updatedData = {
           ...formData,
@@ -73,7 +75,7 @@ export default function Checkout() {
           Alert.alert("Session Expired", "Please login again");
           router.push("/(auth)/signin");
         } else {
-          Alert.alert("Error", "Failed to fetch profile data");
+          Alert.alert("Error", result.message || "Failed to fetch profile data");
         }
       }
     } catch (error) {
@@ -91,6 +93,7 @@ export default function Checkout() {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("userToken");
+      console.log("Update using token:", token); // Debug log
 
       if (!token) {
         Alert.alert("Error", "Please login to update profile");
@@ -106,16 +109,11 @@ export default function Checkout() {
       if (formData.gender) {
         updateData.gender = formData.gender;
       }
-
-      // Only include mobile if it's changed and valid
       if (formData.mobile && formData.mobile.trim() !== "") {
-        const mobileRegex = /^[0-9]{10}$/;
-        if (!mobileRegex.test(formData.mobile)) {
-          Alert.alert("Error", "Please enter a valid 10-digit mobile number");
-          setLoading(false);
-          return;
-        }
+        updateData.mobile = formData.mobile.trim();
       }
+
+      console.log("Sending update data:", updateData); // Debug log
 
       const response = await fetch(
         `https://ecommerce-shop-qg3y.onrender.com/api/user/update`,
@@ -123,7 +121,7 @@ export default function Checkout() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${token}`,
+            "Authorization": `${token}`
           },
           body: JSON.stringify(updateData),
         }
@@ -132,11 +130,11 @@ export default function Checkout() {
       const result = await response.json();
       console.log("Update Response:", result);
 
-      if (response.ok && result.success) {
+      if (result.success) {
         Alert.alert(
           "Success",
           "Profile updated successfully",
-          [{ text: "OK", onPress: () => fetchUserProfile() }] // Refresh the profile data
+          [{ text: "OK", onPress: () => fetchUserProfile() }]
         );
       } else {
         if (response.status === 401) {

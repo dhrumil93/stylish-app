@@ -136,6 +136,18 @@ export default function ScreensLayout() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen
+              name="settings/index"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="notification-test/index"
+              options={{
+                headerShown: false,
+              }}
+            />
           </Stack>
         </View>
         {shouldShowNavigation && <BottomNavigation />}
