@@ -27,7 +27,8 @@ import BottomNavigation from "../components/BottomNavigation";
 import Categories from "../components/Categories";
 
 const HEADER_HEIGHT = 56;
-const STATUSBAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
+const STATUSBAR_HEIGHT =
+  Platform.OS === "android" ? StatusBar.currentHeight : 0;
 const { width } = Dimensions.get("window");
 
 const categories = [
@@ -208,13 +209,13 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <StatusBar 
-        translucent 
+      <StatusBar
+        translucent
         backgroundColor="transparent"
         barStyle="dark-content"
       />
       <Header />
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -263,19 +264,13 @@ export default function Home() {
                 >
                   <View style={styles.bannerContent}>
                     <Text style={styles.bannerTitle}>{banner.title}</Text>
-                    <Text style={styles.bannerSubtitle}>
-                      {banner.subtitle}
-                    </Text>
+                    <Text style={styles.bannerSubtitle}>{banner.subtitle}</Text>
                     <Text style={styles.bannerDescription}>
                       {banner.description}
                     </Text>
                     <TouchableOpacity style={styles.shopNowButton}>
                       <Text style={styles.shopNowText}>Shop Now</Text>
-                      <AntDesign
-                        name="arrowright"
-                        size={16}
-                        color="#FFFFFF"
-                      />
+                      <AntDesign name="arrowright" size={16} color="#FFFFFF" />
                     </TouchableOpacity>
                   </View>
                 </ImageBackground>
@@ -321,7 +316,11 @@ export default function Home() {
         {/* Products Section */}
         <View style={styles.productsSection}>
           {loading ? (
-            <ActivityIndicator size="large" color="#F83758" style={styles.loader} />
+            <ActivityIndicator
+              size="large"
+              color="#F83758"
+              style={styles.loader}
+            />
           ) : error ? (
             <Text style={styles.errorText}>{error}</Text>
           ) : (
@@ -330,57 +329,73 @@ export default function Home() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.productsScrollContainer}
             >
-              {Array.isArray(products) && products.map((product) => (
-                <TouchableOpacity 
-                  key={product?._id} 
-                  style={styles.productCard}
-                  onPress={() => router.push({
-                    pathname: "/(screens)/product",
-                    params: { id: product?._id }
-                  })}
-                >
-                  <Image 
-                    source={{ uri: product?.product_images?.[0] || 'https://via.placeholder.com/200' }} 
-                    style={styles.productImage} 
-                  />
-                  <View style={styles.productInfo}>
-                    <Text style={styles.productTitle} numberOfLines={1}>
-                      {product?.name || 'Product Name'}
-                    </Text>
-                    <Text style={styles.productDescription} numberOfLines={2}>
-                      {product?.description || 'No description available'}
-                    </Text>
-                    <View style={styles.priceContainer}>
-                      <Text style={styles.price}>₹{product?.price || 0}</Text>
-                      {product?.originalPrice && (
-                        <>
-                          <Text style={styles.originalPrice}>
-                            ₹{product.originalPrice}
-                          </Text>
-                          <Text style={styles.discount}>
-                            {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% Off
-                          </Text>
-                        </>
-                      )}
-                    </View>
-                    <View style={styles.ratingContainer}>
-                      <View style={styles.stars}>
-                        {[...Array(5)].map((_, index) => (
-                          <AntDesign
-                            key={index}
-                            name={index < Math.floor(product?.rating || 0) ? "star" : "staro"}
-                            size={16}
-                            color="#FFD700"
-                          />
-                        ))}
-                      </View>
-                      <Text style={styles.reviews}>
-                        {product?.reviews?.length || 0}
+              {Array.isArray(products) &&
+                products.map((product) => (
+                  <TouchableOpacity
+                    key={product?._id}
+                    style={styles.productCard}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/(screens)/product",
+                        params: { id: product?._id },
+                      })
+                    }
+                  >
+                    <Image
+                      source={{
+                        uri:
+                          product?.product_images?.[0] ||
+                          "https://via.placeholder.com/200",
+                      }}
+                      style={styles.productImage}
+                    />
+                    <View style={styles.productInfo}>
+                      <Text style={styles.productTitle} numberOfLines={1}>
+                        {product?.name || "Product Name"}
                       </Text>
+                      <Text style={styles.productDescription} numberOfLines={2}>
+                        {product?.description || "No description available"}
+                      </Text>
+                      <View style={styles.priceContainer}>
+                        <Text style={styles.price}>₹{product?.price || 0}</Text>
+                        {product?.originalPrice && (
+                          <>
+                            <Text style={styles.originalPrice}>
+                              ₹{product.originalPrice}
+                            </Text>
+                            <Text style={styles.discount}>
+                              {Math.round(
+                                ((product.originalPrice - product.price) /
+                                  product.originalPrice) *
+                                  100
+                              )}
+                              % Off
+                            </Text>
+                          </>
+                        )}
+                      </View>
+                      <View style={styles.ratingContainer}>
+                        <View style={styles.stars}>
+                          {[...Array(5)].map((_, index) => (
+                            <AntDesign
+                              key={index}
+                              name={
+                                index < Math.floor(product?.rating || 0)
+                                  ? "star"
+                                  : "staro"
+                              }
+                              size={16}
+                              color="#FFD700"
+                            />
+                          ))}
+                        </View>
+                        <Text style={styles.reviews}>
+                          {product?.reviews?.length || 0}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
+                  </TouchableOpacity>
+                ))}
             </ScrollView>
           )}
         </View>
@@ -388,10 +403,7 @@ export default function Home() {
         {/* Special Offers Section */}
         <View style={styles.specialOfferContainer}>
           <View style={styles.specialOfferContent}>
-            <Image
-              source={specialOffer.icon}
-              style={styles.specialOfferIcon}
-            />
+            <Image source={specialOffer.icon} style={styles.specialOfferIcon} />
             <View style={styles.specialOfferTextContainer}>
               <View style={styles.specialOfferHeader}>
                 <Text style={styles.specialOfferTitle}>
@@ -479,25 +491,21 @@ export default function Home() {
               <TouchableOpacity
                 key={product.id}
                 style={styles.trendingProductCard}
+                onPress={() => router.push("/(screens)/trending/")}
               >
                 <Image
                   source={product.image}
                   style={styles.trendingProductImage}
                 />
                 <View style={styles.trendingProductInfo}>
-                  <Text
-                    style={styles.trendingProductTitle}
-                    numberOfLines={2}
-                  >
+                  <Text style={styles.trendingProductTitle} numberOfLines={2}>
                     {product.title}
                   </Text>
                   <Text style={styles.trendingProductSubtitle}>
                     {product.subtitle}
                   </Text>
                   <View style={styles.trendingPriceContainer}>
-                    <Text style={styles.trendingPrice}>
-                      ₹{product.price}
-                    </Text>
+                    <Text style={styles.trendingPrice}>₹{product.price}</Text>
                     <Text style={styles.trendingOriginalPrice}>
                       ₹{product.originalPrice}
                     </Text>
@@ -513,20 +521,18 @@ export default function Home() {
 
         {/* New Arrivals Section */}
         <View style={styles.newArrivalsContainer}>
-          <Image
-            source={newArrivals.image}
-            style={styles.newArrivalsImage}
-          />
+          <Image source={newArrivals.image} style={styles.newArrivalsImage} />
           <View style={styles.newArrivalsContent}>
             <View style={styles.newArrivalsTextContainer}>
-              <Text style={styles.newArrivalsTitle}>
-                {newArrivals.title}
-              </Text>
+              <Text style={styles.newArrivalsTitle}>{newArrivals.title}</Text>
               <Text style={styles.newArrivalsSubtitle}>
                 {newArrivals.subtitle}
               </Text>
             </View>
-            <TouchableOpacity style={styles.newArrivalsButton}>
+            <TouchableOpacity
+              style={styles.newArrivalsButton}
+              onPress={() => router.push("/(screens)/trending/")}
+            >
               <Text style={styles.newArrivalsButtonText}>View all</Text>
               <AntDesign name="arrowright" size={16} color="#FFFFFF" />
             </TouchableOpacity>
@@ -536,7 +542,10 @@ export default function Home() {
         {/* Sponsored Section */}
         <View style={styles.sponsoredContainer}>
           <Text style={styles.sponsoredTitle}>{sponsored.title}</Text>
-          <TouchableOpacity style={styles.sponsoredCard}>
+          <TouchableOpacity
+            style={styles.sponsoredCard}
+            onPress={() => router.push("/(screens)/trending/")}
+          >
             <Image source={sponsored.image} style={styles.sponsoredImage} />
             <View style={styles.discountOverlay}>
               <Text style={styles.discountText}>{sponsored.discount}</Text>
